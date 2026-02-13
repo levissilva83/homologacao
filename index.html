@@ -1,0 +1,2274 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=5, user-scalable=yes">
+    <meta name="theme-color" content="#0f0f1e">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="format-detection" content="telephone=no">
+    <title>🥋 Luta Academy - Check-in de Treino</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Inter:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            border: 0;
+            box-sizing: border-box;
+            -webkit-box-sizing: border-box;
+            -moz-box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #0f0f1e;
+            --secondary: #1a1a2e;
+            --accent: #d4af37;
+            --accent-light: #e8c547;
+            --text-primary: #ffffff;
+            --text-secondary: #b0b0c0;
+            --success: #2ecc71;
+            --warning: #f39c12;
+            --danger: #e74c3c;
+            --border: #2a2a3e;
+            --day-bg: #1a1a2e;
+            --day-hover: #252540;
+        }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -webkit-text-size-adjust: 100%;
+            -ms-text-size-adjust: 100%;
+            -webkit-tap-highlight-color: transparent;
+            margin: 0;
+            padding: 0;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, var(--primary) 0%, #1a1a30 100%);
+            color: var(--text-primary);
+            line-height: 1.6;
+            position: relative;
+            width: 100%;
+            height: 100vh;
+            max-width: 100%;
+            max-height: 100vh;
+            overflow: hidden;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            -webkit-text-size-adjust: 100%;
+            -ms-text-size-adjust: 100%;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(212, 175, 55, 0.03) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(30, 144, 255, 0.02) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .app-container {
+            display: flex;
+            height: 100vh;
+            width: 100%;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        /* ===== HEADER ===== */
+        header {
+            background: linear-gradient(135deg, var(--secondary) 0%, rgba(26, 26, 46, 0.95) 100%);
+            border-bottom: 2px solid var(--accent);
+            padding: 16px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            backdrop-filter: blur(10px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--accent), transparent);
+        }
+
+        .header-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-family: 'Playfair Display', serif;
+        }
+
+        .header-brand-icon {
+            font-size: 28px;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-5px); }
+        }
+
+        .header-brand-text {
+            font-size: 18px;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--accent), var(--accent-light));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: 1px;
+        }
+
+        .header-user {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 8px 12px;
+            background: rgba(212, 175, 55, 0.1);
+            border-radius: 8px;
+            border: 1px solid rgba(212, 175, 55, 0.2);
+        }
+
+        .user-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent), #8b5a3c);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 14px;
+        }
+
+        .user-name {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        /* ===== CONTEÚDO ===== */
+        .content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            max-width: 100vw;
+            width: 100%;
+        }
+
+        /* ===== RESPONSIVIDADE GERAL ===== */
+        input, select, textarea {
+            width: 100%;
+            font-family: inherit;
+            font-size: 16px;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            border: none;
+            border-radius: 4px;
+            padding: 12px;
+            background-color: rgba(255, 255, 255, 0.05);
+            color: var(--text-primary);
+            -webkit-user-select: text;
+            -moz-user-select: text;
+            user-select: text;
+            -webkit-text-size-adjust: 100%;
+        }
+
+        input:disabled, select:disabled, textarea:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            -webkit-focus-ring-color: transparent;
+            border-color: var(--accent);
+            background-color: rgba(212, 175, 55, 0.1);
+        }
+
+        /* Remover estilos padrão iOS */
+        input[type="text"],
+        input[type="email"],
+        input[type="password"],
+        input[type="date"],
+        input[type="number"],
+        input[type="tel"],
+        textarea,
+        select {
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            border-radius: 6px;
+            border: 1px solid rgba(212, 175, 55, 0.2);
+        }
+
+        /* Remove seta do select */
+        select {
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23d4af37' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            background-size: 20px;
+            padding-right: 40px;
+            cursor: pointer;
+        }
+
+        button {
+            cursor: pointer;
+            transition: all 0.2s ease;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-family: inherit;
+        }
+
+        button:active {
+            opacity: 0.8;
+        }
+
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .btn {
+            min-height: 44px;
+            padding: 12px 16px;
+            border-radius: 6px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            transition: all 0.3s ease;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+
+        /* ===== LOGIN RESPONSIVO ===== */
+        #loginScreen {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .login-container {
+            width: 100%;
+            max-width: 420px;
+            animation: slideUp 0.6s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .login-icon {
+            font-size: 64px;
+            margin-bottom: 16px;
+            display: block;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .login-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 32px;
+            font-weight: 900;
+            margin-bottom: 8px;
+            background: linear-gradient(135deg, var(--accent), var(--accent-light));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .login-subtitle {
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        .form-card {
+            background: var(--secondary);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 16px;
+            backdrop-filter: blur(10px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .form-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--accent), transparent);
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            margin-bottom: 8px;
+        }
+
+        .form-input,
+        .form-select {
+            width: 100%;
+            padding: 14px 16px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1.5px solid var(--border);
+            border-radius: 10px;
+            color: var(--text-primary);
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .form-input:focus,
+        .form-select:focus {
+            outline: none;
+            border-color: var(--accent);
+            background: rgba(212, 175, 55, 0.1);
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.2);
+        }
+
+        .form-input::placeholder {
+            color: var(--text-secondary);
+        }
+
+        .form-select option {
+            background: var(--secondary);
+            color: var(--text-primary);
+        }
+
+        /* Botões */
+        .btn {
+            width: 100%;
+            padding: 14px 24px;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            font-family: 'Inter', sans-serif;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .btn:active::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent), var(--accent-light));
+            color: var(--primary);
+            margin-bottom: 12px;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(212, 175, 55, 0.3);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--accent);
+            border: 2px solid var(--accent);
+        }
+
+        /* Recovery Password */
+
+        /* ===== RANKING STYLES — MOBILE-FIRST REDESIGN ===== */
+        .ranking-container {
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+
+        /* --- SEGMENTED CONTROL (Period) --- */
+        .ranking-period-section {
+            margin-bottom: 14px;
+        }
+
+        .period-segmented {
+            display: flex;
+            background: rgba(255,255,255,0.04);
+            border-radius: 10px;
+            padding: 3px;
+            border: 1px solid var(--border);
+        }
+
+        .period-seg-btn {
+            flex: 1;
+            padding: 10px 0;
+            text-align: center;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+            border: none;
+            background: transparent;
+            font-family: inherit;
+            letter-spacing: 0.3px;
+        }
+
+        .period-seg-btn.active {
+            background: linear-gradient(135deg, var(--accent), var(--accent-light));
+            color: var(--primary);
+            box-shadow: 0 2px 10px rgba(212, 175, 55, 0.35);
+        }
+
+        /* --- CT CHIPS (horizontal scroll) --- */
+        .ranking-filter-section {
+            margin-bottom: 16px;
+        }
+
+        .ct-chips-scroll {
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            padding: 2px 0 6px 0;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+        .ct-chips-scroll::-webkit-scrollbar { display: none; }
+
+        .ct-chip {
+            flex-shrink: 0;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            background: rgba(255,255,255,0.04);
+            border: 1.5px solid var(--border);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+            white-space: nowrap;
+            letter-spacing: 0.2px;
+        }
+
+        .ct-chip.active {
+            background: rgba(212, 175, 55, 0.18);
+            border-color: var(--accent);
+            color: var(--accent);
+            box-shadow: 0 0 12px rgba(212, 175, 55, 0.15);
+        }
+        .ct-chip.geral.active {
+            background: rgba(30, 144, 255, 0.18);
+            border-color: #5ba8f7;
+            color: #7bbcff;
+            box-shadow: 0 0 12px rgba(30, 144, 255, 0.15);
+        }
+
+        /* --- USER STATS BANNER --- */
+        .user-training-section {
+            background: linear-gradient(135deg, rgba(212,175,55,0.08) 0%, rgba(30,144,255,0.06) 100%);
+            border: 1px solid rgba(212, 175, 55, 0.18);
+            border-radius: 14px;
+            padding: 14px;
+            margin-bottom: 16px;
+        }
+
+        .user-stats-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .user-stats-total {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-width: 68px;
+            padding: 10px 8px;
+            background: rgba(212, 175, 55, 0.12);
+            border: 1px solid rgba(212, 175, 55, 0.25);
+            border-radius: 12px;
+        }
+
+        .user-stats-total-num {
+            font-size: 28px;
+            font-weight: 800;
+            color: var(--accent);
+            line-height: 1;
+        }
+
+        .user-stats-total-label {
+            font-size: 9px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-top: 4px;
+        }
+
+        .user-training-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            flex: 1;
+        }
+
+        .ct-training-card {
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(212, 175, 55, 0.15);
+            border-radius: 8px;
+            padding: 8px 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex: 1 1 auto;
+            min-width: 0;
+        }
+
+        .ct-training-name {
+            font-size: 11px;
+            color: var(--text-secondary);
+            font-weight: 500;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .ct-training-count {
+            font-size: 16px;
+            font-weight: 800;
+            color: var(--accent);
+            margin-left: auto;
+            flex-shrink: 0;
+        }
+
+        /* --- PODIUM (Top 3) --- */
+        .top3-container {
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            gap: 6px;
+            margin-bottom: 18px;
+            padding: 10px 0 0;
+            min-height: 180px;
+        }
+
+        .podium-slot {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            flex: 1;
+            max-width: 120px;
+        }
+
+        .podium-avatar {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            margin-bottom: 6px;
+            position: relative;
+        }
+
+        .podium-slot.first .podium-avatar {
+            width: 56px;
+            height: 56px;
+            font-size: 28px;
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.4);
+            border: 2px solid #FFD700;
+            background: rgba(255, 215, 0, 0.12);
+        }
+        .podium-slot.second .podium-avatar {
+            border: 2px solid #C0C0C0;
+            background: rgba(192, 192, 192, 0.1);
+        }
+        .podium-slot.third .podium-avatar {
+            border: 2px solid #CD7F32;
+            background: rgba(205, 127, 50, 0.1);
+        }
+
+        .podium-name {
+            font-size: 12px;
+            font-weight: 700;
+            color: #fff;
+            text-align: center;
+            margin-bottom: 2px;
+            max-width: 100%;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .podium-meta {
+            font-size: 10px;
+            color: var(--text-secondary);
+            text-align: center;
+            margin-bottom: 6px;
+        }
+
+        .podium-bar {
+            width: 100%;
+            border-radius: 10px 10px 4px 4px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            padding-top: 10px;
+            position: relative;
+        }
+
+        .podium-slot.first .podium-bar {
+            height: 90px;
+            background: linear-gradient(180deg, rgba(255,215,0,0.22) 0%, rgba(255,215,0,0.06) 100%);
+            border: 1.5px solid rgba(255, 215, 0, 0.35);
+        }
+        .podium-slot.second .podium-bar {
+            height: 65px;
+            background: linear-gradient(180deg, rgba(192,192,192,0.18) 0%, rgba(192,192,192,0.04) 100%);
+            border: 1.5px solid rgba(192, 192, 192, 0.25);
+        }
+        .podium-slot.third .podium-bar {
+            height: 48px;
+            background: linear-gradient(180deg, rgba(205,127,50,0.18) 0%, rgba(205,127,50,0.04) 100%);
+            border: 1.5px solid rgba(205, 127, 50, 0.25);
+        }
+
+        .podium-count {
+            font-size: 22px;
+            font-weight: 800;
+            line-height: 1;
+        }
+
+        .podium-slot.first .podium-count { color: #FFD700; }
+        .podium-slot.second .podium-count { color: #d0d0d0; }
+        .podium-slot.third .podium-count { color: #CD7F32; }
+
+        .podium-count-label {
+            font-size: 9px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            margin-top: 2px;
+        }
+
+        .podium-ct-info {
+            font-size: 9px;
+            color: var(--text-secondary);
+            opacity: 0.7;
+            margin-top: 4px;
+            text-align: center;
+            max-width: 100%;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        /* --- USER POSITION CARD --- */
+        .user-position-section {
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.1), rgba(30, 144, 255, 0.08));
+            border: 1.5px solid rgba(212, 175, 55, 0.3);
+            border-radius: 12px;
+            padding: 12px 14px;
+            margin-bottom: 14px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .user-pos-rank-badge {
+            min-width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, var(--accent), var(--accent-light));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            font-weight: 800;
+            color: var(--primary);
+            flex-shrink: 0;
+        }
+
+        .user-pos-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .user-pos-name {
+            font-size: 14px;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 2px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .user-pos-details {
+            font-size: 11px;
+            color: var(--text-secondary);
+        }
+
+        .user-pos-next {
+            text-align: right;
+            flex-shrink: 0;
+        }
+
+        .user-pos-next-label {
+            font-size: 9px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+        }
+
+        .user-pos-next-diff {
+            font-size: 15px;
+            font-weight: 700;
+            color: #FF6B6B;
+            margin-top: 2px;
+        }
+
+        /* Hidden containers for compatibility */
+        .user-position-card { display: contents; }
+
+        /* --- RANKING LIST --- */
+        .ranking-list-section { }
+
+        .ranking-list {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .ranking-item {
+            display: flex;
+            align-items: center;
+            padding: 10px 12px;
+            background: rgba(255,255,255,0.025);
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 10px;
+            transition: all 0.2s ease;
+            gap: 10px;
+        }
+
+        .ranking-item.current-user {
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.1), rgba(30, 144, 255, 0.06));
+            border-color: rgba(212, 175, 55, 0.3);
+            box-shadow: 0 0 12px rgba(212, 175, 55, 0.1);
+        }
+
+        .ranking-item-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex: 1;
+            min-width: 0;
+        }
+
+        .ranking-position {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--text-secondary);
+            min-width: 30px;
+            text-align: center;
+            flex-shrink: 0;
+        }
+
+        .ranking-item.current-user .ranking-position {
+            color: var(--accent);
+        }
+
+        .ranking-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .ranking-name {
+            font-size: 13px;
+            font-weight: 600;
+            color: #e0e0e8;
+            margin-bottom: 1px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .ranking-item.current-user .ranking-name {
+            color: var(--accent);
+        }
+
+        .ranking-details {
+            font-size: 10px;
+            color: var(--text-secondary);
+        }
+
+        .ranking-count {
+            font-size: 15px;
+            font-weight: 800;
+            color: var(--accent);
+            text-align: right;
+            flex-shrink: 0;
+            min-width: 28px;
+        }
+
+        /* --- SECTION LABELS --- */
+        .rank-section-label {
+            font-size: 11px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            padding-left: 2px;
+        }
+
+        /* Info Card */
+        .info-card {
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.05), rgba(30, 144, 255, 0.05));
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 16px;
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.1);
+        }
+
+        .info-row:last-child {
+            border-bottom: none;
+        }
+
+        .info-label {
+            color: var(--text-secondary);
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .info-value {
+            font-weight: 600;
+            color: var(--accent);
+            font-size: 14px;
+        }
+
+        /* ===== CALENDÁRIO ===== */
+        .calendar-container {
+            background: var(--secondary);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 20px;
+            backdrop-filter: blur(10px);
+        }
+
+        .calendar-header {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .calendar-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 16px;  /* Reduzido de 20px */
+            font-weight: 700;
+            color: var(--accent);
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .calendar-subtitle {
+            color: var(--text-secondary);
+            font-size: 11px;  /* Reduzido de 12px */
+        }
+
+        /* Days Grid */
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: 1fr;  /* ✅ NOVO: Apenas 1 coluna para mostrar hoje em tamanho maior */
+            gap: 12px;
+            margin-bottom: 24px;
+            justify-items: center;  /* ✅ Centraliza o dia */
+            max-width: 220px;  /* ✅ Limita largura para card ficar bem proporcionado */
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Times Grid */
+        .times-container {
+            background: rgba(212, 175, 55, 0.05);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .times-container.active {
+            display: block;
+            animation: slideDown 0.3s ease-out;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .times-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            margin-bottom: 12px;
+        }
+
+        .times-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 10px;
+        }
+
+        .time-btn,
+        .ct-btn {
+            padding: 12px;
+            background: var(--day-bg);
+            border: 2px solid var(--border);
+            border-radius: 10px;
+            color: var(--text-primary);
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 13px;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .time-btn:hover,
+        .ct-btn:hover {
+            border-color: var(--accent);
+            background: var(--day-hover);
+        }
+
+        .time-btn.selected,
+        .ct-btn.selected {
+            background: linear-gradient(135deg, var(--accent), var(--accent-light));
+            color: var(--primary);
+            border-color: var(--accent);
+        }
+
+        /* Selected Info */
+        .selected-info {
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.1), rgba(30, 144, 255, 0.1));
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .selected-info.active {
+            display: block;
+            animation: slideDown 0.3s ease-out;
+        }
+
+        .selected-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.1);
+        }
+
+        .selected-row:last-child {
+            border-bottom: none;
+        }
+
+        .selected-label {
+            color: var(--text-secondary);
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .selected-value {
+            color: var(--accent);
+            font-weight: 700;
+            font-size: 12px;  /* Reduzido de 14px para 12px */
+        }
+
+        /* Message */
+        .message {
+            padding: 12px 16px;
+            border-radius: 10px;
+            font-size: 12px;
+            margin-bottom: 16px;
+            border-left: 4px solid;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .message.success {
+            background: rgba(46, 204, 113, 0.1);
+            color: var(--success);
+            border-color: var(--success);
+        }
+
+        .message.warning {
+            background: rgba(243, 156, 18, 0.1);
+            color: var(--warning);
+            border-color: var(--warning);
+        }
+
+        .message.danger {
+            background: rgba(231, 76, 60, 0.1);
+            color: var(--danger);
+            border-color: var(--danger);
+        }
+
+        /* APP SCREEN */
+        #appScreen {
+            display: none;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 8px;
+            border-bottom: 2px solid var(--border);
+            margin-bottom: 16px;
+            overflow-x: auto;
+            padding-bottom: 12px;
+        }
+
+        .tab-btn {
+            background: transparent;
+            color: var(--text-secondary);
+            border: none;
+            padding: 10px 16px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            white-space: nowrap;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .tab-btn.active {
+            color: var(--accent);
+            border-bottom-color: var(--accent);
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .stat-card {
+            background: var(--secondary);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 16px;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--accent);
+            margin-bottom: 4px;
+        }
+
+        .stat-label {
+            font-size: 11px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Admin Panel */
+        .admin-section {
+            background: rgba(212, 175, 55, 0.05);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 20px;
+        }
+
+        .admin-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            margin-bottom: 12px;
+        }
+
+        .admin-form {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .admin-form input {
+            flex: 1;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-size: 12px;
+        }
+
+        .admin-form input::placeholder {
+            color: var(--text-secondary);
+        }
+
+        .admin-form button {
+            padding: 10px 16px;
+            background: linear-gradient(135deg, var(--accent), var(--accent-light));
+            color: var(--primary);
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 12px;
+            text-transform: uppercase;
+        }
+
+        .admin-form button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(212, 175, 55, 0.2);
+        }
+
+        .cts-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 8px;
+        }
+
+        .ct-item {
+            background: var(--day-bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 12px;
+        }
+
+        .ct-item button {
+            background: rgba(231, 76, 60, 0.2);
+            color: var(--danger);
+            border: none;
+            border-radius: 4px;
+            padding: 4px 8px;
+            cursor: pointer;
+            font-size: 10px;
+            text-transform: uppercase;
+            transition: all 0.3s ease;
+        }
+
+        .ct-item button:hover {
+            background: rgba(231, 76, 60, 0.4);
+        }
+
+        /* Responsividade */
+        /* ===== MOBILE FIRST - PADRÃO PARA CELULAR ===== */
+        
+        body {
+            font-size: 14px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 100%;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+        }
+
+        .content {
+            flex: 1;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            width: 100%;
+            max-width: 100%;
+            overflow-x: hidden;
+        }
+
+        img, video {
+            max-width: 100%;
+            height: auto;
+        }
+
+        /* ===== TABLET (768px+) ===== */
+        @media (min-width: 769px) {
+            .content {
+                padding: 20px;
+                gap: 20px;
+            }
+
+            .form-row {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 16px;
+            }
+
+            .selected-value {
+                font-size: 14px;  /* Maior em tablet */
+            }
+        }
+
+        /* ===== MOBILE PEQUENO (até 480px) ===== */
+        @media (max-width: 480px) {
+            body {
+                font-size: 13px;
+            }
+
+            .content {
+                padding: 10px;
+                gap: 10px;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+
+            .selected-value {
+                font-size: 11px;  /* Menor em mobile */
+            }
+
+            .btn {
+                padding: 10px 12px;
+                font-size: 12px;
+                min-height: 40px;
+            }
+
+            .tab-btn {
+                padding: 8px 10px;
+                font-size: 11px;
+            }
+
+            header {
+                padding: 10px 12px;
+            }
+
+            .tabs {
+                gap: 4px;
+            }
+        }
+
+        /* ===== MOBILE ULTRA PEQUENO (até 375px) ===== */
+        @media (max-width: 375px) {
+            body {
+                font-size: 12px;
+            }
+
+            .content {
+                padding: 8px;
+                gap: 8px;
+            }
+
+            .selected-value {
+                font-size: 10px;  /* Ainda menor para iPhone SE */
+            }
+
+            .btn {
+                padding: 8px 10px;
+                font-size: 11px;
+                min-height: 38px;
+            }
+
+            header {
+                padding: 8px 10px;
+            }
+        }
+
+        /* ===== LANDSCAPE MOBILE ===== */
+        @media (max-height: 500px) {
+            .tabs {
+                flex-wrap: nowrap;
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+
+            .content {
+                padding: 8px;
+                gap: 8px;
+            }
+
+            header {
+                padding: 8px;
+            }
+        }
+
+        .content::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .content::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .content::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 3px;
+        }
+
+        .content::-webkit-scrollbar-thumb:hover {
+            background: var(--accent);
+        }
+
+        .btn-small {
+            padding: 8px 16px;
+            font-size: 11px;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- HEADER -->
+        <header>
+            <div class="header-brand">
+                <span class="header-brand-icon">🥋</span>
+                <span class="header-brand-text">LUTA</span>
+            </div>
+            <div class="header-user" id="headerUser" style="display: none;">
+                <div class="user-avatar" id="userInitial">L</div>
+                <div class="user-name" id="headerUserName">Usuário</div>
+            </div>
+        </header>
+
+        <!-- CONTENT -->
+        <div class="content">
+            <!-- LOGIN SCREEN -->
+            <div id="loginScreen" class="login-container">
+                <div class="login-header">
+                    <span class="login-icon">🥋</span>
+                    <h1 class="login-title">LUTA ACADEMY</h1>
+                    <p class="login-subtitle">Sistema de Check-in de Treinos</p>
+                </div>
+
+                <div id="loginTab">
+                    <div class="form-card">
+                        <h2 style="font-size: 16px; margin-bottom: 20px; text-transform: uppercase; letter-spacing: 1px; color: var(--accent);">Entrar</h2>
+                        
+                        <form onsubmit="handleLogin(event)">
+                            <div class="form-group">
+                                <label class="form-label">📧 Email</label>
+                                <input type="email" id="loginEmail" class="form-input" placeholder="seu@email.com" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">🔒 Senha</label>
+                                <input type="password" id="loginPassword" class="form-input" placeholder="••••••" required>
+                            </div>
+
+                            <div id="loginMessage"></div>
+
+                            <button type="submit" class="btn btn-primary">Entrar na Academia</button>
+                        </form>
+                    </div>
+
+                    <button class="btn btn-secondary" onclick="showRegister()">Criar Nova Conta</button>
+                </div>
+
+                <div id="registerTab" style="display: none;">
+                    <div class="form-card">
+                        <h2 style="font-size: 16px; margin-bottom: 20px; text-transform: uppercase; letter-spacing: 1px; color: var(--accent);">Cadastro</h2>
+                        
+                        <form onsubmit="handleRegister(event)">
+                            <div class="form-group">
+                                <label class="form-label">👤 Nome Completo</label>
+                                <input type="text" id="regName" class="form-input" placeholder="Seu Nome" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">📧 Email</label>
+                                <input type="email" id="regEmail" class="form-input" placeholder="seu@email.com" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">🔒 Senha</label>
+                                <input type="password" id="regPassword" class="form-input" placeholder="••••••" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">🥋 Faixa</label>
+                                <select id="regFaixa" class="form-select" required>
+                                    <option value="">Selecione sua faixa</option>
+                                    <option value="Branca">⚪ Branca</option>
+                                    <option value="Azul">🔵 Azul</option>
+                                    <option value="Roxa">🟣 Roxa</option>
+                                    <option value="Marrom">🟤 Marrom</option>
+                                    <option value="Preta">⚫ Preta</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">📊 Grau</label>
+                                <select id="regGrau" class="form-select" required>
+                                    <option value="">Selecione o grau</option>
+                                    <option value="0">0</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="4">4</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">🏢 CT Principal</label>
+                                <select id="regCT" class="form-select" required>
+                                    <option value="">Selecione seu CT</option>
+                                </select>
+                            </div>
+
+                            <div id="registerMessage"></div>
+
+                            <button type="submit" class="btn btn-primary">Cadastrar Aluno</button>
+                        </form>
+                    </div>
+
+                    <button class="btn btn-secondary" onclick="showLogin()">Voltar ao Login</button>
+                </div>
+
+                <!-- RECOVERY TAB -->
+            </div>
+
+            <!-- APP SCREEN -->
+            <div id="appScreen">
+                <div class="tabs">
+                    <button class="tab-btn active" onclick="switchTab('attendance')">✍️ Check-in</button>
+                    <button class="tab-btn" onclick="switchTab('ranking')">🏆 Ranking</button>
+                </div>
+
+                <!-- TAB: PRESENÇA -->
+                <div id="attendance" class="tab-content active">
+                    <div class="info-card">
+                        <div class="info-row">
+                            <span class="info-label">👤 Aluno</span>
+                            <span class="info-value" id="displayName">-</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">🥋 Faixa</span>
+                            <span class="info-value" id="displayFaixa">-</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">📊 Treinos</span>
+                            <span class="info-value" id="displayCount">0</span>
+                        </div>
+                    </div>
+
+                    <div class="calendar-container">
+                        <div class="times-container active" id="ctSelectorContainer">
+                            <div class="times-title">🏢 Qual CT você treinou?</div>
+                            <div class="times-grid" id="ctGrid">
+                                <!-- Preenchido dinamicamente -->
+                            </div>
+                        </div>
+
+                        <div class="selected-info" id="selectedInfo">
+                            <div class="selected-row">
+                                <span class="selected-label">🏢 Academia</span>
+                                <span class="selected-value" id="selectedCT">-</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button class="btn btn-primary" onclick="confirmAttendance()">✓ Confirmar Presença</button>
+                    <div id="attendanceMessage"></div>
+                    
+                    <!-- ✅ Botão de logout -->
+                    <button class="btn btn-secondary" onclick="handleLogout()" style="margin-top: 20px;">🚪 Sair</button>
+                </div>
+
+                <!-- TAB: RANKING -->
+                <div id="ranking" class="tab-content">
+                    <div class="ranking-container">
+
+                        <!-- FILTRO 1: Período — Segmented Control -->
+                        <div class="ranking-period-section">
+                            <div class="period-segmented" id="periodFilterGrid">
+                                <button class="period-seg-btn active" onclick="switchRankingPeriod('mes')">📅 Este Mês</button>
+                                <button class="period-seg-btn" onclick="switchRankingPeriod('ano')">📆 Este Ano</button>
+                            </div>
+                        </div>
+
+                        <!-- FILTRO 2: Academia — Chips Horizontais -->
+                        <div class="ranking-filter-section">
+                            <div class="ct-chips-scroll" id="ctFilterGrid"></div>
+                        </div>
+
+                        <!-- Seção de Treinos por CT do Usuário -->
+                        <div id="userTrainingSection" class="user-training-section" style="display: none;">
+                            <div class="rank-section-label">Seus treinos</div>
+                            <div class="user-stats-row">
+                                <div class="user-stats-total">
+                                    <div class="user-stats-total-num" id="userTotalCount">0</div>
+                                    <div class="user-stats-total-label" id="userTotalLabel">treinos</div>
+                                </div>
+                                <div class="user-training-grid" id="userTrainingGrid"></div>
+                            </div>
+                        </div>
+
+                        <!-- TOP 3 — Podium -->
+                        <div class="top3-container" id="top3Container" style="display: none;"></div>
+
+                        <!-- Posição do Usuário -->
+                        <div class="user-position-section" id="userPositionSection" style="display: none;">
+                            <div class="user-position-card" id="userPositionCard"></div>
+                        </div>
+
+                        <!-- Ranking Geral (4º em diante) -->
+                        <div class="ranking-list-section" id="rankingListSection" style="display: none;">
+                            <div class="rank-section-label">4º em diante</div>
+                            <div class="ranking-list" id="rankingList"></div>
+                        </div>
+
+                        <!-- Ranking por CT -->
+                        <div id="ctRankingContainer" style="display: none;">
+                            <div class="rank-section-label" id="ctRankingTitle">Ranking</div>
+                            <div class="ranking-list" id="ctRankingList"></div>
+                        </div>
+
+                        <!-- Mensagem de carregamento -->
+                        <div id="rankingMessage" style="text-align: center; padding: 20px; color: var(--text-secondary);">Carregando ranking...</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbz3xeb_MCnVzAx5i0y5YEymKN1EJMlQcQZE5PlAPmskw9R796T0yq-6Yfdg1XOz7d_LtA/exec';
+        let currentUser = null;
+        let selectedCT = null;
+        let allCTs = [];
+
+        // ✅ Fluxo simplificado: CT → Confirmar Presença (sem dias)
+        // ✅ FUNÇÃO CRÍTICA: Exibir mensagens ao usuário
+        function showMessage(elementId, message, type) {
+            const element = document.getElementById(elementId);
+            if (!element) {
+                console.log('❌ Elemento não encontrado: ' + elementId);
+                return;
+            }
+            
+            // Define cor baseado no tipo
+            let bgColor = '#2ecc71';  // success - verde
+            let textColor = '#fff';
+            
+            if (type === 'danger') {
+                bgColor = '#e74c3c';  // red
+                textColor = '#fff';
+            } else if (type === 'warning') {
+                bgColor = '#f39c12';  // orange
+                textColor = '#fff';
+            } else if (type === 'info') {
+                bgColor = '#3498db';  // blue
+                textColor = '#fff';
+            }
+            
+            element.innerHTML = `<div style="
+                background-color: ${bgColor};
+                color: ${textColor};
+                padding: 12px 16px;
+                border-radius: 8px;
+                margin: 12px 0;
+                font-size: 14px;
+                text-align: center;
+                animation: slideIn 0.3s ease-in;
+            ">${message}</div>`;
+        }
+
+        window.addEventListener('load', function() {
+            const userSession = sessionStorage.getItem('bjjUser');
+            if (userSession) {
+                currentUser = JSON.parse(userSession);
+                showAppScreen();
+                loadAttendanceInfo();
+                loadCTs();
+                // ✅ Calendário removido - fluxo simplificado
+            }
+        });
+
+        async function handleLogin(event) {
+            event.preventDefault();
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+
+            showMessage('loginMessage', 'Conectando...', 'warning');
+
+            try {
+                const response = await fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    body: JSON.stringify({ action: 'login', email, password })
+                });
+                const data = await response.json();
+
+                // ✅ CORREÇÃO: Verificar se authenticated é verdadeiro
+                if (data.authenticated === true) {
+                    currentUser = data;
+                    sessionStorage.setItem('bjjUser', JSON.stringify(currentUser));
+                    showAppScreen();
+                    loadAttendanceInfo();
+                    loadCTs();
+                    // ✅ Calendário removido - fluxo simplificado
+                } else {
+                    // ✅ CORREÇÃO: Usar data.message em vez de data.error
+                    showMessage('loginMessage', data.message || 'Erro ao fazer login', 'danger');
+                }
+            } catch (error) {
+                showMessage('loginMessage', 'Erro de conexão: ' + error.message, 'danger');
+            }
+        }
+
+        async function handleRegister(event) {
+            event.preventDefault();
+            const name = document.getElementById('regName').value;
+            const email = document.getElementById('regEmail').value;
+            const password = document.getElementById('regPassword').value;
+            const faixa = document.getElementById('regFaixa').value;
+            const grau = document.getElementById('regGrau').value;
+            const ct = document.getElementById('regCT').value;
+
+            // ✅ Validação: CT Principal é obrigatório
+            if (!ct) {
+                showMessage('registerMessage', '⚠️ Escolha seu CT Principal para se cadastrar', 'warning');
+                return;
+            }
+
+            showMessage('registerMessage', 'Cadastrando...', 'warning');
+
+            try {
+                const response = await fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    body: JSON.stringify({ 
+                        action: 'requestAccount', 
+                        name, 
+                        email, 
+                        password, 
+                        faixa, 
+                        grau,
+                        ct
+                    })
+                });
+                const data = await response.json();
+
+                if (data.success) {
+                    showMessage('registerMessage', '✅ Cadastro realizado! Faça login após aprovação.', 'success');
+                    setTimeout(() => showLogin(), 2000);
+                } else {
+                    showMessage('registerMessage', data.message || 'Erro ao cadastrar', 'danger');
+                }
+            } catch (error) {
+                showMessage('registerMessage', 'Erro de conexão', 'danger');
+            }
+        }
+
+        async function loadCTs() {
+            try {
+                const response = await fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    body: JSON.stringify({ action: 'getCTsList' })
+                });
+                const data = await response.json();
+
+                console.log('CTs recebidos:', data.cts);  // ✅ DEBUG
+                
+                if (data.success && data.cts) {
+                    allCTs = data.cts;
+
+                    // Preencher select de registro
+                    const regCTSelect = document.getElementById('regCT');
+                    if (regCTSelect) {
+                        data.cts.forEach(ct => {
+                            const ctName = typeof ct === 'string' ? ct : ct.name || ct.toString();  // ✅ GARANTE STRING
+                            
+                            if (!Array.from(regCTSelect.options).find(opt => opt.value === ctName)) {
+                                const option = document.createElement('option');
+                                option.value = ctName;
+                                option.textContent = ctName;
+                                regCTSelect.appendChild(option);
+                            }
+                        });
+                    }
+
+                    // Preencher grid de seleção de CT
+                    const ctGrid = document.getElementById('ctGrid');
+                    if (ctGrid) {
+                        ctGrid.innerHTML = '';
+                        data.cts.forEach(ct => {
+                            const ctName = typeof ct === 'string' ? ct : ct.name || ct.toString();  // ✅ GARANTE STRING
+                            
+                            console.log('Criando botão para CT:', ctName);  // ✅ DEBUG
+                            
+                            const btn = document.createElement('button');
+                            btn.type = 'button';
+                            btn.className = 'ct-btn';
+                            btn.textContent = ctName;  // ✅ SEMPRE STRING
+                            btn.addEventListener('click', () => selectCT(ctName));
+                            ctGrid.appendChild(btn);
+                        });
+                    }
+                }
+            } catch (error) {
+                console.error('Erro ao carregar CTs:', error);
+            }
+        }
+
+        function selectCT(ctName) {
+            selectedCT = ctName;
+            document.querySelectorAll('.ct-btn').forEach(btn => btn.classList.remove('selected'));
+            event.target?.classList.add('selected');
+            document.getElementById('selectedCT').textContent = ctName;
+        }
+
+        function confirmAttendance() {
+            if (!selectedCT) {
+                showMessage('attendanceMessage', 'Selecione o CT', 'warning');
+                return;
+            }
+
+            showMessage('attendanceMessage', 'Registrando presença...', 'warning');
+
+            // ✅ Usar data atual (hoje)
+            const today = new Date();
+            const dateStr = today.toLocaleDateString('pt-BR');
+
+            fetch(SCRIPT_URL, {
+                method: 'POST',
+                body: JSON.stringify({
+                    action: 'attendance',
+                    email: currentUser.email,
+                    name: currentUser.name,
+                    faixa: currentUser.faixa,
+                    grau: currentUser.grau,
+                    ct: selectedCT,
+                    date: dateStr
+                })
+            }).then(r => r.json()).then(data => {
+                if (data.success) {
+                    // ✅ Incrementar treinos no usuário atual
+                    currentUser.treinos = (currentUser.treinos || 0) + 1;
+                    
+                    // ✅ Atualizar sessionStorage com novo contador
+                    sessionStorage.setItem('bjjUser', JSON.stringify(currentUser));
+                    
+                    // ✅ Atualizar display do contador
+                    document.getElementById('displayCount').textContent = currentUser.treinos;
+                    
+                    showMessage('attendanceMessage', '✅ Presença confirmada!', 'success');
+                    selectedCT = null;
+                    document.querySelectorAll('.ct-btn').forEach(btn => btn.classList.remove('selected'));
+                    document.getElementById('selectedCT').textContent = '-';
+                    setTimeout(() => document.getElementById('attendanceMessage').innerHTML = '', 3000);
+                } else {
+                    showMessage('attendanceMessage', data.message || 'Erro', 'danger');
+                }
+            }).catch(() => showMessage('attendanceMessage', 'Erro de conexão', 'danger'));
+        }
+
+        function loadAttendanceInfo() {
+            // Carrega dados do usuário já logado (vem do login)
+            if (currentUser) {
+                document.getElementById('displayName').textContent = currentUser.name;
+                document.getElementById('displayFaixa').textContent = currentUser.faixa;
+                document.getElementById('displayCount').textContent = currentUser.treinos || '0';
+            }
+        }
+
+        // ===== RANKING FUNCTIONS =====
+        
+        async function loadRanking() {
+            console.log('📊 Carregando ranking do ' + currentRankingPeriod);
+            
+            try {
+                const response = await fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    body: JSON.stringify({ 
+                        action: 'getRankingMonth', 
+                        email: currentUser.email,
+                        period: currentRankingPeriod  // ✅ Passa período ao backend
+                    })
+                });
+                const data = await response.json();
+                
+                console.log('Ranking recebido:', data);
+                
+                if (data.success && data.ranking && data.ranking.length > 0) {
+                    displayRanking(data.ranking);
+                } else {
+                    document.getElementById('rankingMessage').textContent = 'Sem dados de ranking';
+                }
+            } catch (error) {
+                console.error('Erro ao carregar ranking:', error);
+                document.getElementById('rankingMessage').textContent = 'Erro ao carregar ranking';
+            }
+        }
+
+        let currentRankingPeriod = 'mes'; // Período ativo (mes/ano)
+        let currentRankingFilter = 'geral'; // Filtro ativo do ranking
+        let allRankingData = null; // Armazenar ranking completo
+
+        function switchRankingPeriod(period) {
+            console.log('📊 Trocando período para: ' + period);
+            
+            // Atualizar segmented control
+            document.querySelectorAll('.period-seg-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.closest('.period-seg-btn').classList.add('active');
+            
+            currentRankingPeriod = period;
+            currentRankingFilter = 'geral'; // Reset para geral quando trocar período
+            
+            // Atualizar label
+            const label = document.getElementById('userTotalLabel');
+            if (period === 'mes') {
+                label.textContent = 'este mês';
+            } else {
+                label.textContent = 'este ano';
+            }
+            
+            // Recarregar ranking
+            loadRanking();
+        }
+
+        function switchRankingFilter(ctName) {
+            console.log('📊 Trocando filtro para: ' + ctName);
+            
+            // Atualizar chips ativos
+            document.querySelectorAll('.ct-chip').forEach(chip => chip.classList.remove('active'));
+            event.target.closest('.ct-chip').classList.add('active');
+            
+            currentRankingFilter = ctName;
+            
+            if (ctName === 'geral') {
+                // Ranking Geral
+                document.getElementById('userTrainingSection').style.display = 'block';
+                document.getElementById('top3Container').style.display = 'flex';
+                document.getElementById('userPositionSection').style.display = null;
+                document.getElementById('rankingListSection').style.display = null;
+                document.getElementById('ctRankingContainer').style.display = 'none';
+                
+                // Re-exibir ranking geral
+                displayGeneralRanking(allRankingData);
+            } else {
+                // Ranking por CT
+                document.getElementById('userTrainingSection').style.display = 'none';
+                document.getElementById('top3Container').style.display = 'none';
+                document.getElementById('userPositionSection').style.display = 'none';
+                document.getElementById('rankingListSection').style.display = 'none';
+                document.getElementById('ctRankingContainer').style.display = 'block';
+                
+                // Exibir ranking do CT
+                displayCTRanking(allRankingData, ctName);
+            }
+        }
+
+        function displayGeneralRanking(ranking) {
+            console.log('📊 Exibindo ranking geral');
+            
+            document.getElementById('rankingMessage').style.display = 'none';
+            
+            // Encontrar posição do usuário
+            const userRank = ranking.find(r => r.email.toLowerCase() === currentUser.email.toLowerCase());
+            const userPosition = ranking.findIndex(r => r.email.toLowerCase() === currentUser.email.toLowerCase()) + 1;
+            
+            // ===== SEÇÃO: TREINOS POR CT DO USUÁRIO =====
+            if (userRank && userRank.treinosPorCT && Object.keys(userRank.treinosPorCT).length > 0) {
+                const userTrainingSection = document.getElementById('userTrainingSection');
+                userTrainingSection.style.display = 'block';
+                
+                const userTrainingGrid = document.getElementById('userTrainingGrid');
+                userTrainingGrid.innerHTML = '';
+                
+                // Montar cards de treinos por CT
+                Object.keys(userRank.treinosPorCT).sort().forEach(ctName => {
+                    const count = userRank.treinosPorCT[ctName];
+                    const card = document.createElement('div');
+                    card.className = 'ct-training-card';
+                    card.innerHTML = `
+                        <div class="ct-training-name">${ctName}</div>
+                        <div class="ct-training-count">${count}</div>
+                    `;
+                    userTrainingGrid.appendChild(card);
+                });
+                
+                // Mostrar total geral
+                document.getElementById('userTotalCount').textContent = userRank.totalTreinos;
+            } else {
+                document.getElementById('userTrainingSection').style.display = 'none';
+            }
+            
+            // ===== PODIUM (Top 3) =====
+            const top3Container = document.getElementById('top3Container');
+            top3Container.innerHTML = '';
+            
+            const podiumOrder = [1, 0, 2]; // 2nd, 1st, 3rd (visual order)
+            const podiumClasses = ['first', 'second', 'third'];
+            const podiumMedals = ['🥇', '🥈', '🥉'];
+            
+            // Build slots in display order: 2nd | 1st | 3rd
+            for (const displayIdx of podiumOrder) {
+                if (displayIdx >= ranking.length) continue;
+                
+                const student = ranking[displayIdx];
+                const slot = document.createElement('div');
+                slot.className = `podium-slot ${podiumClasses[displayIdx]}`;
+                
+                // Montar descrição de treinos por CT
+                let ctInfo = '';
+                if (student.treinosPorCT && Object.keys(student.treinosPorCT).length > 0) {
+                    const cts = Object.keys(student.treinosPorCT).map(ct => `${ct}: ${student.treinosPorCT[ct]}`).join(' · ');
+                    ctInfo = `<div class="podium-ct-info">${cts}</div>`;
+                }
+                
+                slot.innerHTML = `
+                    <div class="podium-avatar">${podiumMedals[displayIdx]}</div>
+                    <div class="podium-name">${student.name.split(' ')[0]}</div>
+                    <div class="podium-meta">${student.faixa}</div>
+                    <div class="podium-bar">
+                        <div class="podium-count">${student.totalTreinos}</div>
+                        <div class="podium-count-label">treinos</div>
+                        ${ctInfo}
+                    </div>
+                `;
+                
+                top3Container.appendChild(slot);
+            }
+            
+            top3Container.style.display = 'flex';
+            
+            // ===== POSIÇÃO DO USUÁRIO =====
+            if (userRank && userPosition > 3) {
+                const userPositionSection = document.getElementById('userPositionSection');
+                userPositionSection.style.display = 'flex';
+                
+                const nextUser = ranking[userPosition] || null;
+                const nextDiff = nextUser ? userRank.totalTreinos - nextUser.totalTreinos : 0;
+                
+                // Montar descrição de treinos por CT do usuário
+                let userTrainingsDesc = '';
+                if (userRank.treinosPorCT && Object.keys(userRank.treinosPorCT).length > 0) {
+                    const ctsList = Object.keys(userRank.treinosPorCT).map(ct => `${ct}: ${userRank.treinosPorCT[ct]}`).join(' • ');
+                    userTrainingsDesc = `<div style="font-size: 10px; color: var(--text-secondary); margin-top: 2px;">${ctsList}</div>`;
+                }
+                
+                const userPositionCard = document.getElementById('userPositionCard');
+                userPositionCard.innerHTML = `
+                    <div class="user-pos-rank-badge">#${userPosition}</div>
+                    <div class="user-pos-info">
+                        <div class="user-pos-name">👤 ${currentUser.name}</div>
+                        <div class="user-pos-details">${userRank.faixa} • ${userRank.totalTreinos} treinos</div>
+                        ${userTrainingsDesc}
+                    </div>
+                    <div class="user-pos-next">
+                        <div class="user-pos-next-label">Próximo</div>
+                        <div class="user-pos-next-diff">${nextDiff > 0 ? '+' : ''}${nextDiff}</div>
+                    </div>
+                `;
+            }
+            
+            // ===== RANKING GERAL (4º em diante) =====
+            const rankingListSection = document.getElementById('rankingListSection');
+            const rankingList = document.getElementById('rankingList');
+            
+            if (ranking.length > 3) {
+                rankingListSection.style.display = 'block';
+                rankingList.innerHTML = '';
+                
+                for (let i = 3; i < ranking.length; i++) {
+                    const student = ranking[i];
+                    const position = i + 1;
+                    const isCurrentUser = student.email.toLowerCase() === currentUser.email.toLowerCase();
+                    
+                    // Montar descrição de treinos por CT
+                    let ctsList = '';
+                    if (student.treinosPorCT && Object.keys(student.treinosPorCT).length > 0) {
+                        ctsList = Object.keys(student.treinosPorCT).map(ct => `${ct}: ${student.treinosPorCT[ct]}`).join(' • ');
+                    }
+                    
+                    const item = document.createElement('div');
+                    item.className = `ranking-item ${isCurrentUser ? 'current-user' : ''}`;
+                    
+                    item.innerHTML = `
+                        <div class="ranking-item-left">
+                            <div class="ranking-position">#${position}</div>
+                            <div class="ranking-info">
+                                <div class="ranking-name">${student.name}${isCurrentUser ? ' ✨' : ''}</div>
+                                <div class="ranking-details">${student.faixa} • ${student.ctPrincipal}</div>
+                                ${ctsList ? `<div style="font-size: 10px; color: var(--text-secondary); margin-top: 2px; opacity: 0.7;">${ctsList}</div>` : ''}
+                            </div>
+                        </div>
+                        <div class="ranking-count">${student.totalTreinos}</div>
+                    `;
+                    
+                    rankingList.appendChild(item);
+                }
+            }
+        }
+
+        function displayCTRanking(ranking, ctName) {
+            console.log('📊 Exibindo ranking do CT: ' + ctName);
+            
+            // Filtrar apenas alunos que treinaram neste CT
+            const ctRanking = ranking
+                .filter(student => student.treinosPorCT && student.treinosPorCT[ctName] && student.treinosPorCT[ctName] > 0)
+                .map(student => ({
+                    ...student,
+                    ctTreinos: student.treinosPorCT[ctName]
+                }))
+                .sort((a, b) => b.ctTreinos - a.ctTreinos);
+            
+            const ctRankingList = document.getElementById('ctRankingList');
+            const ctRankingTitle = document.getElementById('ctRankingTitle');
+            ctRankingTitle.textContent = 'Ranking — ' + ctName;
+            ctRankingList.innerHTML = '';
+            
+            if (ctRanking.length === 0) {
+                ctRankingList.innerHTML = '<div style="text-align: center; color: var(--text-secondary); padding: 24px; font-size: 13px;">Nenhum aluno treinou neste CT este mês</div>';
+                return;
+            }
+            
+            // Mostrar ranking do CT
+            for (let i = 0; i < ctRanking.length; i++) {
+                const student = ctRanking[i];
+                const position = i + 1;
+                const isCurrentUser = student.email.toLowerCase() === currentUser.email.toLowerCase();
+                
+                const item = document.createElement('div');
+                item.className = `ranking-item ${isCurrentUser ? 'current-user' : ''}`;
+                
+                // Medalha para top 3
+                let posLabel = `#${position}`;
+                if (position === 1) posLabel = '🥇';
+                else if (position === 2) posLabel = '🥈';
+                else if (position === 3) posLabel = '🥉';
+                
+                item.innerHTML = `
+                    <div class="ranking-item-left">
+                        <div class="ranking-position">${posLabel}</div>
+                        <div class="ranking-info">
+                            <div class="ranking-name">${student.name}${isCurrentUser ? ' ✨' : ''}</div>
+                            <div class="ranking-details">${student.faixa} • ${student.ctPrincipal}</div>
+                        </div>
+                    </div>
+                    <div class="ranking-count">${student.ctTreinos}</div>
+                `;
+                
+                ctRankingList.appendChild(item);
+            }
+        }
+
+        function displayRanking(ranking) {
+            console.log('📊 Exibindo ranking');
+            
+            // Armazenar ranking completo
+            allRankingData = ranking;
+            
+            // Gerar filtros de CTs
+            const ctsSet = new Set();
+            ranking.forEach(student => {
+                if (student.treinosPorCT) {
+                    Object.keys(student.treinosPorCT).forEach(ct => ctsSet.add(ct));
+                }
+            });
+            
+            const ctFilterGrid = document.getElementById('ctFilterGrid');
+            ctFilterGrid.innerHTML = '';
+            
+            // Chip "Geral" (sempre primeiro)
+            const geralChip = document.createElement('div');
+            geralChip.className = 'ct-chip geral active';
+            geralChip.textContent = '📊 Geral';
+            geralChip.onclick = function() { switchRankingFilter('geral'); };
+            ctFilterGrid.appendChild(geralChip);
+            
+            // Chips para cada CT
+            const cts = Array.from(ctsSet).sort();
+            cts.forEach(ct => {
+                const chip = document.createElement('div');
+                chip.className = 'ct-chip';
+                chip.textContent = '🏢 ' + ct;
+                chip.onclick = function() { switchRankingFilter(ct); };
+                ctFilterGrid.appendChild(chip);
+            });
+            
+            // Exibir ranking geral por padrão
+            displayGeneralRanking(ranking);
+        }
+
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+            
+            // ✅ Carrega dados específicos quando abrir abas
+            if (tabName === 'ranking') {
+                loadRanking();
+            }
+        }
+
+        function showAppScreen() {
+            document.getElementById('loginScreen').style.display = 'none';
+            document.getElementById('appScreen').style.display = 'block';
+            document.getElementById('headerUser').style.display = 'flex';
+            document.getElementById('headerUserName').textContent = currentUser.name.split(' ')[0];
+            document.getElementById('userInitial').textContent = currentUser.name.charAt(0).toUpperCase();
+        }
+
+        function showLogin() {
+            document.getElementById('registerTab').style.display = 'none';
+            document.getElementById('loginTab').style.display = 'block';
+        }
+
+        function showRegister() {
+            document.getElementById('loginTab').style.display = 'none';
+            document.getElementById('registerTab').style.display = 'block';
+            loadCTs();  // ✅ CARREGA CTs QUANDO ABRE TELA DE CADASTRO
+        }
+
+        function handleLogout() {
+            if (confirm('Sair da conta?')) {
+                sessionStorage.removeItem('bjjUser');
+                currentUser = null;
+                document.getElementById('appScreen').style.display = 'none';
+                document.getElementById('loginScreen').style.display = 'flex';
+                document.getElementById('headerUser').style.display = 'none';
+                document.getElementById('loginEmail').value = '';
+                document.getElementById('loginPassword').value = '';
+                showLogin();
+            }
+        }
+
+    </script>
+</body>
+</html>

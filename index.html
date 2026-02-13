@@ -1,0 +1,2446 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, viewport-fit=cover">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="theme-color" content="#08080a">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="msapplication-TileColor" content="#08080a">
+    <title>JIU JITSU ACADEMY - Checkin</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            border: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-deep: #08080a;
+            --bg-card: #111114;
+            --bg-elevated: #19191e;
+            --bg-glass: rgba(17, 17, 20, 0.8);
+            --accent: #D4A529;
+            --accent-dim: rgba(212, 165, 41, 0.12);
+            --accent-glow: rgba(212, 165, 41, 0.25);
+            --gold-light: #F5D04E;
+            --gold-deep: #B8860B;
+            --coral: #E85D5D;
+            --amber: #F0A030;
+            --lavender: #9B8ACE;
+            --text-1: #f0ede5;
+            --text-2: #8a8678;
+            --text-3: #55524a;
+            --border: rgba(212, 165, 41, 0.08);
+            --border-accent: rgba(212, 165, 41, 0.2);
+            --radius-sm: 10px;
+            --radius-md: 14px;
+            --radius-lg: 20px;
+            --radius-xl: 28px;
+            --shadow-card: 0 2px 20px rgba(0,0,0,0.4);
+            --shadow-glow: 0 0 30px rgba(212, 165, 41, 0.1);
+            --safe-bottom: 0px;
+        }
+
+        @supports (padding-bottom: env(safe-area-inset-bottom)) {
+            :root { --safe-bottom: env(safe-area-inset-bottom, 0px); }
+        }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            -webkit-touch-callout: none;
+            -webkit-text-size-adjust: 100%;
+            -ms-text-size-adjust: 100%;
+            -webkit-tap-highlight-color: transparent;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        body {
+            font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: var(--bg-deep);
+            color: var(--text-1);
+            line-height: 1.5;
+            touch-action: manipulation;
+        }
+
+        /* ===== AMBIENT OVERLAY ===== */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            background: 
+                radial-gradient(ellipse at 20% 0%, rgba(212,165,41,0.03) 0%, transparent 60%),
+                radial-gradient(ellipse at 80% 100%, rgba(184,134,11,0.02) 0%, transparent 60%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .app {
+            display: -webkit-box;
+            display: -webkit-flex;
+            display: -ms-flexbox;
+            display: flex;
+            -webkit-box-orient: vertical;
+            -webkit-box-direction: normal;
+            -webkit-flex-direction: column;
+            -ms-flex-direction: column;
+            flex-direction: column;
+            height: 100vh;
+            height: -webkit-fill-available;
+            width: 100%;
+            position: relative;
+            z-index: 1;
+            overflow: hidden;
+        }
+
+        @supports (height: 100dvh) {
+            .app { height: 100dvh; }
+        }
+
+        /* ===== HEADER ===== */
+        .hdr {
+            display: -webkit-box;
+            display: -webkit-flex;
+            display: -ms-flexbox;
+            display: flex;
+            -webkit-box-align: center;
+            -webkit-align-items: center;
+            -ms-flex-align: center;
+            align-items: center;
+            -webkit-box-pack: justify;
+            -webkit-justify-content: space-between;
+            -ms-flex-pack: justify;
+            justify-content: space-between;
+            padding: 14px 20px;
+            background: #08080a;
+            border-bottom: 1px solid var(--border);
+            position: relative;
+            z-index: 10;
+            -webkit-flex-shrink: 0;
+            -ms-flex-negative: 0;
+            flex-shrink: 0;
+        }
+
+        @supports ((-webkit-backdrop-filter: blur(1px)) or (backdrop-filter: blur(1px))) {
+            .hdr {
+                background: rgba(8,8,10,0.92);
+                -webkit-backdrop-filter: blur(20px);
+                backdrop-filter: blur(20px);
+            }
+        }
+
+        .hdr-brand {
+            display: -webkit-box;
+            display: -webkit-flex;
+            display: flex;
+            -webkit-box-align: center;
+            -webkit-align-items: center;
+            align-items: center;
+        }
+
+        .hdr-brand > * + * {
+            margin-left: 10px;
+        }
+
+        .hdr-title {
+            font-family: 'Sora', sans-serif;
+            font-weight: 800;
+            font-size: 14px;
+            letter-spacing: 2px;
+            background: linear-gradient(135deg, var(--accent), var(--gold-light));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hdr-user {
+            display: none;
+            -webkit-box-align: center;
+            -webkit-align-items: center;
+            align-items: center;
+            padding: 6px 14px 6px 8px;
+            background: var(--accent-dim);
+            border-radius: 50px;
+            border: 1px solid var(--border-accent);
+            cursor: pointer;
+        }
+
+        .hdr-user > * + * {
+            margin-left: 10px;
+        }
+
+        .hdr-avatar {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent), var(--gold-light));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 12px;
+            color: var(--bg-deep);
+        }
+
+        .hdr-name {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--accent);
+        }
+
+        /* ===== MAIN CONTENT ===== */
+        .main {
+            -webkit-box-flex: 1;
+            -webkit-flex: 1 1 0;
+            -ms-flex: 1 1 0px;
+            flex: 1 1 0;
+            overflow-y: auto;
+            overflow-x: hidden;
+            -webkit-overflow-scrolling: touch;
+            overscroll-behavior-y: contain;
+            -ms-scroll-chaining: none;
+            padding: 20px 16px;
+            padding-bottom: 90px;
+            min-height: 0;
+            position: relative;
+            touch-action: pan-y;
+        }
+
+        @supports (padding-bottom: env(safe-area-inset-bottom)) {
+            .main { padding-bottom: calc(90px + env(safe-area-inset-bottom, 0px)); }
+        }
+
+        .main::-webkit-scrollbar { width: 4px; }
+        .main::-webkit-scrollbar-track { background: transparent; }
+        .main::-webkit-scrollbar-thumb { background: var(--text-3); border-radius: 4px; }
+        .main::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+
+        /* ===== BOTTOM NAV ===== */
+        .bnav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            display: none;
+            background: #08080a;
+            border-top: 1px solid var(--border);
+            padding: 8px 16px 8px;
+            z-index: 100;
+        }
+
+        @supports ((-webkit-backdrop-filter: blur(1px)) or (backdrop-filter: blur(1px))) {
+            .bnav {
+                background: rgba(8,8,10,0.94);
+                -webkit-backdrop-filter: blur(24px);
+                backdrop-filter: blur(24px);
+            }
+        }
+
+        @supports (padding-bottom: env(safe-area-inset-bottom)) {
+            .bnav { padding-bottom: calc(8px + env(safe-area-inset-bottom, 0px)); }
+        }
+
+        .bnav-inner {
+            display: -webkit-box;
+            display: -webkit-flex;
+            display: -ms-flexbox;
+            display: flex;
+            -webkit-justify-content: space-around;
+            -ms-flex-pack: distribute;
+            justify-content: space-around;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        .bnav-btn {
+            display: -webkit-box;
+            display: -webkit-flex;
+            display: -ms-flexbox;
+            display: flex;
+            -webkit-box-orient: vertical;
+            -webkit-box-direction: normal;
+            -webkit-flex-direction: column;
+            -ms-flex-direction: column;
+            flex-direction: column;
+            -webkit-box-align: center;
+            -webkit-align-items: center;
+            -ms-flex-align: center;
+            align-items: center;
+            padding: 6px 16px;
+            background: none;
+            border: none;
+            color: var(--text-3);
+            cursor: pointer;
+            -webkit-transition: all 0.25s ease;
+            transition: all 0.25s ease;
+            border-radius: var(--radius-sm);
+            position: relative;
+            font-family: inherit;
+        }
+
+        .bnav-btn .bnav-icon {
+            font-size: 22px;
+            margin-bottom: 4px;
+            -webkit-transition: -webkit-transform 0.25s ease;
+            transition: transform 0.25s ease;
+        }
+
+        .bnav-btn .bnav-label {
+            font-size: 10px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .bnav-btn.active {
+            color: var(--accent);
+        }
+
+        .bnav-btn.active .bnav-icon {
+            transform: scale(1.15);
+        }
+
+        .bnav-btn.active::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 20px;
+            height: 3px;
+            border-radius: 0 0 4px 4px;
+            background: var(--accent);
+        }
+
+        /* ===== FORM ELEMENTS ===== */
+        input, select, textarea {
+            width: 100%;
+            font-family: inherit;
+            font-size: 16px;
+            -webkit-appearance: none;
+            appearance: none;
+            border: none;
+            border-radius: var(--radius-md);
+            padding: 14px 16px;
+            background: var(--bg-elevated);
+            color: var(--text-1);
+            border: 1.5px solid var(--border);
+            transition: all 0.3s ease;
+            -webkit-user-select: text;
+            user-select: text;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--accent);
+            background: rgba(212,165,41,0.05);
+            box-shadow: 0 0 0 3px rgba(212,165,41,0.1);
+        }
+
+        input::placeholder { color: var(--text-3); }
+
+        select {
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23D4A529' stroke-width='2'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 14px center;
+            background-size: 18px;
+            padding-right: 42px;
+            cursor: pointer;
+        }
+
+        select option {
+            background: var(--bg-card);
+            color: var(--text-1);
+        }
+
+        button {
+            cursor: pointer;
+            transition: all 0.2s ease;
+            -webkit-user-select: none;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+            border: none;
+            font-family: inherit;
+        }
+
+        button:active { transform: scale(0.97); }
+        button:disabled { opacity: 0.4; cursor: not-allowed; }
+
+        .btn {
+            width: 100%;
+            min-height: 50px;
+            padding: 14px 24px;
+            border-radius: var(--radius-md);
+            font-weight: 700;
+            font-size: 14px;
+            letter-spacing: 0.8px;
+            text-transform: uppercase;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent), var(--gold-light));
+            color: var(--bg-deep);
+            box-shadow: 0 4px 20px rgba(212,165,41,0.3);
+        }
+
+        .btn-primary:active {
+            box-shadow: 0 2px 10px rgba(212,165,41,0.2);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: var(--accent);
+            border: 2px solid var(--border-accent);
+        }
+
+        .btn-danger-outline {
+            background: transparent;
+            color: var(--coral);
+            border: 2px solid rgba(255,107,107,0.3);
+        }
+
+        /* ===== CARD BASE ===== */
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card-glass {
+            background: #111114;
+        }
+
+        @supports ((-webkit-backdrop-filter: blur(1px)) or (backdrop-filter: blur(1px))) {
+            .card-glass {
+                background: var(--bg-glass);
+                -webkit-backdrop-filter: blur(12px);
+                backdrop-filter: blur(12px);
+            }
+        }
+
+        .card-glow {
+            box-shadow: var(--shadow-glow);
+            border-color: var(--border-accent);
+        }
+
+        /* ===== LOGIN SCREEN ===== */
+        #loginScreen {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            min-height: 0;
+            padding: 40px 0 20px;
+            animation: fadeUp 0.6s ease-out;
+        }
+
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .login-hero {
+            text-align: center;
+            margin-bottom: 36px;
+        }
+
+        .login-title {
+            font-family: 'Sora', sans-serif;
+            font-size: 28px;
+            font-weight: 800;
+            letter-spacing: 3px;
+            background: linear-gradient(135deg, var(--accent), var(--gold-light));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 6px;
+        }
+
+        .login-sub {
+            color: var(--text-2);
+            font-size: 14px;
+        }
+
+        .login-box {
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .form-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-xl);
+            padding: 28px 24px;
+            margin-bottom: 14px;
+        }
+
+        .form-card-title {
+            font-family: 'Sora', sans-serif;
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--accent);
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 22px;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--text-2);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+
+        /* ===== TAB CONTENT ===== */
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        .tab-content.active { display: block; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* ===== CHECK-IN TAB ===== */
+        .checkin-profile {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 20px;
+            background: linear-gradient(135deg, var(--bg-card), var(--bg-elevated));
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            margin-bottom: 20px;
+        }
+
+        .checkin-avatar {
+            width: 52px;
+            height: 52px;
+            border-radius: 16px;
+            background: linear-gradient(135deg, var(--accent), var(--gold-light));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            font-weight: 800;
+            color: var(--bg-deep);
+            flex-shrink: 0;
+        }
+
+        .checkin-info { flex: 1; }
+
+        .checkin-name {
+            font-family: 'Sora', sans-serif;
+            font-weight: 700;
+            font-size: 16px;
+            color: var(--text-1);
+            margin-bottom: 2px;
+        }
+
+        .checkin-meta {
+            font-size: 13px;
+            color: var(--text-2);
+        }
+
+        .checkin-meta span {
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        .checkin-count {
+            text-align: center;
+            padding: 8px 14px;
+            background: var(--accent-dim);
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border-accent);
+        }
+
+        .checkin-count-num {
+            font-family: 'Sora', sans-serif;
+            font-size: 22px;
+            font-weight: 800;
+            color: var(--accent);
+        }
+
+        .checkin-count-label {
+            font-size: 9px;
+            color: var(--text-2);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .ct-section {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .section-title {
+            font-family: 'Sora', sans-serif;
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--text-2);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 14px;
+        }
+
+        .ct-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 10px;
+        }
+
+        .ct-btn {
+            padding: 14px 10px;
+            background: var(--bg-elevated);
+            border: 2px solid var(--border);
+            border-radius: var(--radius-md);
+            color: var(--text-2);
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 13px;
+            transition: all 0.3s ease;
+            text-align: center;
+            font-family: inherit;
+        }
+
+        .ct-btn:hover { border-color: var(--accent); color: var(--text-1); }
+
+        .ct-btn.selected {
+            background: var(--accent-dim);
+            color: var(--accent);
+            border-color: var(--accent);
+            box-shadow: 0 0 20px rgba(212,165,41,0.15);
+        }
+
+        .selected-ct-bar {
+            display: none;
+            padding: 12px 16px;
+            background: var(--accent-dim);
+            border: 1px solid var(--border-accent);
+            border-radius: var(--radius-sm);
+            margin-top: 14px;
+            font-size: 13px;
+            color: var(--text-2);
+        }
+
+        .selected-ct-bar span {
+            color: var(--accent);
+            font-weight: 700;
+        }
+
+        .selected-ct-bar.active { display: flex; justify-content: space-between; }
+
+        /* ===== MESSAGE ===== */
+        .msg {
+            padding: 14px 18px;
+            border-radius: var(--radius-md);
+            font-size: 13px;
+            font-weight: 600;
+            margin: 14px 0;
+            text-align: center;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(-8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .msg.success { background: rgba(212,165,41,0.12); color: var(--accent); border: 1px solid var(--border-accent); }
+        .msg.danger { background: rgba(255,107,107,0.12); color: var(--coral); border: 1px solid rgba(255,107,107,0.2); }
+        .msg.warning { background: rgba(255,179,71,0.12); color: var(--amber); border: 1px solid rgba(255,179,71,0.2); }
+        .msg.info { background: rgba(184,134,11,0.12); color: var(--gold-light); border: 1px solid rgba(184,134,11,0.2); }
+
+        /* ===== RANKING TAB ===== */
+        .rank-period {
+            display: flex;
+            gap: 8px;
+            background: var(--bg-card);
+            border-radius: 50px;
+            padding: 4px;
+            border: 1px solid var(--border);
+            margin-bottom: 16px;
+        }
+
+        .rank-period-btn {
+            flex: 1;
+            padding: 10px 16px;
+            background: transparent;
+            border: none;
+            border-radius: 50px;
+            color: var(--text-3);
+            font-weight: 600;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: inherit;
+        }
+
+        .rank-period-btn.active {
+            background: linear-gradient(135deg, var(--accent), var(--gold-light));
+            color: var(--bg-deep);
+            box-shadow: 0 4px 15px rgba(212,165,41,0.3);
+        }
+
+        .rank-ct-scroll {
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            padding-bottom: 4px;
+            margin-bottom: 20px;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .rank-ct-scroll::-webkit-scrollbar { height: 0; }
+
+        .rank-ct-chip {
+            padding: 8px 18px;
+            background: var(--bg-elevated);
+            border: 1.5px solid var(--border);
+            border-radius: 50px;
+            color: var(--text-2);
+            font-weight: 600;
+            font-size: 12px;
+            white-space: nowrap;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: inherit;
+        }
+
+        .rank-ct-chip.active {
+            background: var(--accent-dim);
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        .rank-ct-chip.geral.active {
+            background: rgba(184,134,11,0.15);
+            border-color: var(--gold-light);
+            color: var(--gold-light);
+        }
+
+        /* User training summary */
+        .user-stats-card {
+            display: none;
+            background: linear-gradient(135deg, var(--bg-card), rgba(212,165,41,0.05));
+            border: 1px solid var(--border-accent);
+            border-radius: var(--radius-lg);
+            padding: 18px;
+            margin-bottom: 20px;
+        }
+
+        .user-stats-row {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .user-stats-total {
+            text-align: center;
+            padding: 12px 18px;
+            background: var(--accent-dim);
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border-accent);
+            flex-shrink: 0;
+        }
+
+        .user-stats-num {
+            font-family: 'Sora', sans-serif;
+            font-size: 28px;
+            font-weight: 800;
+            color: var(--accent);
+        }
+
+        .user-stats-lbl {
+            font-size: 10px;
+            color: var(--text-2);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .user-ct-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            flex: 1;
+        }
+
+        .user-ct-tag {
+            padding: 8px 12px;
+            background: var(--bg-elevated);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            text-align: center;
+        }
+
+        .user-ct-tag-name {
+            font-size: 10px;
+            color: var(--text-3);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 2px;
+        }
+
+        .user-ct-tag-count {
+            font-family: 'Sora', sans-serif;
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--accent);
+        }
+
+        /* Podium */
+        .podium {
+            display: none;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .podium-card {
+            background: var(--bg-card);
+            border: 1.5px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 16px 10px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .podium-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+        }
+
+        .podium-card.gold::before { background: linear-gradient(90deg, #FFD700, #FFA500); }
+        .podium-card.silver::before { background: linear-gradient(90deg, #C0C0C0, #A0A0A0); }
+        .podium-card.bronze::before { background: linear-gradient(90deg, #CD7F32, #B8722D); }
+
+        .podium-medal { font-size: 28px; margin-bottom: 8px; }
+
+        .podium-name {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--text-1);
+            margin-bottom: 3px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .podium-faixa {
+            font-size: 11px;
+            color: var(--text-3);
+            margin-bottom: 6px;
+        }
+
+        .podium-count {
+            font-family: 'Sora', sans-serif;
+            font-size: 22px;
+            font-weight: 800;
+            color: var(--accent);
+        }
+
+        .podium-ct {
+            font-size: 10px;
+            color: var(--text-3);
+            margin-top: 4px;
+        }
+
+        /* User position */
+        .user-pos-card {
+            display: none;
+            background: linear-gradient(135deg, var(--bg-card), rgba(212,165,41,0.05));
+            border: 1.5px solid var(--border-accent);
+            border-radius: var(--radius-lg);
+            padding: 16px;
+            margin-bottom: 20px;
+        }
+
+        .user-pos-inner {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .user-pos-rank {
+            font-family: 'Sora', sans-serif;
+            font-size: 20px;
+            font-weight: 800;
+            color: var(--accent);
+        }
+
+        .user-pos-name {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-1);
+            margin-top: 2px;
+        }
+
+        .user-pos-meta {
+            font-size: 12px;
+            color: var(--text-2);
+        }
+
+        .user-pos-next-label {
+            font-size: 10px;
+            color: var(--text-3);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            text-align: right;
+        }
+
+        .user-pos-diff {
+            font-family: 'Sora', sans-serif;
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--coral);
+            text-align: right;
+        }
+
+        /* Ranking list */
+        .rank-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .rank-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px 16px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            transition: all 0.3s ease;
+        }
+
+        .rank-item.me {
+            background: linear-gradient(135deg, var(--bg-card), rgba(212,165,41,0.08));
+            border-color: var(--border-accent);
+        }
+
+        .rank-item-left {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            flex: 1;
+            min-width: 0;
+        }
+
+        .rank-pos {
+            font-family: 'Sora', sans-serif;
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--accent);
+            min-width: 36px;
+            text-align: center;
+        }
+
+        .rank-name {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-1);
+            margin-bottom: 1px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .rank-detail {
+            font-size: 11px;
+            color: var(--text-3);
+        }
+
+        .rank-num {
+            font-family: 'Sora', sans-serif;
+            font-size: 16px;
+            font-weight: 800;
+            color: var(--accent);
+            flex-shrink: 0;
+        }
+
+        /* ===== EVOLUÇÃO TAB ===== */
+        .evo-container {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+
+        /* Motivation banner */
+        .evo-motivation {
+            background: linear-gradient(135deg, rgba(212,165,41,0.08), rgba(184,134,11,0.08));
+            border: 1px solid var(--border-accent);
+            border-radius: var(--radius-lg);
+            padding: 18px 20px;
+            text-align: center;
+        }
+
+        .evo-motivation-icon { font-size: 28px; margin-bottom: 6px; }
+
+        .evo-motivation-text {
+            font-family: 'Sora', sans-serif;
+            font-size: 14px;
+            font-weight: 600;
+            font-style: italic;
+            color: var(--text-1);
+            margin-bottom: 4px;
+        }
+
+        .evo-motivation-sub {
+            font-size: 12px;
+            color: var(--text-2);
+        }
+
+        /* Hero card */
+        .evo-hero {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-xl);
+            padding: 24px 20px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            align-items: center;
+        }
+
+        .evo-hero-belt {
+            width: 64px;
+            height: 64px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
+            flex-shrink: 0;
+        }
+
+        .evo-hero-belt.branca { background: linear-gradient(135deg, #f0f0f0, #d0d0d0); }
+        .evo-hero-belt.azul { background: linear-gradient(135deg, #2196F3, #1565C0); }
+        .evo-hero-belt.roxa { background: linear-gradient(135deg, #9C27B0, #6A1B9A); }
+        .evo-hero-belt.marrom { background: linear-gradient(135deg, #8D6E63, #5D4037); }
+        .evo-hero-belt.preta { background: linear-gradient(135deg, #424242, #1a1a1a); }
+
+        .evo-hero-info { flex: 1; min-width: 140px; }
+
+        .evo-hero-title {
+            font-family: 'Sora', sans-serif;
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--text-1);
+        }
+
+        .evo-hero-sub {
+            font-size: 12px;
+            color: var(--text-2);
+            margin-top: 2px;
+        }
+
+        .evo-hero-status {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 50px;
+            font-size: 11px;
+            font-weight: 700;
+            margin-top: 6px;
+        }
+
+        .evo-hero-status.red { background: rgba(255,107,107,0.15); color: var(--coral); }
+        .evo-hero-status.yellow { background: rgba(255,179,71,0.15); color: var(--amber); }
+        .evo-hero-status.green { background: rgba(212,165,41,0.15); color: var(--accent); }
+
+        .evo-hero-stats {
+            display: flex;
+            gap: 12px;
+            width: 100%;
+        }
+
+        .evo-hero-stat {
+            flex: 1;
+            text-align: center;
+            padding: 12px;
+            background: var(--bg-elevated);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+        }
+
+        .evo-hero-stat-val {
+            font-family: 'Sora', sans-serif;
+            font-size: 22px;
+            font-weight: 800;
+            color: var(--accent);
+        }
+
+        .evo-hero-stat-lbl {
+            font-size: 10px;
+            color: var(--text-3);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Seals */
+        .evo-seals {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 20px;
+        }
+
+        .evo-seals-title {
+            font-family: 'Sora', sans-serif;
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--text-2);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 16px;
+        }
+
+        .evo-seals-row {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+
+        .evo-seal { text-align: center; }
+
+        .evo-seal-circle {
+            width: 52px;
+            height: 52px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            margin: 0 auto 8px;
+            transition: all 0.5s ease;
+        }
+
+        .evo-seal-circle.locked {
+            background: var(--bg-elevated);
+            border: 2px dashed var(--text-3);
+            opacity: 0.5;
+        }
+
+        .evo-seal-circle.current-target {
+            background: var(--accent-dim);
+            border: 2px solid var(--accent);
+            animation: pulse-seal 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse-seal {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(212,165,41,0.2); }
+            50% { box-shadow: 0 0 0 8px rgba(212,165,41,0); }
+        }
+
+        .evo-seal-circle.unlocked {
+            background: linear-gradient(135deg, var(--accent), var(--gold-light));
+            border: none;
+            box-shadow: 0 4px 15px rgba(212,165,41,0.3);
+        }
+
+        .evo-seal-label {
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--text-3);
+        }
+
+        .evo-seal-label.unlocked { color: var(--accent); }
+        .evo-seal-label.current-target { color: var(--accent); }
+
+        .evo-seal-progress {
+            font-size: 10px;
+            color: var(--text-3);
+            margin-top: 2px;
+        }
+
+        /* Frequency bar */
+        .evo-freq {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 18px 20px;
+        }
+
+        .evo-freq-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .evo-freq-left {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-2);
+        }
+
+        .evo-freq-pct {
+            font-family: 'Sora', sans-serif;
+            font-size: 18px;
+            font-weight: 800;
+        }
+
+        .evo-freq-pct.red { color: var(--coral); }
+        .evo-freq-pct.yellow { color: var(--amber); }
+        .evo-freq-pct.green { color: var(--accent); }
+
+        .evo-freq-bar-bg {
+            width: 100%;
+            height: 8px;
+            background: var(--bg-elevated);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .evo-freq-bar-fill {
+            height: 100%;
+            border-radius: 4px;
+            transition: width 1s ease;
+        }
+
+        .evo-freq-bar-fill.red { background: linear-gradient(90deg, var(--coral), #FF8A80); }
+        .evo-freq-bar-fill.yellow { background: linear-gradient(90deg, var(--amber), #FFD54F); }
+        .evo-freq-bar-fill.green { background: linear-gradient(90deg, var(--accent), var(--gold-light)); }
+
+        .evo-freq-sub {
+            font-size: 11px;
+            color: var(--text-3);
+            margin-top: 8px;
+            text-align: center;
+        }
+
+        /* Criteria */
+        .evo-criteria-section {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 20px;
+        }
+
+        .evo-criteria-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+
+        .evo-criteria-header-icon { font-size: 20px; }
+
+        .evo-criteria-header-text {
+            font-family: 'Sora', sans-serif;
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--text-1);
+            flex: 1;
+        }
+
+        .evo-criteria-header-sub {
+            font-family: 'Sora', sans-serif;
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--accent);
+        }
+
+        .evo-criteria-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .evo-criteria-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            background: var(--bg-elevated);
+            border-radius: var(--radius-sm);
+        }
+
+        .evo-criteria-check {
+            width: 28px;
+            height: 28px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        .evo-criteria-check.pass { background: rgba(212,165,41,0.15); color: var(--accent); }
+        .evo-criteria-check.fail { background: rgba(255,107,107,0.15); color: var(--coral); }
+        .evo-criteria-check.pending { background: rgba(255,179,71,0.15); color: var(--amber); }
+
+        .evo-criteria-label {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-1);
+        }
+
+        .evo-criteria-detail {
+            font-size: 11px;
+            color: var(--text-3);
+        }
+
+        /* Exam button */
+        .evo-exam-btn {
+            width: 100%;
+            padding: 16px;
+            border-radius: var(--radius-md);
+            font-weight: 700;
+            font-size: 14px;
+            text-align: center;
+            letter-spacing: 0.5px;
+            font-family: inherit;
+        }
+
+        .evo-exam-btn.disabled {
+            background: var(--bg-elevated);
+            color: var(--text-3);
+            cursor: not-allowed;
+        }
+
+        .evo-exam-btn.active {
+            background: linear-gradient(135deg, var(--accent), var(--gold-light));
+            color: var(--bg-deep);
+            cursor: pointer;
+            box-shadow: 0 4px 20px rgba(212,165,41,0.3);
+        }
+
+        /* Timeline */
+        .evo-timeline {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 20px;
+        }
+
+        .evo-timeline-title {
+            font-family: 'Sora', sans-serif;
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--text-2);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 20px;
+        }
+
+        .evo-tl-track {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            position: relative;
+            padding: 0 8px;
+            margin-bottom: 20px;
+        }
+
+        .evo-tl-line-bg {
+            position: absolute;
+            top: 18px;
+            left: 28px;
+            right: 28px;
+            height: 4px;
+            background: var(--bg-elevated);
+            border-radius: 2px;
+            z-index: 0;
+        }
+
+        .evo-tl-line-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent), var(--gold-light));
+            border-radius: 2px;
+            transition: width 1s ease;
+        }
+
+        .evo-tl-node {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            z-index: 1;
+            min-width: 44px;
+        }
+
+        .evo-tl-dot {
+            width: 36px;
+            height: 36px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+        }
+
+        .evo-tl-dot.future { background: var(--bg-elevated); border: 2px dashed var(--text-3); opacity: 0.5; }
+        .evo-tl-dot.current { background: var(--accent-dim); border: 2px solid var(--accent); box-shadow: 0 0 15px rgba(212,165,41,0.3); }
+        .evo-tl-dot.completed { background: var(--accent); }
+
+        .evo-tl-label {
+            font-size: 10px;
+            font-weight: 600;
+            color: var(--text-3);
+        }
+
+        .evo-tl-label.current { color: var(--accent); }
+
+        .evo-tl-meta {
+            font-size: 9px;
+            color: var(--text-3);
+        }
+
+        .evo-overall-progress {
+            background: var(--bg-elevated);
+            border-radius: var(--radius-sm);
+            padding: 14px;
+        }
+
+        .evo-overall-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+
+        .evo-overall-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-2);
+        }
+
+        .evo-overall-pct {
+            font-family: 'Sora', sans-serif;
+            font-size: 14px;
+            font-weight: 800;
+            color: var(--accent);
+        }
+
+        .evo-overall-bar-bg {
+            height: 6px;
+            background: var(--bg-deep);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .evo-overall-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent), var(--gold-light));
+            border-radius: 3px;
+            transition: width 1s ease;
+        }
+
+        /* ===== ADMIN SECTION ===== */
+        .admin-section {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 18px;
+            margin-top: 20px;
+        }
+
+        .admin-form {
+            display: flex;
+            gap: 8px;
+        }
+
+        .admin-form input {
+            flex: 1;
+            padding: 10px 14px;
+            font-size: 13px;
+        }
+
+        .admin-form button {
+            padding: 10px 18px;
+            background: linear-gradient(135deg, var(--accent), var(--gold-light));
+            color: var(--bg-deep);
+            border: none;
+            border-radius: var(--radius-sm);
+            font-weight: 700;
+            font-size: 12px;
+            text-transform: uppercase;
+            font-family: inherit;
+        }
+
+        .cts-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        .ct-item {
+            padding: 8px 14px;
+            background: var(--bg-elevated);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 12px;
+            color: var(--text-2);
+        }
+
+        .ct-item button {
+            background: rgba(255,107,107,0.15);
+            color: var(--coral);
+            border: none;
+            border-radius: 4px;
+            padding: 3px 8px;
+            font-size: 10px;
+            font-weight: 700;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 380px) {
+            .main { padding: 14px 12px; padding-bottom: 76px; }
+            .evo-seals-row { gap: 6px; }
+            .evo-seal-circle { width: 44px; height: 44px; font-size: 18px; border-radius: 14px; }
+            .podium { gap: 6px; }
+        }
+
+        @media (min-width: 769px) {
+            .main { padding: 24px; padding-bottom: 80px; max-width: 560px; margin: 0 auto; }
+        }
+
+        /* ===== BROAD COMPATIBILITY ===== */
+        /* Prefix transitions for older WebKit/Samsung/UC browsers */
+        button, input, select, .card, .bnav-btn, .rank-ct-chip, .ct-btn, .evo-seal-circle {
+            -webkit-transition: all 0.2s ease;
+            -o-transition: all 0.2s ease;
+            transition: all 0.2s ease;
+        }
+
+        /* Prefix transforms */
+        .bnav-btn.active .bnav-icon {
+            -webkit-transform: scale(1.15);
+            -ms-transform: scale(1.15);
+            transform: scale(1.15);
+        }
+
+        button:active {
+            -webkit-transform: scale(0.97);
+            -ms-transform: scale(0.97);
+            transform: scale(0.97);
+        }
+
+        /* Prefix animations */
+        @-webkit-keyframes fadeUp {
+            from { opacity: 0; -webkit-transform: translateY(20px); transform: translateY(20px); }
+            to { opacity: 1; -webkit-transform: translateY(0); transform: translateY(0); }
+        }
+
+        @-webkit-keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @-webkit-keyframes pulse-seal {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(212,165,41,0.2); }
+            50% { box-shadow: 0 0 0 8px rgba(212,165,41,0); }
+        }
+
+        /* Prefix gradient text for older Chrome/Samsung */
+        .hdr-title, .login-title {
+            -webkit-background-clip: text !important;
+            background-clip: text;
+        }
+
+        /* Ensure touch targets min 44px */
+        button, a, input, select, .bnav-btn, .rank-ct-chip, .ct-btn {
+            min-height: 44px;
+        }
+
+        /* Fix 300ms tap delay on old Android */
+        a, button, input, select {
+            touch-action: manipulation;
+        }
+
+        /* Samsung Internet input fix */
+        input, select, textarea {
+            -webkit-border-radius: 14px;
+            border-radius: 14px;
+        }
+
+        /* Prevent zoom on input focus (iOS) */
+        @media screen and (-webkit-min-device-pixel-ratio: 0) {
+            select, textarea, input[type="text"], input[type="password"], input[type="email"] {
+                font-size: 16px;
+            }
+        }
+
+        /* Notch safe areas for all devices */
+        @supports (padding-left: env(safe-area-inset-left)) {
+            .hdr { padding-left: max(20px, env(safe-area-inset-left)); padding-right: max(20px, env(safe-area-inset-right)); }
+            .main { padding-left: max(16px, env(safe-area-inset-left)); padding-right: max(16px, env(safe-area-inset-right)); }
+        }
+    </style>
+</head>
+<body>
+    <div class="app">
+        <!-- HEADER -->
+        <div class="hdr">
+            <div class="hdr-brand">
+                                <div style="display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-orient:vertical;-webkit-flex-direction:column;flex-direction:column;">
+                    <div class="hdr-title">JIU JITSU ACADEMY</div>
+                    <div style="font-size:10px;letter-spacing:1.5px;color:var(--text-2);font-weight:600;text-transform:uppercase;font-family:'Sora',sans-serif;">Checkin</div>
+                </div>
+            </div>
+            <div class="hdr-user" id="headerUser" onclick="handleLogout()">
+                <div class="hdr-avatar" id="userInitial">L</div>
+                <div class="hdr-name" id="headerUserName">User</div>
+            </div>
+        </div>
+
+        <!-- MAIN CONTENT -->
+        <div class="main">
+            <!-- LOGIN -->
+            <div id="loginScreen">
+                <div class="login-hero">
+                    <h1 class="login-title">JIU JITSU ACADEMY</h1>
+                    <p class="login-sub">Checkin de Treinos</p>
+                </div>
+
+                <div class="login-box">
+                    <div id="loginTab">
+                        <div class="form-card">
+                            <div class="form-card-title">Entrar</div>
+                            <form onsubmit="handleLogin(event)">
+                                <div class="form-group">
+                                    <label class="form-label">Email</label>
+                                    <input type="email" id="loginEmail" placeholder="seu@email.com" required>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Senha</label>
+                                    <input type="password" id="loginPassword" placeholder="••••••" required>
+                                </div>
+                                <div id="loginMessage"></div>
+                                <button type="submit" class="btn btn-primary">Entrar</button>
+                            </form>
+                        </div>
+                        <button class="btn btn-outline" onclick="showRegister()">Criar Nova Conta</button>
+                    </div>
+
+                    <div id="registerTab" style="display: none;">
+                        <div class="form-card">
+                            <div class="form-card-title">Cadastro</div>
+                            <form onsubmit="handleRegister(event)">
+                                <div class="form-group">
+                                    <label class="form-label">Nome Completo</label>
+                                    <input type="text" id="regName" placeholder="Seu Nome" required>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Email</label>
+                                    <input type="email" id="regEmail" placeholder="seu@email.com" required>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Senha</label>
+                                    <input type="password" id="regPassword" placeholder="••••••" required>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Faixa</label>
+                                    <select id="regFaixa" required>
+                                        <option value="">Selecione sua faixa</option>
+                                        <option value="Branca">⚪ Branca</option>
+                                        <option value="Azul">🔵 Azul</option>
+                                        <option value="Roxa">🟣 Roxa</option>
+                                        <option value="Marrom">🟤 Marrom</option>
+                                        <option value="Preta">⚫ Preta</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Grau</label>
+                                    <select id="regGrau" required>
+                                        <option value="">Selecione o grau</option>
+                                        <option value="0">0</option>
+                                        <option value="1">1</option>
+                                        <option value="2">2</option>
+                                        <option value="3">3</option>
+                                        <option value="4">4</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">CT Principal</label>
+                                    <select id="regCT" required>
+                                        <option value="">Selecione seu CT</option>
+                                    </select>
+                                </div>
+                                <div id="registerMessage"></div>
+                                <button type="submit" class="btn btn-primary">Cadastrar</button>
+                            </form>
+                        </div>
+                        <button class="btn btn-outline" onclick="showLogin()">Voltar ao Login</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- APP -->
+            <div id="appScreen" style="display:none;">
+                <!-- TAB: CHECK-IN -->
+                <div id="attendance" class="tab-content active">
+                    <div class="checkin-profile">
+                        <div class="checkin-avatar" id="checkinInitial">L</div>
+                        <div class="checkin-info">
+                            <div class="checkin-name" id="displayName">-</div>
+                            <div class="checkin-meta"><span id="displayFaixa">-</span></div>
+                        </div>
+                        <div class="checkin-count">
+                            <div class="checkin-count-num" id="displayCount">0</div>
+                            <div class="checkin-count-label">Treinos</div>
+                        </div>
+                    </div>
+
+                    <div class="ct-section">
+                        <div class="section-title">Onde você treinou?</div>
+                        <div class="ct-grid" id="ctGrid"></div>
+                        <div class="selected-ct-bar" id="selectedInfo">
+                            <span>Academia:</span>
+                            <span id="selectedCT">-</span>
+                        </div>
+                    </div>
+
+                    <button class="btn btn-primary" onclick="confirmAttendance()">✓ Confirmar Presença</button>
+                    <div id="attendanceMessage"></div>
+
+                    <button class="btn btn-danger-outline" onclick="handleLogout()" style="margin-top: 24px;">Sair da Conta</button>
+                </div>
+
+                <!-- TAB: RANKING -->
+                <div id="ranking" class="tab-content">
+                    <div class="rank-period" id="periodFilterGrid">
+                        <button class="rank-period-btn active" onclick="switchRankingPeriod('mes')">📅 Este Mês</button>
+                        <button class="rank-period-btn" onclick="switchRankingPeriod('ano')">📆 Este Ano</button>
+                    </div>
+
+                    <div class="rank-ct-scroll" id="ctFilterGrid"></div>
+
+                    <div class="user-stats-card" id="userTrainingSection">
+                        <div class="section-title" style="margin-bottom:12px;">Seus treinos</div>
+                        <div class="user-stats-row">
+                            <div class="user-stats-total">
+                                <div class="user-stats-num" id="userTotalCount">0</div>
+                                <div class="user-stats-lbl" id="userTotalLabel">treinos</div>
+                            </div>
+                            <div class="user-ct-grid" id="userTrainingGrid"></div>
+                        </div>
+                    </div>
+
+                    <div class="podium" id="top3Container"></div>
+
+                    <div class="user-pos-card" id="userPositionSection">
+                        <div class="user-pos-inner" id="userPositionCard"></div>
+                    </div>
+
+                    <div id="rankingListSection" style="display:none;">
+                        <div class="section-title" style="margin-bottom:12px;">Ranking</div>
+                        <div class="rank-list" id="rankingList"></div>
+                    </div>
+
+                    <div id="ctRankingContainer" style="display:none;">
+                        <div class="section-title" id="ctRankingTitle" style="margin-bottom:12px;">Ranking</div>
+                        <div class="rank-list" id="ctRankingList"></div>
+                    </div>
+
+                    <div id="rankingMessage" style="text-align:center; padding:30px; color:var(--text-3); font-size: 13px;">Carregando ranking...</div>
+                </div>
+
+                <!-- TAB: EVOLUÇÃO -->
+                <div id="evolucao" class="tab-content">
+                    <div class="evo-container">
+                        <div class="evo-motivation" id="evoMotivation">
+                            <div class="evo-motivation-icon">🔥</div>
+                            <div class="evo-motivation-text" id="evoMotivationText">"Consistência constrói campeões."</div>
+                            <div class="evo-motivation-sub" id="evoMotivationSub">Continue firme no tatame</div>
+                        </div>
+
+                        <div class="evo-hero" id="evoHero">
+                            <div class="evo-hero-belt branca" id="evoHeroBelt">🥋</div>
+                            <div class="evo-hero-info">
+                                <div class="evo-hero-title" id="evoHeroTitle">Faixa Branca</div>
+                                <div class="evo-hero-sub" id="evoHeroSub">Próxima: Azul</div>
+                                <div id="evoHeroStatus"></div>
+                            </div>
+                            <div class="evo-hero-stats">
+                                <div class="evo-hero-stat">
+                                    <div class="evo-hero-stat-val" id="evoStatTreinos">0</div>
+                                    <div class="evo-hero-stat-lbl">Treinos</div>
+                                </div>
+                                <div class="evo-hero-stat">
+                                    <div class="evo-hero-stat-val" id="evoStatSemestre">0</div>
+                                    <div class="evo-hero-stat-lbl">Semestre</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="evo-seals">
+                            <div class="evo-seals-title">🏅 Selos de Grau</div>
+                            <div class="evo-seals-row" id="evoSealsRow"></div>
+                        </div>
+
+                        <div class="evo-freq">
+                            <div class="evo-freq-row">
+                                <div class="evo-freq-left">📊 Frequência Semestre</div>
+                                <div class="evo-freq-pct" id="evoFreqPct">0%</div>
+                            </div>
+                            <div class="evo-freq-bar-bg">
+                                <div class="evo-freq-bar-fill" id="evoFreqBarFill" style="width:0%"></div>
+                            </div>
+                            <div class="evo-freq-sub" id="evoFreqDetail">0 de 48 aulas possíveis</div>
+                        </div>
+
+                        <div class="evo-criteria-section" id="evoFaixaCriteria">
+                            <div class="evo-criteria-header">
+                                <div class="evo-criteria-header-icon">🏅</div>
+                                <div class="evo-criteria-header-text" id="evoFaixaCriteriaTitle">Exame de Faixa</div>
+                                <div class="evo-criteria-header-sub" id="evoFaixaProgress">0/6</div>
+                            </div>
+                            <div class="evo-criteria-list" id="evoFaixaCriteriaList"></div>
+                        </div>
+
+                        <button class="evo-exam-btn disabled" id="evoExamBtn" disabled>🔒 Critérios pendentes para Exame de Faixa</button>
+
+                        <div class="evo-timeline">
+                            <div class="evo-timeline-title">🥋 Caminho até a Faixa Preta</div>
+                            <div class="evo-tl-track" id="evoTimeline">
+                                <div class="evo-tl-line-bg">
+                                    <div class="evo-tl-line-fill" id="evoTlFill" style="width:0%"></div>
+                                </div>
+                            </div>
+                            <div class="evo-overall-progress">
+                                <div class="evo-overall-header">
+                                    <div class="evo-overall-label">Progresso Geral</div>
+                                    <div class="evo-overall-pct" id="evoOverallPct">0%</div>
+                                </div>
+                                <div class="evo-overall-bar-bg">
+                                    <div class="evo-overall-bar-fill" id="evoOverallFill" style="width:0%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- BOTTOM NAV -->
+        <div class="bnav" id="bottomNav">
+            <div class="bnav-inner">
+                <button class="bnav-btn active" onclick="switchTab('attendance')">
+                    <span class="bnav-icon">✍️</span>
+                    <span class="bnav-label">Check-in</span>
+                </button>
+                <button class="bnav-btn" onclick="switchTab('ranking')">
+                    <span class="bnav-icon">🏆</span>
+                    <span class="bnav-label">Ranking</span>
+                </button>
+                <button class="bnav-btn" onclick="switchTab('evolucao')">
+                    <span class="bnav-icon">📈</span>
+                    <span class="bnav-label">Evolução</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbz3xeb_MCnVzAx5i0y5YEymKN1EJMlQcQZE5PlAPmskw9R796T0yq-6Yfdg1XOz7d_LtA/exec';
+        let currentUser = null;
+        let selectedCT = null;
+        let allCTs = [];
+        let currentRankingPeriod = 'mes';
+        let currentRankingFilter = 'geral';
+        let allRankingData = null;
+
+        // ===== UTILS =====
+        function showMessage(elementId, message, type) {
+            const el = document.getElementById(elementId);
+            if (!el) return;
+            el.innerHTML = '<div class="msg ' + type + '">' + message + '</div>';
+        }
+
+        // ===== INIT =====
+        window.addEventListener('load', function() {
+            const s = sessionStorage.getItem('bjjUser');
+            if (s) {
+                currentUser = JSON.parse(s);
+                showAppScreen();
+                loadAttendanceInfo();
+                loadCTs();
+            }
+        });
+
+        // ===== AUTH =====
+        async function handleLogin(event) {
+            event.preventDefault();
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            showMessage('loginMessage', 'Conectando...', 'warning');
+
+            try {
+                const r = await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify({ action: 'login', email, password }) });
+                const data = await r.json();
+                if (data.authenticated === true) {
+                    currentUser = data;
+                    sessionStorage.setItem('bjjUser', JSON.stringify(currentUser));
+                    showAppScreen();
+                    loadAttendanceInfo();
+                    loadCTs();
+                } else {
+                    showMessage('loginMessage', data.message || 'Erro ao fazer login', 'danger');
+                }
+            } catch (err) {
+                showMessage('loginMessage', 'Erro de conexão: ' + err.message, 'danger');
+            }
+        }
+
+        async function handleRegister(event) {
+            event.preventDefault();
+            const name = document.getElementById('regName').value;
+            const email = document.getElementById('regEmail').value;
+            const password = document.getElementById('regPassword').value;
+            const faixa = document.getElementById('regFaixa').value;
+            const grau = document.getElementById('regGrau').value;
+            const ct = document.getElementById('regCT').value;
+
+            if (!ct) { showMessage('registerMessage', '⚠️ Escolha seu CT Principal', 'warning'); return; }
+            showMessage('registerMessage', 'Cadastrando...', 'warning');
+
+            try {
+                const r = await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify({ action: 'requestAccount', name, email, password, faixa, grau, ct }) });
+                const data = await r.json();
+                if (data.success) {
+                    showMessage('registerMessage', '✅ Cadastro realizado! Faça login após aprovação.', 'success');
+                    setTimeout(() => showLogin(), 2000);
+                } else {
+                    showMessage('registerMessage', data.message || 'Erro ao cadastrar', 'danger');
+                }
+            } catch (err) {
+                showMessage('registerMessage', 'Erro de conexão', 'danger');
+            }
+        }
+
+        // ===== NAVIGATION =====
+        function showAppScreen() {
+            document.getElementById('loginScreen').style.display = 'none';
+            document.getElementById('appScreen').style.display = 'block';
+            document.getElementById('headerUser').style.display = 'flex';
+            document.getElementById('bottomNav').style.display = 'block';
+            document.getElementById('headerUserName').textContent = currentUser.name.split(' ')[0];
+            document.getElementById('userInitial').textContent = currentUser.name.charAt(0).toUpperCase();
+            document.getElementById('checkinInitial').textContent = currentUser.name.charAt(0).toUpperCase();
+        }
+
+        function showLogin() {
+            document.getElementById('registerTab').style.display = 'none';
+            document.getElementById('loginTab').style.display = 'block';
+        }
+
+        function showRegister() {
+            document.getElementById('loginTab').style.display = 'none';
+            document.getElementById('registerTab').style.display = 'block';
+            loadCTs();
+        }
+
+        function handleLogout() {
+            if (confirm('Sair da conta?')) {
+                sessionStorage.removeItem('bjjUser');
+                currentUser = null;
+                document.getElementById('appScreen').style.display = 'none';
+                document.getElementById('loginScreen').style.display = 'flex';
+                document.getElementById('headerUser').style.display = 'none';
+                document.getElementById('bottomNav').style.display = 'none';
+                document.getElementById('loginEmail').value = '';
+                document.getElementById('loginPassword').value = '';
+                showLogin();
+            }
+        }
+
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.bnav-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(tabName).classList.add('active');
+            event.target.closest('.bnav-btn').classList.add('active');
+
+            if (tabName === 'ranking') loadRanking();
+            if (tabName === 'evolucao') loadEvolucao();
+        }
+
+        // ===== CHECK-IN =====
+        async function loadCTs() {
+            try {
+                const r = await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify({ action: 'getCTsList' }) });
+                const data = await r.json();
+                if (data.success && data.cts) {
+                    allCTs = data.cts;
+                    const regCT = document.getElementById('regCT');
+                    if (regCT) {
+                        data.cts.forEach(ct => {
+                            const name = typeof ct === 'string' ? ct : ct.name || ct.toString();
+                            if (!Array.from(regCT.options).find(o => o.value === name)) {
+                                const opt = document.createElement('option');
+                                opt.value = name;
+                                opt.textContent = name;
+                                regCT.appendChild(opt);
+                            }
+                        });
+                    }
+                    const grid = document.getElementById('ctGrid');
+                    if (grid) {
+                        grid.innerHTML = '';
+                        data.cts.forEach(ct => {
+                            const name = typeof ct === 'string' ? ct : ct.name || ct.toString();
+                            const btn = document.createElement('button');
+                            btn.type = 'button';
+                            btn.className = 'ct-btn';
+                            btn.textContent = name;
+                            btn.addEventListener('click', () => selectCT(name));
+                            grid.appendChild(btn);
+                        });
+                    }
+                }
+            } catch (err) { console.error('Erro CTs:', err); }
+        }
+
+        function selectCT(ctName) {
+            selectedCT = ctName;
+            document.querySelectorAll('.ct-btn').forEach(b => b.classList.remove('selected'));
+            event.target?.classList.add('selected');
+            document.getElementById('selectedCT').textContent = ctName;
+            document.getElementById('selectedInfo').classList.add('active');
+        }
+
+        function confirmAttendance() {
+            if (!selectedCT) { showMessage('attendanceMessage', 'Selecione o CT', 'warning'); return; }
+            showMessage('attendanceMessage', 'Registrando presença...', 'info');
+
+            const today = new Date();
+            const dateStr = today.toLocaleDateString('pt-BR');
+
+            fetch(SCRIPT_URL, {
+                method: 'POST',
+                body: JSON.stringify({
+                    action: 'attendance', email: currentUser.email, name: currentUser.name,
+                    faixa: currentUser.faixa, grau: currentUser.grau, ct: selectedCT, date: dateStr
+                })
+            }).then(r => r.json()).then(data => {
+                if (data.success) {
+                    currentUser.treinos = (currentUser.treinos || 0) + 1;
+                    sessionStorage.setItem('bjjUser', JSON.stringify(currentUser));
+                    document.getElementById('displayCount').textContent = currentUser.treinos;
+                    showMessage('attendanceMessage', '✅ Presença confirmada!', 'success');
+                    selectedCT = null;
+                    document.querySelectorAll('.ct-btn').forEach(b => b.classList.remove('selected'));
+                    document.getElementById('selectedCT').textContent = '-';
+                    document.getElementById('selectedInfo').classList.remove('active');
+                    setTimeout(() => document.getElementById('attendanceMessage').innerHTML = '', 3000);
+                } else {
+                    showMessage('attendanceMessage', data.message || 'Erro', 'danger');
+                }
+            }).catch(() => showMessage('attendanceMessage', 'Erro de conexão', 'danger'));
+        }
+
+        function loadAttendanceInfo() {
+            if (currentUser) {
+                document.getElementById('displayName').textContent = currentUser.name;
+                document.getElementById('displayFaixa').textContent = currentUser.faixa;
+                document.getElementById('displayCount').textContent = currentUser.treinos || '0';
+            }
+        }
+
+        // ===== RANKING =====
+        async function loadRanking() {
+            try {
+                const r = await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify({ action: 'getRankingMonth', email: currentUser.email, period: currentRankingPeriod }) });
+                const data = await r.json();
+                if (data.success && data.ranking && data.ranking.length > 0) {
+                    displayRanking(data.ranking);
+                } else {
+                    document.getElementById('rankingMessage').textContent = 'Sem dados de ranking';
+                }
+            } catch (err) {
+                document.getElementById('rankingMessage').textContent = 'Erro ao carregar ranking';
+            }
+        }
+
+        function switchRankingPeriod(period) {
+            document.querySelectorAll('.rank-period-btn').forEach(b => b.classList.remove('active'));
+            event.target.closest('.rank-period-btn').classList.add('active');
+            currentRankingPeriod = period;
+            currentRankingFilter = 'geral';
+            const label = document.getElementById('userTotalLabel');
+            label.textContent = period === 'mes' ? 'treinos este mês' : 'treinos este ano';
+            loadRanking();
+        }
+
+        function switchRankingFilter(ctName) {
+            document.querySelectorAll('.rank-ct-chip').forEach(c => c.classList.remove('active'));
+            event.target.closest('.rank-ct-chip').classList.add('active');
+            currentRankingFilter = ctName;
+
+            if (ctName === 'geral') {
+                document.getElementById('userTrainingSection').style.display = 'block';
+                document.getElementById('top3Container').style.display = 'grid';
+                document.getElementById('userPositionSection').style.display = null;
+                document.getElementById('rankingListSection').style.display = null;
+                document.getElementById('ctRankingContainer').style.display = 'none';
+                displayGeneralRanking(allRankingData);
+            } else {
+                document.getElementById('userTrainingSection').style.display = 'none';
+                document.getElementById('top3Container').style.display = 'none';
+                document.getElementById('userPositionSection').style.display = 'none';
+                document.getElementById('rankingListSection').style.display = 'none';
+                document.getElementById('ctRankingContainer').style.display = 'block';
+                displayCTRanking(allRankingData, ctName);
+            }
+        }
+
+        function displayRanking(ranking) {
+            allRankingData = ranking;
+            const ctsSet = new Set();
+            ranking.forEach(s => { if (s.treinosPorCT) Object.keys(s.treinosPorCT).forEach(ct => ctsSet.add(ct)); });
+
+            const filterGrid = document.getElementById('ctFilterGrid');
+            filterGrid.innerHTML = '';
+
+            const geralChip = document.createElement('button');
+            geralChip.className = 'rank-ct-chip geral active';
+            geralChip.textContent = '📊 Geral';
+            geralChip.onclick = function() { switchRankingFilter('geral'); };
+            filterGrid.appendChild(geralChip);
+
+            Array.from(ctsSet).sort().forEach(ct => {
+                const chip = document.createElement('button');
+                chip.className = 'rank-ct-chip';
+                chip.textContent = ct;
+                chip.onclick = function() { switchRankingFilter(ct); };
+                filterGrid.appendChild(chip);
+            });
+
+            displayGeneralRanking(ranking);
+        }
+
+        function displayGeneralRanking(ranking) {
+            document.getElementById('rankingMessage').style.display = 'none';
+
+            const userRank = ranking.find(r => r.email.toLowerCase() === currentUser.email.toLowerCase());
+            const userPosition = ranking.findIndex(r => r.email.toLowerCase() === currentUser.email.toLowerCase()) + 1;
+
+            // User training cards
+            if (userRank && userRank.treinosPorCT && Object.keys(userRank.treinosPorCT).length > 0) {
+                const section = document.getElementById('userTrainingSection');
+                section.style.display = 'block';
+                const grid = document.getElementById('userTrainingGrid');
+                grid.innerHTML = '';
+                Object.keys(userRank.treinosPorCT).sort().forEach(ct => {
+                    const tag = document.createElement('div');
+                    tag.className = 'user-ct-tag';
+                    tag.innerHTML = '<div class="user-ct-tag-name">' + ct + '</div><div class="user-ct-tag-count">' + userRank.treinosPorCT[ct] + '</div>';
+                    grid.appendChild(tag);
+                });
+                document.getElementById('userTotalCount').textContent = userRank.totalTreinos;
+            } else {
+                document.getElementById('userTrainingSection').style.display = 'none';
+            }
+
+            // Top 3
+            const top3 = document.getElementById('top3Container');
+            top3.innerHTML = '';
+            const medals = ['🥇','🥈','🥉'];
+            const classes = ['gold','silver','bronze'];
+            for (let i = 0; i < Math.min(3, ranking.length); i++) {
+                const s = ranking[i];
+                let cts = '';
+                if (s.treinosPorCT) cts = Object.keys(s.treinosPorCT).map(c => c + ': ' + s.treinosPorCT[c]).join(' | ');
+                const card = document.createElement('div');
+                card.className = 'podium-card ' + classes[i];
+                card.innerHTML = '<div class="podium-medal">' + medals[i] + '</div><div class="podium-name">' + s.name + '</div><div class="podium-faixa">' + s.faixa + '</div><div class="podium-count">' + s.totalTreinos + '</div><div class="podium-ct">' + s.ctPrincipal + '</div>' + (cts ? '<div style="font-size:9px;color:var(--text-3);margin-top:4px;">' + cts + '</div>' : '');
+                top3.appendChild(card);
+            }
+            top3.style.display = ranking.length > 0 ? 'grid' : 'none';
+
+            // User position (if >3)
+            if (userRank && userPosition > 3) {
+                const posSection = document.getElementById('userPositionSection');
+                posSection.style.display = 'block';
+                const nextUser = ranking[userPosition] || null;
+                const nextDiff = nextUser ? userRank.totalTreinos - nextUser.totalTreinos : 0;
+                let uCts = '';
+                if (userRank.treinosPorCT) uCts = Object.keys(userRank.treinosPorCT).map(c => c + ': ' + userRank.treinosPorCT[c]).join(' • ');
+                document.getElementById('userPositionCard').innerHTML =
+                    '<div><div class="user-pos-rank">#' + userPosition + 'º lugar</div><div class="user-pos-name">' + currentUser.name + '</div><div class="user-pos-meta">' + userRank.faixa + ' • ' + userRank.totalTreinos + ' treinos</div>' + (uCts ? '<div style="font-size:11px;color:var(--text-3);margin-top:4px;">' + uCts + '</div>' : '') + '</div><div><div class="user-pos-next-label">Próximo</div><div class="user-pos-diff">' + (nextDiff > 0 ? '+' : '') + nextDiff + ' treinos</div></div>';
+            }
+
+            // 4th+ list
+            const listSection = document.getElementById('rankingListSection');
+            const list = document.getElementById('rankingList');
+            if (ranking.length > 3) {
+                listSection.style.display = 'block';
+                list.innerHTML = '';
+                for (let i = 3; i < ranking.length; i++) {
+                    const s = ranking[i];
+                    const isMe = s.email.toLowerCase() === currentUser.email.toLowerCase();
+                    let cts = '';
+                    if (s.treinosPorCT) cts = Object.keys(s.treinosPorCT).map(c => c + ': ' + s.treinosPorCT[c]).join(' • ');
+                    const item = document.createElement('div');
+                    item.className = 'rank-item' + (isMe ? ' me' : '');
+                    item.innerHTML = '<div class="rank-item-left"><div class="rank-pos">#' + (i+1) + '</div><div><div class="rank-name">' + s.name + (isMe ? ' ✨' : '') + '</div><div class="rank-detail">' + s.faixa + ' • ' + s.ctPrincipal + '</div>' + (cts ? '<div style="font-size:10px;color:var(--text-3);margin-top:2px;">' + cts + '</div>' : '') + '</div></div><div class="rank-num">' + s.totalTreinos + '</div>';
+                    list.appendChild(item);
+                }
+            }
+        }
+
+        function displayCTRanking(ranking, ctName) {
+            const ctRanking = ranking
+                .filter(s => s.treinosPorCT && s.treinosPorCT[ctName] && s.treinosPorCT[ctName] > 0)
+                .map(s => ({ ...s, ctTreinos: s.treinosPorCT[ctName] }))
+                .sort((a, b) => b.ctTreinos - a.ctTreinos);
+
+            const list = document.getElementById('ctRankingList');
+            document.getElementById('ctRankingTitle').textContent = 'Ranking em ' + ctName;
+            list.innerHTML = '';
+
+            if (ctRanking.length === 0) {
+                list.innerHTML = '<div style="text-align:center;color:var(--text-3);padding:20px;">Nenhum aluno treinou neste CT</div>';
+                return;
+            }
+
+            for (let i = 0; i < ctRanking.length; i++) {
+                const s = ctRanking[i];
+                const isMe = s.email.toLowerCase() === currentUser.email.toLowerCase();
+                const item = document.createElement('div');
+                item.className = 'rank-item' + (isMe ? ' me' : '');
+                item.innerHTML = '<div class="rank-item-left"><div class="rank-pos">#' + (i+1) + '</div><div><div class="rank-name">' + s.name + (isMe ? ' ✨' : '') + '</div><div class="rank-detail">' + s.faixa + ' • ' + s.ctPrincipal + '</div></div></div><div class="rank-num">' + s.ctTreinos + '</div>';
+                list.appendChild(item);
+            }
+        }
+
+        // ===== EVOLUÇÃO =====
+        const BELT_CONFIG = {
+            'Branca': { order: 0, emoji: '⚪', class: 'branca', next: 'Azul', minMonths: 12, minTreinos: 90 },
+            'Azul':   { order: 1, emoji: '🔵', class: 'azul',   next: 'Roxa', minMonths: 24, minTreinos: 200 },
+            'Roxa':   { order: 2, emoji: '🟣', class: 'roxa',   next: 'Marrom', minMonths: 24, minTreinos: 300 },
+            'Marrom': { order: 3, emoji: '🟤', class: 'marrom', next: 'Preta', minMonths: 18, minTreinos: 200 },
+            'Preta':  { order: 4, emoji: '⚫', class: 'preta',  next: null, minMonths: 0, minTreinos: 0 }
+        };
+        const BELT_ORDER = ['Branca', 'Azul', 'Roxa', 'Marrom', 'Preta'];
+        const BELT_ACCUMULATED = { 'Branca': 0, 'Azul': 90, 'Roxa': 290, 'Marrom': 590, 'Preta': 790 };
+        const SEMESTER_MAX_CLASSES = 48;
+        const GRAU_MIN_TREINOS = 22;
+        const FREQ_MIN_APTO = 75;
+        const FREQ_MIN_EVOLUCAO = 60;
+
+        function loadEvolucao() {
+            if (!currentUser) return;
+            const faixa = currentUser.faixa || 'Branca';
+            const grau = parseInt(currentUser.grau) || 0;
+            const totalTreinos = parseInt(currentUser.treinos) || 0;
+            const treinosSemestre = Math.min(totalTreinos, SEMESTER_MAX_CLASSES);
+            const freq = Math.min(SEMESTER_MAX_CLASSES > 0 ? Math.round((treinosSemestre / SEMESTER_MAX_CLASSES) * 100) : 0, 100);
+            const avaliacao = currentUser.avaliacaoTecnica || false;
+            const compromisso = currentUser.compromisso || false;
+            const tempoNaFaixa = currentUser.tempoNaFaixa || 0;
+
+            renderHero(faixa, grau, totalTreinos, treinosSemestre, freq);
+            renderSeals(grau, treinosSemestre);
+            renderFrequencyNew(freq, treinosSemestre);
+            renderFaixaCriteria(faixa, grau, totalTreinos, freq, tempoNaFaixa, avaliacao, compromisso);
+            renderTimeline(faixa, totalTreinos);
+            renderMotivation(freq);
+        }
+
+        function renderHero(faixa, grau, totalTreinos, treinosSemestre, freq) {
+            const cfg = BELT_CONFIG[faixa] || BELT_CONFIG['Branca'];
+            document.getElementById('evoHeroBelt').className = 'evo-hero-belt ' + cfg.class;
+            document.getElementById('evoHeroTitle').textContent = 'Faixa ' + faixa + ' ' + cfg.emoji;
+            document.getElementById('evoHeroSub').textContent = grau + '/4 graus' + (cfg.next ? ' • Próxima: ' + cfg.next : ' • 🏆 Máxima');
+
+            const statusEl = document.getElementById('evoHeroStatus');
+            if (freq < FREQ_MIN_EVOLUCAO) statusEl.innerHTML = '<div class="evo-hero-status red">🔴 Não apto</div>';
+            else if (freq < FREQ_MIN_APTO) statusEl.innerHTML = '<div class="evo-hero-status yellow">🟡 Em evolução</div>';
+            else statusEl.innerHTML = '<div class="evo-hero-status green">🟢 Apto</div>';
+
+            document.getElementById('evoStatTreinos').textContent = totalTreinos;
+            document.getElementById('evoStatSemestre').textContent = treinosSemestre;
+        }
+
+        function renderSeals(grauAtual, treinosSemestre) {
+            const row = document.getElementById('evoSealsRow');
+            row.innerHTML = '';
+            const reqs = [GRAU_MIN_TREINOS, GRAU_MIN_TREINOS*2, GRAU_MIN_TREINOS*3, GRAU_MIN_TREINOS*4];
+
+            for (let i = 0; i < 4; i++) {
+                const min = reqs[i];
+                const isUnlocked = (i + 1) <= grauAtual;
+                const isCurrent = !isUnlocked && (i === grauAtual);
+                const progress = Math.min(treinosSemestre, min);
+                const pct = Math.round((progress / min) * 100);
+
+                let cls = 'locked', icon = '🔒', lbl = '', prog = '';
+                if (isUnlocked) { cls = 'unlocked'; icon = '⭐'; lbl = 'unlocked'; prog = 'Conquistado'; }
+                else if (isCurrent) { cls = 'current-target'; icon = pct >= 100 ? '✅' : '🎯'; lbl = 'current-target'; prog = progress + '/' + min; }
+
+                const seal = document.createElement('div');
+                seal.className = 'evo-seal';
+                seal.innerHTML = '<div class="evo-seal-circle ' + cls + '">' + icon + '</div><div class="evo-seal-label ' + lbl + '">' + (i+1) + 'º Grau</div><div class="evo-seal-progress">' + prog + '</div>';
+                row.appendChild(seal);
+            }
+        }
+
+        function renderFrequencyNew(freq, treinosSemestre) {
+            const cls = freq < FREQ_MIN_EVOLUCAO ? 'red' : freq < FREQ_MIN_APTO ? 'yellow' : 'green';
+            const pctEl = document.getElementById('evoFreqPct');
+            pctEl.textContent = freq + '%';
+            pctEl.className = 'evo-freq-pct ' + cls;
+            const barEl = document.getElementById('evoFreqBarFill');
+            barEl.className = 'evo-freq-bar-fill ' + cls;
+            setTimeout(() => { barEl.style.width = Math.min(freq, 100) + '%'; }, 100);
+            document.getElementById('evoFreqDetail').textContent = treinosSemestre + ' de ' + SEMESTER_MAX_CLASSES + ' aulas possíveis';
+        }
+
+        function renderFaixaCriteria(faixa, grau, totalTreinos, freq, tempoNaFaixa, avaliacao, compromisso) {
+            const cfg = BELT_CONFIG[faixa] || BELT_CONFIG['Branca'];
+            if (!cfg.next) {
+                document.getElementById('evoFaixaCriteria').style.display = 'none';
+                document.getElementById('evoExamBtn').style.display = 'none';
+                return;
+            }
+            document.getElementById('evoFaixaCriteriaTitle').textContent = faixa + ' → ' + cfg.next;
+
+            const criteria = [
+                { label: '4 graus completos', detail: grau + '/4 graus', pass: grau >= 4 },
+                { label: 'Tempo mínimo ' + cfg.minMonths + ' meses', detail: tempoNaFaixa + '/' + cfg.minMonths + ' meses', pass: tempoNaFaixa >= cfg.minMonths },
+                { label: 'Mínimo ' + cfg.minTreinos + ' treinos', detail: totalTreinos + '/' + cfg.minTreinos, pass: totalTreinos >= cfg.minTreinos },
+                { label: 'Frequência ≥ 75%', detail: freq + '%', pass: freq >= 75 },
+                { label: 'Avaliação técnica', detail: avaliacao ? 'Aprovada' : 'Pendente', pass: avaliacao, pending: !avaliacao },
+                { label: 'Compromisso validado', detail: compromisso ? 'Validado' : 'Pendente', pass: compromisso, pending: !compromisso }
+            ];
+
+            const passCount = criteria.filter(c => c.pass).length;
+            document.getElementById('evoFaixaProgress').textContent = passCount + '/' + criteria.length;
+
+            const listEl = document.getElementById('evoFaixaCriteriaList');
+            listEl.innerHTML = '';
+            criteria.forEach(c => {
+                const st = c.pass ? 'pass' : (c.pending ? 'pending' : 'fail');
+                const icon = c.pass ? '✓' : (c.pending ? '⏳' : '✗');
+                listEl.innerHTML += '<div class="evo-criteria-item"><div class="evo-criteria-check ' + st + '">' + icon + '</div><div class="evo-criteria-text"><div class="evo-criteria-label">' + c.label + '</div><div class="evo-criteria-detail">' + c.detail + '</div></div></div>';
+            });
+
+            const allPass = grau >= 4 && tempoNaFaixa >= cfg.minMonths && totalTreinos >= cfg.minTreinos && freq >= 75 && avaliacao && compromisso;
+            const btn = document.getElementById('evoExamBtn');
+            if (allPass) {
+                btn.className = 'evo-exam-btn active';
+                btn.disabled = false;
+                btn.innerHTML = '🏅 Solicitar Exame → ' + cfg.next;
+                btn.onclick = () => alert('Solicitação de exame enviada! Aguarde contato do professor.');
+            } else {
+                btn.className = 'evo-exam-btn disabled';
+                btn.disabled = true;
+                btn.innerHTML = '🔒 ' + (criteria.length - passCount) + ' critério(s) pendente(s)';
+            }
+        }
+
+        function renderTimeline(faixaAtual, totalTreinos) {
+            const currentIdx = BELT_ORDER.indexOf(faixaAtual);
+            const track = document.getElementById('evoTimeline');
+            const lineBg = track.querySelector('.evo-tl-line-bg');
+            track.innerHTML = '';
+            track.appendChild(lineBg);
+
+            let fillPct = 0;
+            if (currentIdx >= 0) {
+                const seg = 100 / (BELT_ORDER.length - 1);
+                fillPct = currentIdx * seg;
+                if (currentIdx < BELT_ORDER.length - 1) {
+                    const need = BELT_CONFIG[faixaAtual].minTreinos;
+                    if (need > 0) fillPct += Math.min(totalTreinos / need, 1) * seg * 0.8;
+                }
+            }
+            const fillEl = lineBg.querySelector('.evo-tl-line-fill');
+            setTimeout(() => { fillEl.style.width = Math.min(fillPct, 100) + '%'; }, 200);
+
+            const emojis = { 'Branca': '⚪', 'Azul': '🔵', 'Roxa': '🟣', 'Marrom': '🟤', 'Preta': '⚫' };
+            const years = { 'Branca': '~1a', 'Azul': '~2a', 'Roxa': '~2a', 'Marrom': '~1.5a', 'Preta': '🏆' };
+
+            BELT_ORDER.forEach((belt, idx) => {
+                const node = document.createElement('div');
+                node.className = 'evo-tl-node';
+                let state = 'future';
+                if (idx < currentIdx) state = 'completed';
+                else if (idx === currentIdx) state = 'current';
+                node.innerHTML = '<div class="evo-tl-dot ' + BELT_CONFIG[belt].class + ' ' + state + '">' + emojis[belt] + '</div><div class="evo-tl-label ' + (state === 'current' ? 'current' : '') + '">' + belt + '</div><div class="evo-tl-meta">' + years[belt] + '</div>';
+                track.appendChild(node);
+            });
+
+            const totalNeeded = BELT_ACCUMULATED['Preta'];
+            const accumulated = BELT_ACCUMULATED[faixaAtual] + totalTreinos;
+            const overallPct = Math.min(Math.round((accumulated / totalNeeded) * 100), 100);
+            document.getElementById('evoOverallPct').textContent = overallPct + '%';
+            setTimeout(() => { document.getElementById('evoOverallFill').style.width = overallPct + '%'; }, 300);
+        }
+
+        function renderMotivation(freq) {
+            const iconEl = document.getElementById('evoMotivation').querySelector('.evo-motivation-icon');
+            const textEl = document.getElementById('evoMotivationText');
+            const subEl = document.getElementById('evoMotivationSub');
+            if (freq >= 75) { iconEl.textContent = '🔥'; textEl.textContent = '"Consistência constrói campeões."'; subEl.textContent = 'Sua dedicação está no caminho certo!'; }
+            else if (freq >= 60) { iconEl.textContent = '💪'; textEl.textContent = '"Você está perto. Continue firme."'; subEl.textContent = 'Mais alguns treinos e você atinge o objetivo'; }
+            else if (freq >= 30) { iconEl.textContent = '🥋'; textEl.textContent = '"A faixa preta é construída nos dias que você quase faltou."'; subEl.textContent = 'Cada treino conta — volte ao tatame'; }
+            else { iconEl.textContent = '🌅'; textEl.textContent = '"A jornada de mil milhas começa com um único passo."'; subEl.textContent = 'Nunca é tarde para recomeçar'; }
+        }
+
+        // ===== AUTO UPDATE GRAU =====
+        async function autoUpdateGrau(novoGrau) {
+            if (!currentUser) return;
+            if (currentUser._updatingGrau) return;
+            if (novoGrau <= (currentUser.grau || 0)) return;
+            currentUser._updatingGrau = true;
+            try {
+                const r = await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify({ action: 'updateGrau', email: currentUser.email, grau: novoGrau }) });
+                const data = await r.json();
+                if (data.success) {
+                    currentUser.grau = novoGrau;
+                    sessionStorage.setItem('bjjUser', JSON.stringify(currentUser));
+                }
+            } catch (err) { console.error('Erro grau:', err); }
+            finally { currentUser._updatingGrau = false; }
+        }
+    </script>
+</body>
+</html>

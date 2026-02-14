@@ -14,6 +14,18 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+    // Early notch detection
+    (function(){
+        var isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+        var h = screen.height, w = screen.width;
+        var hasNotch = isIOS && (Math.max(h,w) >= 812);
+        var isStandalone = navigator.standalone === true;
+        if (hasNotch || isStandalone) {
+            document.documentElement.style.setProperty('--notch-top', hasNotch ? '50px' : '24px');
+        }
+    })();
+    </script>
     <style>
 
         * {
@@ -48,6 +60,7 @@
             --shadow-card: 0 2px 20px rgba(0,0,0,0.4);
             --shadow-glow: 0 0 30px rgba(212, 165, 41, 0.1);
             --safe-bottom: 0px;
+            --notch-top: 0px;
         }
 
         @supports (padding-bottom: env(safe-area-inset-bottom)) {
@@ -128,7 +141,7 @@
             -ms-flex-pack: justify;
             justify-content: space-between;
             padding: 14px 20px;
-            padding-top: calc(14px + env(safe-area-inset-top, 0px));
+            padding-top: calc(14px + var(--notch-top, 0px));
             background: #08080a;
             border-bottom: 1px solid var(--border);
             position: relative;
@@ -136,6 +149,16 @@
             -webkit-flex-shrink: 0;
             -ms-flex-negative: 0;
             flex-shrink: 0;
+        }
+
+        /* iOS 11.0-11.1 */
+        @supports (padding-top: constant(safe-area-inset-top)) {
+            .hdr { padding-top: calc(14px + constant(safe-area-inset-top)); }
+        }
+
+        /* iOS 11.2+ / modern */
+        @supports (padding-top: env(safe-area-inset-top)) {
+            .hdr { padding-top: calc(14px + env(safe-area-inset-top)); }
         }
 
         @supports ((-webkit-backdrop-filter: blur(1px)) or (backdrop-filter: blur(1px))) {
@@ -519,6 +542,38 @@
             letter-spacing: 1px;
             margin-bottom: 8px;
         }
+
+        /* ===== PASSWORD INPUT ===== */
+        .password-wrapper {
+            position: relative;
+        }
+        .password-wrapper input {
+            padding-right: 44px;
+        }
+        .password-toggle {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: var(--text-3);
+            cursor: pointer;
+            padding: 4px;
+            font-size: 18px;
+            line-height: 1;
+            transition: color 0.2s;
+        }
+        .password-toggle:hover {
+            color: var(--gold);
+        }
+        .password-match-hint {
+            font-size: 11px;
+            margin-top: 4px;
+            min-height: 16px;
+        }
+        .password-match-hint.match { color: #2ecc71; }
+        .password-match-hint.no-match { color: #e74c3c; }
 
         /* ===== TAB CONTENT ===== */
         .tab-content {
@@ -1553,25 +1608,10 @@
 
         /* Belt colors */
         .ibjjf-belt-band.branca { background: linear-gradient(90deg, #e8e8e8, #f5f5f5); }
-        .ibjjf-belt-band.cinza-branca { background: linear-gradient(90deg, #bbb, #e8e8e8); }
-        .ibjjf-belt-band.cinza { background: linear-gradient(90deg, #999, #bbb); }
-        .ibjjf-belt-band.cinza-preta { background: linear-gradient(90deg, #999, #333); }
-        .ibjjf-belt-band.amarela-branca { background: linear-gradient(90deg, #F5D04E, #e8e8e8); }
-        .ibjjf-belt-band.amarela { background: linear-gradient(90deg, #E8C425, #F5D04E); }
-        .ibjjf-belt-band.amarela-preta { background: linear-gradient(90deg, #E8C425, #333); }
-        .ibjjf-belt-band.laranja-branca { background: linear-gradient(90deg, #FF8C00, #e8e8e8); }
-        .ibjjf-belt-band.laranja { background: linear-gradient(90deg, #E67300, #FF8C00); }
-        .ibjjf-belt-band.laranja-preta { background: linear-gradient(90deg, #E67300, #333); }
-        .ibjjf-belt-band.verde-branca { background: linear-gradient(90deg, #2E8B57, #e8e8e8); }
-        .ibjjf-belt-band.verde { background: linear-gradient(90deg, #228B22, #2E8B57); }
-        .ibjjf-belt-band.verde-preta { background: linear-gradient(90deg, #228B22, #333); }
         .ibjjf-belt-band.azul { background: linear-gradient(90deg, #1565C0, #2196F3); }
         .ibjjf-belt-band.roxa { background: linear-gradient(90deg, #6A1B9A, #9C27B0); }
         .ibjjf-belt-band.marrom { background: linear-gradient(90deg, #5D4037, #8D6E63); }
         .ibjjf-belt-band.preta { background: linear-gradient(90deg, #1a1a1a, #424242); }
-        .ibjjf-belt-band.vermelha-preta { background: linear-gradient(90deg, #C62828, #333); }
-        .ibjjf-belt-band.vermelha-branca { background: linear-gradient(90deg, #C62828, #e8e8e8); }
-        .ibjjf-belt-band.vermelha { background: linear-gradient(90deg, #B71C1C, #D32F2F); }
 
         /* Belt info */
         .ibjjf-belt-info {
@@ -1662,20 +1702,6 @@
         .ibjjf-status-tag.done {
             color: var(--text-3);
             font-size: 12px;
-        }
-
-        /* Category dividers */
-        .ibjjf-category {
-            font-family: 'Sora', sans-serif;
-            font-size: 9px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-            color: var(--text-3);
-            padding: 8px 0 4px;
-            margin-left: -32px;
-            padding-left: 32px;
-            opacity: 0.6;
         }
 
         /* Progress summary below roadmap */
@@ -1788,6 +1814,230 @@
             font-weight: 700;
         }
 
+        /* ===== PERFIL TAB ===== */
+        .perfil-container { max-width: 480px; margin: 0 auto; }
+
+        .perfil-header {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .perfil-avatar-big {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent), var(--gold-light));
+            display: -webkit-flex;
+            display: flex;
+            -webkit-align-items: center;
+            align-items: center;
+            -webkit-justify-content: center;
+            justify-content: center;
+            font-size: 32px;
+            font-weight: 800;
+            color: var(--bg-deep);
+            margin: 0 auto 12px;
+            font-family: 'Sora', sans-serif;
+        }
+
+        .perfil-nome {
+            font-family: 'Sora', sans-serif;
+            font-size: 20px;
+            font-weight: 800;
+            color: var(--text-1);
+        }
+
+        .perfil-faixa-tag {
+            display: inline-block;
+            font-size: 11px;
+            font-weight: 700;
+            padding: 4px 12px;
+            border-radius: 50px;
+            background: var(--accent-dim);
+            color: var(--accent);
+            margin-top: 6px;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .perfil-completeness {
+            margin-top: 16px;
+            padding: 12px 16px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+        }
+
+        .perfil-completeness-row {
+            display: -webkit-flex;
+            display: flex;
+            -webkit-justify-content: space-between;
+            justify-content: space-between;
+            -webkit-align-items: center;
+            align-items: center;
+            margin-bottom: 6px;
+        }
+
+        .perfil-completeness-label {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--text-2);
+        }
+
+        .perfil-completeness-pct {
+            font-family: 'Sora', sans-serif;
+            font-size: 13px;
+            font-weight: 800;
+            color: var(--accent);
+        }
+
+        .perfil-completeness-bar {
+            height: 5px;
+            background: var(--bg-elevated);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .perfil-completeness-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent), var(--gold-light));
+            border-radius: 3px;
+            -webkit-transition: width 0.6s ease;
+            transition: width 0.6s ease;
+        }
+
+        .perfil-section {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 18px;
+            margin-bottom: 16px;
+        }
+
+        .perfil-section-title {
+            font-family: 'Sora', sans-serif;
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--text-2);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 14px;
+            display: -webkit-flex;
+            display: flex;
+            -webkit-align-items: center;
+            align-items: center;
+        }
+
+        .perfil-section-title span { margin-right: 8px; }
+
+        .perfil-field {
+            margin-bottom: 14px;
+        }
+
+        .perfil-field:last-child { margin-bottom: 0; }
+
+        .perfil-field label {
+            display: block;
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--text-2);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 6px;
+        }
+
+        .perfil-field input,
+        .perfil-field select,
+        .perfil-field textarea {
+            width: 100%;
+            padding: 12px 14px;
+            font-size: 15px;
+            background: var(--bg-elevated);
+            border: 1.5px solid var(--border);
+            border-radius: var(--radius-md);
+            color: var(--text-1);
+            font-family: inherit;
+            -webkit-appearance: none;
+            appearance: none;
+        }
+
+        .perfil-field textarea {
+            resize: vertical;
+            min-height: 70px;
+        }
+
+        .perfil-field input:focus,
+        .perfil-field select:focus,
+        .perfil-field textarea:focus {
+            outline: none;
+            border-color: var(--accent);
+            background: rgba(212,165,41,0.05);
+            box-shadow: 0 0 0 3px rgba(212,165,41,0.1);
+        }
+
+        .perfil-row {
+            display: -webkit-flex;
+            display: flex;
+            gap: 12px;
+        }
+
+        .perfil-row > .perfil-field {
+            -webkit-flex: 1;
+            flex: 1;
+            min-width: 0;
+        }
+
+        .perfil-save-btn {
+            width: 100%;
+            padding: 16px;
+            border-radius: var(--radius-md);
+            background: linear-gradient(135deg, var(--accent), var(--gold-light));
+            color: var(--bg-deep);
+            font-family: 'Sora', sans-serif;
+            font-size: 14px;
+            font-weight: 700;
+            letter-spacing: 0.8px;
+            text-transform: uppercase;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 4px 20px rgba(212,165,41,0.3);
+        }
+
+        .perfil-save-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .perfil-divider {
+            height: 1px;
+            background: var(--border);
+            margin: 14px 0;
+        }
+
+        .perfil-pwd-row {
+            display: -webkit-flex;
+            display: flex;
+            gap: 12px;
+        }
+
+        .perfil-pwd-row > .perfil-field { -webkit-flex: 1; flex: 1; min-width: 0; }
+
+        .perfil-logout-btn {
+            width: 100%;
+            padding: 14px;
+            border-radius: var(--radius-md);
+            background: transparent;
+            color: var(--coral);
+            border: 2px solid rgba(232,93,93,0.3);
+            font-family: inherit;
+            font-size: 14px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            cursor: pointer;
+            margin-top: 8px;
+        }
+
         /* ===== RESPONSIVE ===== */
         @media (max-width: 380px) {
             .main { padding: 14px 12px; padding-bottom: 76px; }
@@ -1871,6 +2121,541 @@
             .hdr { padding-left: max(20px, env(safe-area-inset-left)); padding-right: max(20px, env(safe-area-inset-right)); }
             .main { padding-left: max(16px, env(safe-area-inset-left)); padding-right: max(16px, env(safe-area-inset-right)); }
         }
+
+        /* ===== ADMIN PANEL - TEMA INDIGO (DIFERENTE DO ALUNO) ===== */
+        /* Admin color palette */
+        :root {
+            --adm-primary: #818CF8;
+            --adm-primary-bright: #A5B4FC;
+            --adm-primary-dim: rgba(129,140,248,0.10);
+            --adm-primary-glow: rgba(129,140,248,0.25);
+            --adm-bg: #080a1a;
+            --adm-bg-card: #0f1228;
+            --adm-bg-elevated: #161938;
+            --adm-border: rgba(129,140,248,0.12);
+            --adm-border-accent: rgba(129,140,248,0.25);
+            --adm-text-1: #E8E9F3;
+            --adm-text-2: #9698B8;
+            --adm-text-3: #5C5E80;
+            --adm-green: #34D399;
+            --adm-green-dim: rgba(52,211,153,0.12);
+            --adm-red: #F87171;
+            --adm-red-dim: rgba(248,113,113,0.12);
+            --adm-amber: #FBBF24;
+            --adm-amber-dim: rgba(251,191,36,0.12);
+        }
+
+        /* Admin screen wrapper - distinct background */
+        #adminScreen {
+            background: var(--adm-bg);
+            min-height: calc(100vh - 120px);
+            padding-bottom: 100px;
+        }
+
+        /* Admin page title bar */
+        .adm-page-title {
+            padding: 20px 0 4px;
+            text-align: center;
+        }
+        .adm-page-title h2 {
+            font-family: 'Sora', sans-serif;
+            font-size: 16px;
+            font-weight: 800;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            background: linear-gradient(135deg, var(--adm-primary-bright), var(--adm-primary), #C4B5FD);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin: 0;
+        }
+        .adm-page-title p {
+            font-size: 11px;
+            color: var(--adm-text-3);
+            margin: 4px 0 0;
+            letter-spacing: 0.5px;
+        }
+
+        .admin-container { max-width: 560px; margin: 0 auto; padding: 0 4px; }
+
+        /* Admin welcome banner */
+        .admin-welcome {
+            display: flex; align-items: center; gap: 14px;
+            padding: 18px 16px;
+            background: linear-gradient(135deg, var(--adm-primary-dim), rgba(99,102,241,0.04));
+            border-radius: 16px;
+            margin-bottom: 18px;
+            border: 1px solid var(--adm-border-accent);
+            position: relative;
+            overflow: hidden;
+        }
+        .admin-welcome::after {
+            content: '';
+            position: absolute; top: -30px; right: -30px;
+            width: 100px; height: 100px;
+            background: radial-gradient(circle, var(--adm-primary-glow), transparent 70%);
+            pointer-events: none;
+        }
+        .admin-welcome-icon { font-size: 36px; z-index: 1; }
+        .admin-welcome-text { z-index: 1; }
+        .admin-welcome-title { font-family: 'Sora', sans-serif; font-size: 18px; font-weight: 700; color: var(--adm-text-1); }
+        .admin-welcome-sub { font-size: 11px; color: var(--adm-primary); font-weight: 600; letter-spacing: 1px; text-transform: uppercase; margin-top: 2px; }
+
+        /* Admin sections */
+        .admin-section {
+            background: var(--adm-bg-card);
+            border-radius: 14px;
+            padding: 16px;
+            margin-bottom: 14px;
+            border: 1px solid var(--adm-border);
+        }
+        .admin-section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+        .admin-section-title {
+            font-family: 'Sora', sans-serif; font-size: 14px; font-weight: 700;
+            color: var(--adm-primary-bright);
+            display: flex; align-items: center; gap: 8px;
+        }
+
+        /* Admin badges */
+        .admin-badge { background: var(--adm-red); color: #fff; font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 20px; min-width: 20px; text-align: center; }
+        .admin-badge.green { background: var(--adm-green); color: #0a0a0a; }
+        .admin-badge.blue { background: var(--adm-primary); color: #0a0a0a; }
+
+        .admin-empty { text-align: center; color: var(--adm-text-3); padding: 24px 0; font-size: 13px; }
+
+        /* Admin stats grid */
+        .admin-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 18px; }
+        .admin-stat {
+            background: var(--adm-bg-card);
+            border-radius: 12px;
+            padding: 12px 6px;
+            text-align: center;
+            border: 1px solid var(--adm-border);
+            position: relative;
+            overflow: hidden;
+        }
+        .admin-stat::before {
+            content: '';
+            position: absolute; top: 0; left: 0; right: 0; height: 2px;
+            background: linear-gradient(90deg, transparent, var(--adm-primary), transparent);
+        }
+        .admin-stat-num { font-family: 'Sora', sans-serif; font-size: 26px; font-weight: 800; color: var(--adm-primary-bright); }
+        .admin-stat-label { font-size: 10px; color: var(--adm-text-3); margin-top: 4px; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600; }
+        .admin-stat.warn .admin-stat-num { color: var(--adm-amber); }
+        .admin-stat.warn::before { background: linear-gradient(90deg, transparent, var(--adm-amber), transparent); }
+        .admin-stat.ok .admin-stat-num { color: var(--adm-green); }
+        .admin-stat.ok::before { background: linear-gradient(90deg, transparent, var(--adm-green), transparent); }
+
+        /* Admin cards */
+        .admin-card {
+            background: var(--adm-bg-elevated);
+            border-radius: 10px;
+            padding: 12px;
+            margin-bottom: 10px;
+            border: 1px solid var(--adm-border);
+            transition: border-color 0.2s;
+        }
+        .admin-card:last-child { margin-bottom: 0; }
+        .admin-card:hover { border-color: var(--adm-border-accent); }
+        .admin-card-top { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+        .admin-card-avatar {
+            width: 36px; height: 36px; border-radius: 50%;
+            background: var(--adm-primary-dim); color: var(--adm-primary-bright);
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 700; font-size: 14px; flex-shrink: 0;
+            border: 1px solid var(--adm-border-accent);
+        }
+        .admin-card-info { flex: 1; min-width: 0; }
+        .admin-card-name { font-weight: 600; color: var(--adm-text-1); font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .admin-card-meta { font-size: 12px; color: var(--adm-text-2); margin-top: 2px; }
+        .admin-card-detail { font-size: 12px; color: var(--adm-text-3); margin-bottom: 8px; padding-left: 46px; }
+        .admin-card-actions { display: flex; gap: 8px; padding-left: 46px; }
+
+        /* Admin buttons */
+        .admin-btn { padding: 8px 16px; border-radius: 8px; font-size: 12px; font-weight: 600; cursor: pointer; border: none; transition: all 0.2s; min-height: 36px; }
+        .admin-btn.approve { background: var(--adm-green); color: #0a0a0a; }
+        .admin-btn.approve:hover { background: #5EEAD4; }
+        .admin-btn.reject { background: transparent; color: var(--adm-red); border: 1px solid var(--adm-red-dim); }
+        .admin-btn.reject:hover { background: var(--adm-red-dim); }
+        .admin-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+        .admin-refresh-btn {
+            background: transparent; color: var(--adm-primary);
+            border: 1px solid var(--adm-border-accent);
+            padding: 6px 12px; border-radius: 8px;
+            font-size: 12px; font-weight: 600; cursor: pointer; min-height: 32px;
+        }
+        .admin-refresh-btn:hover { background: var(--adm-primary-dim); }
+
+        /* Admin bulk approve */
+        .admin-bulk-btn {
+            width: 100%; padding: 12px; border-radius: 10px; border: none;
+            background: linear-gradient(135deg, var(--adm-primary), #6366F1);
+            color: #fff; font-weight: 700; font-size: 14px; cursor: pointer;
+            margin-top: 12px; min-height: 44px;
+            box-shadow: 0 4px 16px var(--adm-primary-glow);
+        }
+        .admin-bulk-btn:hover { opacity: 0.9; }
+        .admin-bulk-btn:disabled { opacity: 0.4; cursor: not-allowed; box-shadow: none; }
+
+        /* Admin filter row */
+        .admin-filter-row { display: flex; gap: 8px; margin-bottom: 12px; }
+        .admin-filter-btn {
+            flex: 1; padding: 8px; border-radius: 8px;
+            background: var(--adm-bg-elevated); color: var(--adm-text-3);
+            border: 1px solid var(--adm-border); font-size: 12px; font-weight: 600;
+            cursor: pointer; text-align: center; min-height: 36px;
+            transition: all 0.2s;
+        }
+        .admin-filter-btn.active { background: var(--adm-primary-dim); color: var(--adm-primary-bright); border-color: var(--adm-border-accent); }
+
+        /* Status badges */
+        .admin-checkin-status { display: inline-block; font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 4px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .admin-checkin-status.pendente { background: var(--adm-amber-dim); color: var(--adm-amber); }
+        .admin-checkin-status.aprovado { background: var(--adm-green-dim); color: var(--adm-green); }
+        .admin-checkin-status.rejeitado { background: var(--adm-red-dim); color: var(--adm-red); }
+        .admin-checkin-time { font-size: 11px; color: var(--adm-text-3); background: var(--adm-primary-dim); padding: 2px 8px; border-radius: 4px; display: inline-block; }
+
+        /* Admin student list */
+        .admin-student-card {
+            background: var(--adm-bg-elevated); border-radius: 10px;
+            padding: 12px; margin-bottom: 8px; border: 1px solid var(--adm-border);
+            display: flex; align-items: center; gap: 10px;
+        }
+        .admin-student-card .admin-card-avatar { width: 32px; height: 32px; font-size: 13px; }
+        .admin-student-info { flex: 1; min-width: 0; }
+        .admin-student-name { font-weight: 600; color: var(--adm-text-1); font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .admin-student-meta { font-size: 11px; color: var(--adm-text-3); }
+        .admin-student-belt { font-size: 11px; font-weight: 600; color: var(--adm-text-2); }
+        .admin-student-delete { background: transparent; border: 1px solid var(--adm-red-dim); color: var(--adm-red); font-size: 11px; padding: 4px 10px; border-radius: 6px; cursor: pointer; min-height: 28px; }
+
+        /* Admin header badge */
+        .admin-header-badge {
+            display: inline-block; font-size: 9px; font-weight: 700;
+            color: var(--adm-primary-bright); background: var(--adm-primary-dim);
+            padding: 2px 8px; border-radius: 4px; letter-spacing: 1px;
+            margin-left: 8px; vertical-align: middle;
+            border: 1px solid var(--adm-border-accent);
+        }
+
+        /* Admin bottom nav */
+        #adminNav {
+            background: var(--adm-bg-card) !important;
+            border-top: 1px solid var(--adm-border) !important;
+        }
+        #adminNav .bnav-btn { color: var(--adm-text-3); }
+        #adminNav .bnav-btn.active { color: var(--adm-primary-bright); }
+        #adminNav .bnav-btn.active::after {
+            content: '';
+            position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%);
+            width: 4px; height: 4px; border-radius: 50%;
+            background: var(--adm-primary);
+        }
+        #adminNav .bnav-btn { position: relative; }
+
+        /* Admin inner inputs */
+        #adminScreen input, #adminScreen select, #adminScreen textarea {
+            background: var(--adm-bg-elevated);
+            border-color: var(--adm-border);
+            color: var(--adm-text-1);
+        }
+        #adminScreen input:focus, #adminScreen select:focus, #adminScreen textarea:focus {
+            border-color: var(--adm-primary);
+            box-shadow: 0 0 0 3px var(--adm-primary-dim);
+        }
+        #adminScreen .btn-primary {
+            background: linear-gradient(135deg, var(--adm-primary), #6366F1);
+            box-shadow: 0 4px 12px var(--adm-primary-glow);
+        }
+        #adminScreen .perfil-logout-btn {
+            background: var(--adm-bg-elevated);
+            border-color: var(--adm-border);
+            color: var(--adm-red);
+        }
+        #adminScreen .section-title { color: var(--adm-text-2); }
+        #adminScreen .ct-btn {
+            background: var(--adm-bg-elevated);
+            border-color: var(--adm-border);
+            color: var(--adm-text-2);
+        }
+        #adminScreen .ct-btn.selected {
+            background: var(--adm-primary-dim);
+            border-color: var(--adm-primary);
+            color: var(--adm-primary-bright);
+        }
+        #adminScreen .selected-ct-bar {
+            background: var(--adm-primary-dim);
+            border-color: var(--adm-border-accent);
+            color: var(--adm-primary-bright);
+        }
+        #adminScreen .checkin-profile {
+            background: var(--adm-bg-elevated);
+            border-color: var(--adm-border);
+        }
+        #adminScreen .checkin-avatar {
+            background: var(--adm-primary-dim);
+            color: var(--adm-primary-bright);
+            border-color: var(--adm-border-accent);
+        }
+        #adminScreen .checkin-name { color: var(--adm-text-1); }
+        #adminScreen .checkin-count-num { color: var(--adm-primary-bright); }
+        #adminScreen .checkin-count-label { color: var(--adm-text-3); }
+
+        /* Admin perfil card */
+        #adminScreen .perfil-card {
+            background: var(--adm-bg-elevated);
+            border-color: var(--adm-border);
+        }
+        #adminScreen .perfil-avatar {
+            background: var(--adm-primary-dim);
+            color: var(--adm-primary-bright);
+            border-color: var(--adm-border-accent);
+        }
+        #adminScreen .perfil-name { color: var(--adm-text-1); }
+        #adminScreen .perfil-email { color: var(--adm-text-3); }
+        #adminScreen .form-label { color: var(--adm-text-2); }
+
+        /* CT Schedule Admin */
+
+        /* Report Dashboard */
+        .report-kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-bottom: 18px;
+        }
+        .report-kpi {
+            background: var(--adm-card);
+            border: 1px solid var(--adm-border);
+            border-radius: 12px;
+            padding: 14px;
+            text-align: center;
+        }
+        .report-kpi-num {
+            font-size: 26px;
+            font-weight: 800;
+            font-family: 'Sora', sans-serif;
+        }
+        .report-kpi-num.gold { color: var(--gold); }
+        .report-kpi-num.green { color: #2ecc71; }
+        .report-kpi-num.cyan { color: #67e8f9; }
+        .report-kpi-num.purple { color: #c084fc; }
+        .report-kpi-label {
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--adm-text-3);
+            margin-top: 2px;
+        }
+        .report-section {
+            background: var(--adm-card);
+            border: 1px solid var(--adm-border);
+            border-radius: 14px;
+            padding: 16px;
+            margin-bottom: 14px;
+        }
+        .report-section-title {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--adm-text-2);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 14px;
+        }
+        .report-bar-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+        .report-bar-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--adm-text-2);
+            min-width: 50px;
+            text-align: right;
+            flex-shrink: 0;
+        }
+        .report-bar-track {
+            flex: 1;
+            height: 22px;
+            background: rgba(255,255,255,0.04);
+            border-radius: 6px;
+            overflow: hidden;
+            position: relative;
+        }
+        .report-bar-fill {
+            height: 100%;
+            border-radius: 6px;
+            transition: width 0.6s ease;
+            min-width: 2px;
+        }
+        .report-bar-fill.gold { background: linear-gradient(90deg, #d4af37, #f5d76e); }
+        .report-bar-fill.green { background: linear-gradient(90deg, #2ecc71, #67e8f9); }
+        .report-bar-fill.cyan { background: linear-gradient(90deg, #67e8f9, #22d3ee); }
+        .report-bar-fill.purple { background: linear-gradient(90deg, #a78bfa, #c084fc); }
+        .report-bar-value {
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--adm-text-1);
+            min-width: 30px;
+            text-align: left;
+            flex-shrink: 0;
+        }
+        .report-pico-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            margin-bottom: 18px;
+        }
+        .report-pico {
+            background: var(--adm-card);
+            border: 1px solid var(--adm-border);
+            border-radius: 12px;
+            padding: 12px 8px;
+            text-align: center;
+        }
+        .report-pico-icon { font-size: 20px; margin-bottom: 4px; }
+        .report-pico-val {
+            font-size: 14px;
+            font-weight: 800;
+            color: var(--gold);
+        }
+        .report-pico-lbl {
+            font-size: 9px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--adm-text-3);
+            margin-top: 2px;
+        }
+        .report-table {
+            width: 100%;
+            font-size: 11px;
+            border-collapse: collapse;
+        }
+        .report-table th {
+            text-align: left;
+            font-weight: 700;
+            color: var(--adm-text-3);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-size: 10px;
+            padding: 6px 4px;
+            border-bottom: 1px solid var(--adm-border);
+        }
+        .report-table td {
+            padding: 6px 4px;
+            color: var(--adm-text-2);
+            border-bottom: 1px solid rgba(255,255,255,0.03);
+        }
+        .report-table tr:hover td { color: var(--adm-text-1); }
+        .report-filter-row {
+            display: flex;
+            gap: 6px;
+            margin-bottom: 14px;
+            flex-wrap: wrap;
+        }
+        .report-filter-btn {
+            padding: 6px 14px;
+            border-radius: 20px;
+            border: 1px solid var(--adm-border);
+            background: transparent;
+            color: var(--adm-text-3);
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .report-filter-btn.active {
+            background: var(--adm-primary-dim);
+            border-color: var(--adm-primary-bright);
+            color: var(--adm-primary-bright);
+        }
+
+        /* CT Schedule Admin */
+        .ct-schedule-card {
+            background: var(--adm-card);
+            border: 1px solid var(--adm-border);
+            border-radius: 14px;
+            padding: 16px;
+            margin-bottom: 14px;
+        }
+        .ct-schedule-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 12px;
+        }
+        .ct-schedule-name {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--adm-text-1);
+        }
+        .ct-schedule-status {
+            font-size: 11px;
+            font-weight: 600;
+            padding: 3px 10px;
+            border-radius: 20px;
+        }
+        .ct-schedule-status.saved { background: rgba(45,138,78,0.15); color: #2ecc71; }
+        .ct-schedule-status.unsaved { background: rgba(212,175,55,0.15); color: var(--gold); }
+        .ct-schedule-days {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 6px;
+        }
+        .ct-day-toggle {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            cursor: pointer;
+            padding: 8px 0;
+            border-radius: 10px;
+            border: 1px solid var(--adm-border);
+            background: transparent;
+            transition: all 0.2s;
+            color: var(--adm-text-3);
+        }
+        .ct-day-toggle .ct-day-label {
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .ct-day-toggle .ct-day-icon {
+            font-size: 16px;
+        }
+        .ct-day-toggle.active {
+            background: rgba(45,138,78,0.15);
+            border-color: #2ecc71;
+            color: #2ecc71;
+        }
+        .ct-day-toggle.active .ct-day-icon::after { content: '✓'; }
+        .ct-day-toggle:not(.active) .ct-day-icon::after { content: '✕'; }
+        .ct-schedule-actions {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 12px;
+        }
+        .ct-schedule-save {
+            background: var(--adm-green);
+            color: #0a0a0a;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 13px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .ct-schedule-save:hover { background: #5EEAD4; }
+        .ct-schedule-save:disabled { opacity: 0.5; cursor: default; }
+
+        .adm-tab { display: none; }
+        .adm-tab.active { display: block; }
     </style>
 </head>
 <body>
@@ -1880,7 +2665,7 @@
             <div class="hdr-brand">
                                 <div style="display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-orient:vertical;-webkit-flex-direction:column;flex-direction:column;">
                     <div class="hdr-title">JIU JITSU ACADEMY</div>
-                    <div style="font-size:10px;letter-spacing:1.5px;color:var(--text-2);font-weight:600;text-transform:uppercase;font-family:'Sora',sans-serif;">Checkin</div>
+                    <div id="headerSubtitle" style="font-size:10px;letter-spacing:1.5px;color:var(--text-2);font-weight:600;text-transform:uppercase;font-family:'Sora',sans-serif;">Checkin</div>
                 </div>
             </div>
             <div class="hdr-user" id="headerUser" onclick="handleLogout()">
@@ -1909,13 +2694,17 @@
                                 </div>
                                 <div class="form-group">
                                     <label class="form-label">Senha</label>
-                                    <input type="password" id="loginPassword" placeholder="••••••" required>
+                                    <div class="password-wrapper">
+                                        <input type="password" id="loginPassword" placeholder="••••••" required>
+                                        <button type="button" class="password-toggle" onclick="togglePasswordVisibility('loginPassword', this)" title="Mostrar senha">👁</button>
+                                    </div>
                                 </div>
                                 <div id="loginMessage"></div>
                                 <button type="submit" class="btn btn-primary">Entrar</button>
                             </form>
                         </div>
                         <button class="btn btn-outline" onclick="showRegister()">Criar Nova Conta</button>
+                        <button class="btn" onclick="showForgotPassword()" style="background:transparent;color:var(--text-3);font-size:13px;margin-top:4px;text-decoration:underline;border:none;cursor:pointer;">Esqueci minha senha</button>
                     </div>
 
                     <div id="registerTab" style="display: none;">
@@ -1932,7 +2721,18 @@
                                 </div>
                                 <div class="form-group">
                                     <label class="form-label">Senha</label>
-                                    <input type="password" id="regPassword" placeholder="••••••" required>
+                                    <div class="password-wrapper">
+                                        <input type="password" id="regPassword" placeholder="Mínimo 6 caracteres" required minlength="6">
+                                        <button type="button" class="password-toggle" onclick="togglePasswordVisibility('regPassword', this)" title="Mostrar senha">👁</button>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Confirmar Senha</label>
+                                    <div class="password-wrapper">
+                                        <input type="password" id="regPasswordConfirm" placeholder="Repita a senha" required minlength="6">
+                                        <button type="button" class="password-toggle" onclick="togglePasswordVisibility('regPasswordConfirm', this)" title="Mostrar senha">👁</button>
+                                    </div>
+                                    <div class="password-match-hint" id="passwordMatchHint"></div>
                                 </div>
                                 <div class="form-group">
                                     <label class="form-label">Faixa</label>
@@ -1964,6 +2764,36 @@
                                 </div>
                                 <div id="registerMessage"></div>
                                 <button type="submit" class="btn btn-primary">Cadastrar</button>
+                            </form>
+                        </div>
+                        <button class="btn btn-outline" onclick="showLogin()">Voltar ao Login</button>
+                    </div>
+
+                    <div id="forgotTab" style="display: none;">
+                        <div class="form-card">
+                            <div class="form-card-title">🔑 Recuperar Senha</div>
+                            <p style="font-size:12px;color:var(--text-3);margin-bottom:16px;">Digite seu email cadastrado e uma nova senha. O Professor irá avaliar e aprovar a alteração.</p>
+                            <form onsubmit="handleForgotPassword(event)">
+                                <div class="form-group">
+                                    <label class="form-label">Email cadastrado</label>
+                                    <input type="email" id="forgotEmail" placeholder="seu@email.com" required>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Nova Senha</label>
+                                    <div class="password-wrapper">
+                                        <input type="password" id="forgotPassword" placeholder="Mínimo 6 caracteres" required minlength="6">
+                                        <button type="button" class="password-toggle" onclick="togglePasswordVisibility('forgotPassword', this)" title="Mostrar senha">👁</button>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Confirmar Nova Senha</label>
+                                    <div class="password-wrapper">
+                                        <input type="password" id="forgotPasswordConfirm" placeholder="Repita a nova senha" required minlength="6">
+                                        <button type="button" class="password-toggle" onclick="togglePasswordVisibility('forgotPasswordConfirm', this)" title="Mostrar senha">👁</button>
+                                    </div>
+                                </div>
+                                <div id="forgotMessage"></div>
+                                <button type="submit" class="btn btn-primary">Solicitar Nova Senha</button>
                             </form>
                         </div>
                         <button class="btn btn-outline" onclick="showLogin()">Voltar ao Login</button>
@@ -2005,8 +2835,8 @@
                 <!-- TAB: RANKING -->
                 <div id="ranking" class="tab-content">
                     <div class="rank-period" id="periodFilterGrid">
-                        <button class="rank-period-btn active" onclick="switchRankingPeriod('mes')">📅 Este Mês</button>
-                        <button class="rank-period-btn" onclick="switchRankingPeriod('ano')">📆 Este Ano</button>
+                        <button class="rank-period-btn active" onclick="switchRankingPeriod('mes', event)">📅 Este Mês</button>
+                        <button class="rank-period-btn" onclick="switchRankingPeriod('ano', event)">📆 Este Ano</button>
                     </div>
 
                     <div class="rank-ct-scroll" id="ctFilterGrid"></div>
@@ -2098,7 +2928,7 @@
 
                         <div class="ibjjf-roadmap">
                             <div class="ibjjf-title">🥋 Sistema de Graduação IBJJF</div>
-                            <div class="ibjjf-subtitle">Onde você estava · Onde está · Onde quer chegar</div>
+                            <div class="ibjjf-subtitle">Seu caminho da Faixa Branca até a Faixa Preta</div>
 
                             <div class="ibjjf-legend">
                                 <div class="ibjjf-legend-item"><div class="ibjjf-legend-dot past"></div>Concluída</div>
@@ -2123,33 +2953,505 @@
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
 
-        <!-- BOTTOM NAV -->
+                <!-- PERFIL TAB -->
+                <div id="perfil" class="tab-content">
+                    <div class="perfil-container">
+                        <div class="perfil-header">
+                            <div class="perfil-avatar-big" id="perfilAvatar">?</div>
+                            <div class="perfil-nome" id="perfilNome">—</div>
+                            <div class="perfil-faixa-tag" id="perfilFaixaTag">—</div>
+                            <div class="perfil-completeness">
+                                <div class="perfil-completeness-row">
+                                    <div class="perfil-completeness-label">📋 Perfil completo</div>
+                                    <div class="perfil-completeness-pct" id="perfilCompletePct">0%</div>
+                                </div>
+                                <div class="perfil-completeness-bar">
+                                    <div class="perfil-completeness-fill" id="perfilCompleteFill" style="width:0%"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="perfil-section">
+                            <div class="perfil-section-title"><span>👤</span> Dados Pessoais</div>
+                            <div class="perfil-field">
+                                <label>Data de Nascimento</label>
+                                <input type="date" id="perfilNascimento">
+                            </div>
+                            <div class="perfil-row">
+                                <div class="perfil-field">
+                                    <label>Gênero</label>
+                                    <select id="perfilGenero">
+                                        <option value="">Selecione</option>
+                                        <option value="Masculino">Masculino</option>
+                                        <option value="Feminino">Feminino</option>
+                                        <option value="Outro">Outro</option>
+                                        <option value="Prefiro não dizer">Prefiro não dizer</option>
+                                    </select>
+                                </div>
+                                <div class="perfil-field">
+                                    <label>Profissão</label>
+                                    <input type="text" id="perfilProfissao" placeholder="Ex: Engenheiro, Professor...">
+                                </div>
+                            </div>
+                            <div class="perfil-field">
+                                <label>Bairro / Cidade</label>
+                                <input type="text" id="perfilBairro" placeholder="Ex: Tijuca - Rio de Janeiro">
+                            </div>
+                        </div>
+
+                        <div class="perfil-section">
+                            <div class="perfil-section-title"><span>📱</span> Contato</div>
+                            <div class="perfil-field">
+                                <label>Telefone / WhatsApp</label>
+                                <input type="tel" id="perfilTelefone" placeholder="(21) 99999-9999">
+                            </div>
+                            <div class="perfil-field">
+                                <label>Instagram</label>
+                                <input type="text" id="perfilInstagram" placeholder="@seuusuario">
+                            </div>
+                            <div class="perfil-field">
+                                <label>Contato de Emergência</label>
+                                <input type="text" id="perfilEmergencia" placeholder="Nome — (21) 99999-9999">
+                            </div>
+                        </div>
+
+                        <div class="perfil-section">
+                            <div class="perfil-section-title"><span>🥋</span> Sobre seu Jiu Jitsu</div>
+                            <div class="perfil-field">
+                                <label>Como conheceu a academia?</label>
+                                <select id="perfilOrigem">
+                                    <option value="">Selecione</option>
+                                    <option value="Indicação de amigo">Indicação de amigo</option>
+                                    <option value="Indicação de aluno">Indicação de aluno</option>
+                                    <option value="Instagram">Instagram</option>
+                                    <option value="Facebook">Facebook</option>
+                                    <option value="TikTok">TikTok</option>
+                                    <option value="Google / Busca">Google / Busca</option>
+                                    <option value="Passei na frente">Passei na frente</option>
+                                    <option value="Evento / Campeonato">Evento / Campeonato</option>
+                                    <option value="Outro">Outro</option>
+                                </select>
+                            </div>
+                            <div class="perfil-field">
+                                <label>Objetivo no Jiu Jitsu</label>
+                                <select id="perfilObjetivo">
+                                    <option value="">Selecione</option>
+                                    <option value="Saúde e condicionamento">Saúde e condicionamento</option>
+                                    <option value="Defesa pessoal">Defesa pessoal</option>
+                                    <option value="Competição">Competição</option>
+                                    <option value="Hobby / Lazer">Hobby / Lazer</option>
+                                    <option value="Disciplina / Foco">Disciplina / Foco</option>
+                                    <option value="Socializar">Socializar</option>
+                                    <option value="Faixa preta">Chegar à faixa preta</option>
+                                </select>
+                            </div>
+                            <div class="perfil-field">
+                                <label>Horário preferido de treino</label>
+                                <select id="perfilHorario">
+                                    <option value="">Selecione</option>
+                                    <option value="Manhã (6h-11h)">Manhã (6h-11h)</option>
+                                    <option value="Almoço (11h-14h)">Almoço (11h-14h)</option>
+                                    <option value="Tarde (14h-18h)">Tarde (14h-18h)</option>
+                                    <option value="Noite (18h-22h)">Noite (18h-22h)</option>
+                                    <option value="Flexível">Flexível</option>
+                                </select>
+                            </div>
+                            <div class="perfil-field">
+                                <label>Experiência anterior</label>
+                                <select id="perfilExperiencia">
+                                    <option value="">Selecione</option>
+                                    <option value="Nunca treinei">Nunca treinei</option>
+                                    <option value="Menos de 1 ano">Menos de 1 ano</option>
+                                    <option value="1-2 anos">1-2 anos</option>
+                                    <option value="3-5 anos">3-5 anos</option>
+                                    <option value="5-10 anos">5-10 anos</option>
+                                    <option value="10+ anos">10+ anos</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="perfil-section">
+                            <div class="perfil-section-title"><span>🏥</span> Saúde e Segurança</div>
+                            <div class="perfil-field">
+                                <label>Lesão ou condição médica</label>
+                                <textarea id="perfilSaude" placeholder="Ex: Lesão no joelho, hérnia de disco, asma..."></textarea>
+                            </div>
+                        </div>
+
+                        <div id="perfilMessage"></div>
+                        <button class="perfil-save-btn" id="perfilSaveBtn" onclick="saveProfile()">💾 Salvar Perfil</button>
+
+                        <div class="perfil-section" style="margin-top:16px;">
+                            <div class="perfil-section-title"><span>🔒</span> Alterar Senha</div>
+                            <div class="perfil-field">
+                                <label>Senha Atual</label>
+                                <input type="password" id="perfilSenhaAtual" placeholder="••••••">
+                            </div>
+                            <div class="perfil-pwd-row">
+                                <div class="perfil-field">
+                                    <label>Nova Senha</label>
+                                    <input type="password" id="perfilSenhaNova" placeholder="••••••">
+                                </div>
+                                <div class="perfil-field">
+                                    <label>Confirmar</label>
+                                    <input type="password" id="perfilSenhaConfirma" placeholder="••••••">
+                                </div>
+                            </div>
+                            <div id="perfilPwdMessage"></div>
+                            <button class="perfil-save-btn" style="margin-top:10px" onclick="changePassword()">🔑 Alterar Senha</button>
+                        </div>
+
+                        <button class="perfil-logout-btn" onclick="handleLogout()">🚪 Sair da Conta</button>
+                    </div>
+                </div>
+
+            </div>
+            <!-- end appScreen -->
+
+            <!-- ============================================= -->
+            <!-- ===== ADMIN SCREEN (TOTALMENTE SEPARADO) ==== -->
+            <!-- ============================================= -->
+            <div id="adminScreen" style="display:none;">
+
+            <!-- TAB: PAINEL (Dashboard) -->
+            <div id="adm-painel" class="adm-tab active">
+                <div class="admin-container">
+                    <div class="adm-page-title">
+                        <h2>Painel do Administrador</h2>
+                        <p>Gestão de alunos e presenças</p>
+                    </div>
+
+                    <div class="admin-welcome">
+                        <div class="admin-welcome-icon">🥋</div>
+                        <div class="admin-welcome-text">
+                            <div class="admin-welcome-title" id="adminWelcomeName">Professor</div>
+                            <div class="admin-welcome-sub">Bem-vindo ao painel</div>
+                        </div>
+                    </div>
+
+                    <!-- Stats -->
+                    <div class="admin-stats">
+                        <div class="admin-stat warn">
+                            <div class="admin-stat-num" id="adminPendingAccountsCount">0</div>
+                            <div class="admin-stat-label">Cadastros</div>
+                        </div>
+                        <div class="admin-stat warn">
+                            <div class="admin-stat-num" id="adminPendingResetsCount">0</div>
+                            <div class="admin-stat-label">Senhas</div>
+                        </div>
+                        <div class="admin-stat warn">
+                            <div class="admin-stat-num" id="adminPendingCheckinsCount">0</div>
+                            <div class="admin-stat-label">Pendentes</div>
+                        </div>
+                        <div class="admin-stat ok">
+                            <div class="admin-stat-num" id="adminTodayCheckinsCount">0</div>
+                            <div class="admin-stat-label">Hoje</div>
+                        </div>
+                    </div>
+
+                    <!-- Pending Accounts -->
+                    <div class="admin-section">
+                        <div class="admin-section-header">
+                            <div class="admin-section-title">🆕 Novos Alunos <span class="admin-badge" id="adminAccBadge" style="display:none">0</span></div>
+                            <button class="admin-refresh-btn" onclick="loadPendingAccounts()">↻</button>
+                        </div>
+                        <div id="adminAccountsList">
+                            <div class="admin-empty">Carregando...</div>
+                        </div>
+                    </div>
+
+                    <!-- Pending Password Resets -->
+                    <div class="admin-section">
+                        <div class="admin-section-header">
+                            <div class="admin-section-title">🔑 Reset de Senha <span class="admin-badge" id="adminResetBadge" style="display:none">0</span></div>
+                            <button class="admin-refresh-btn" onclick="loadPendingResets()">↻</button>
+                        </div>
+                        <div id="adminResetsList">
+                            <div class="admin-empty">Carregando...</div>
+                        </div>
+                    </div>
+
+                    <!-- Pending Check-ins -->
+                    <div class="admin-section">
+                        <div class="admin-section-header">
+                            <div class="admin-section-title">⏳ Check-ins Pendentes <span class="admin-badge" id="adminCheckinBadge" style="display:none">0</span></div>
+                            <button class="admin-refresh-btn" onclick="loadPendingCheckins()">↻</button>
+                        </div>
+                        <div class="admin-filter-row">
+                            <button class="admin-filter-btn active" onclick="filterAdminCheckins('hoje', event)">Hoje</button>
+                            <button class="admin-filter-btn" onclick="filterAdminCheckins('semana', event)">Semana</button>
+                            <button class="admin-filter-btn" onclick="filterAdminCheckins('todos', event)">Todos</button>
+                        </div>
+                        <div id="adminCheckinsList">
+                            <div class="admin-empty">Carregando...</div>
+                        </div>
+                        <button class="admin-bulk-btn" id="adminBulkApproveBtn" style="display:none" onclick="bulkApproveCheckins()">✓ Aprovar Todos Pendentes</button>
+                    </div>
+
+                    <!-- Recent Approved -->
+                    <div class="admin-section">
+                        <div class="admin-section-header">
+                            <div class="admin-section-title">✅ Aprovados Hoje <span class="admin-badge green" id="adminApprovedBadge" style="display:none">0</span></div>
+                        </div>
+                        <div id="adminApprovedList">
+                            <div class="admin-empty">Nenhum aprovado hoje</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB: ALUNOS -->
+            <div id="adm-alunos" class="adm-tab">
+                <div class="admin-container">
+                    <div class="adm-page-title">
+                        <h2>Gestão de Alunos</h2>
+                    </div>
+                    <div class="admin-section">
+                        <div class="admin-section-header">
+                            <div class="admin-section-title">👥 Alunos Cadastrados <span class="admin-badge green" id="adminStudentsBadge" style="display:none">0</span></div>
+                            <button class="admin-refresh-btn" onclick="loadStudentsList()">↻</button>
+                        </div>
+                        <div style="margin-bottom:12px;">
+                            <input type="text" id="adminStudentSearch" placeholder="Buscar por nome ou email..." oninput="filterStudentsList()" style="width:100%;box-sizing:border-box;">
+                        </div>
+                        <div id="adminStudentsList">
+                            <div class="admin-empty">Carregando...</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB: CTs SCHEDULE -->
+            <div id="adm-cts" class="adm-tab">
+                <div class="admin-container">
+                    <div class="adm-page-title">
+                        <h2>Centros de Treinamento</h2>
+                        <p>Configure os dias de treino por CT</p>
+                    </div>
+                    <div id="adminCTScheduleList">
+                        <div class="admin-empty">Carregando...</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB: RELATÓRIOS -->
+            <div id="adm-relatorios" class="adm-tab">
+                <div class="admin-container">
+                    <div class="adm-page-title">
+                        <h2>Relatórios</h2>
+                        <p>Métricas de frequência e presença</p>
+                    </div>
+
+                    <!-- CT Filter -->
+                    <div class="report-section" style="padding:12px;">
+                        <div class="report-section-title" style="margin-bottom:10px;">📍 Filtrar por CT</div>
+                        <div class="report-filter-row" id="rptCTFilter">
+                            <button class="report-filter-btn active" onclick="switchReportCT('todos')">Todos os CTs</button>
+                        </div>
+                    </div>
+
+                    <!-- KPIs -->
+                    <div class="report-kpi-grid" id="reportKPIs">
+                        <div class="report-kpi"><div class="report-kpi-num gold" id="rptTotal">-</div><div class="report-kpi-label">Presenças</div></div>
+                        <div class="report-kpi"><div class="report-kpi-num green" id="rptAlunos">-</div><div class="report-kpi-label">Alunos Ativos</div></div>
+                        <div class="report-kpi"><div class="report-kpi-num cyan" id="rptMedia">-</div><div class="report-kpi-label">Média/Mês</div></div>
+                        <div class="report-kpi"><div class="report-kpi-num purple" id="rptMediaAluno">-</div><div class="report-kpi-label">Média/Aluno</div></div>
+                    </div>
+
+                    <!-- Picos -->
+                    <div class="report-pico-grid" id="reportPicos">
+                        <div class="report-pico"><div class="report-pico-icon">📅</div><div class="report-pico-val" id="rptPicoMes">-</div><div class="report-pico-lbl">Melhor Mês</div></div>
+                        <div class="report-pico"><div class="report-pico-icon">📆</div><div class="report-pico-val" id="rptPicoDia">-</div><div class="report-pico-lbl">Dia Favorito</div></div>
+                        <div class="report-pico"><div class="report-pico-icon">⏰</div><div class="report-pico-val" id="rptPicoHora">-</div><div class="report-pico-lbl">Horário Pico</div></div>
+                    </div>
+
+                    <!-- Frequência por Mês -->
+                    <div class="report-section">
+                        <div class="report-section-title">📊 Frequência por Mês</div>
+                        <div id="rptByMonth"></div>
+                    </div>
+
+                    <!-- Frequência por Dia da Semana -->
+                    <div class="report-section">
+                        <div class="report-section-title">📆 Frequência por Dia da Semana</div>
+                        <div id="rptByDay"></div>
+                    </div>
+
+                    <!-- Frequência por Horário -->
+                    <div class="report-section">
+                        <div class="report-section-title">⏰ Frequência por Horário</div>
+                        <div id="rptByHour"></div>
+                    </div>
+
+                    <!-- Frequência por CT (só quando "Todos") -->
+                    <div class="report-section" id="rptByCTSection">
+                        <div class="report-section-title">📍 Presenças por CT</div>
+                        <div id="rptByCT"></div>
+                    </div>
+
+                    <!-- Top Alunos -->
+                    <div class="report-section">
+                        <div class="report-section-title">🏆 Top Alunos (mais presenças)</div>
+                        <div id="rptTopAlunos"></div>
+                    </div>
+
+                    <!-- Lista de Presenças -->
+                    <div class="report-section">
+                        <div class="report-section-title">📋 Últimas Presenças</div>
+                        <div style="overflow-x:auto;">
+                            <table class="report-table" id="rptRecordsTable">
+                                <thead>
+                                    <tr><th>Aluno</th><th>CT</th><th>Data</th><th>Hora</th><th>Dia</th></tr>
+                                </thead>
+                                <tbody id="rptRecords"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB: MEU CHECK-IN -->
+            <div id="adm-checkin" class="adm-tab">
+                <div class="admin-container">
+                    <div class="adm-page-title">
+                        <h2>Meu Check-in</h2>
+                    </div>
+                    <div class="admin-section">
+                        <div class="admin-section-header">
+                            <div class="admin-section-title">✍️ Meu Check-in</div>
+                        </div>
+                        <div class="checkin-profile" style="margin-bottom:16px;">
+                            <div class="checkin-avatar" id="admCheckinInitial">P</div>
+                            <div class="checkin-info">
+                                <div class="checkin-name" id="admDisplayName">-</div>
+                                <div class="checkin-meta"><span id="admDisplayFaixa">-</span></div>
+                            </div>
+                            <div class="checkin-count">
+                                <div class="checkin-count-num" id="admDisplayCount">0</div>
+                                <div class="checkin-count-label">Treinos</div>
+                            </div>
+                        </div>
+
+                        <div class="ct-section">
+                            <div class="section-title">Onde você treinou?</div>
+                            <div class="ct-grid" id="admCtGrid"></div>
+                            <div class="selected-ct-bar" id="admSelectedInfo">
+                                <span>Academia:</span>
+                                <span id="admSelectedCT">-</span>
+                            </div>
+                        </div>
+
+                        <button class="btn btn-primary" onclick="adminConfirmAttendance()">✓ Confirmar Presença</button>
+                        <div id="admAttendanceMessage"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB: PERFIL ADMIN -->
+            <div id="adm-perfil" class="adm-tab">
+                <div class="admin-container">
+                    <div class="adm-page-title">
+                        <h2>Meu Perfil</h2>
+                    </div>
+                    <div class="admin-section">
+                        <div class="admin-section-header">
+                            <div class="admin-section-title">👤 Meu Perfil</div>
+                        </div>
+                        <div class="perfil-card" style="margin-bottom:16px;">
+                            <div class="perfil-header">
+                                <div class="perfil-avatar" id="admPerfilInitial">P</div>
+                                <div class="perfil-info">
+                                    <div class="perfil-name" id="admPerfilName">-</div>
+                                    <div class="perfil-email" id="admPerfilEmail">-</div>
+                                    <div style="margin-top:6px;"><span class="admin-checkin-status aprovado">PROFESSOR</span></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="admin-section">
+                        <div class="admin-section-header">
+                            <div class="admin-section-title">🔒 Alterar Senha</div>
+                        </div>
+                        <div class="form-group"><label class="form-label">Senha Atual</label><input type="password" id="admCurrentPw" placeholder="••••••"></div>
+                        <div class="form-group"><label class="form-label">Nova Senha</label><input type="password" id="admNewPw" placeholder="Mínimo 6 caracteres"></div>
+                        <div class="form-group"><label class="form-label">Confirmar Nova Senha</label><input type="password" id="admConfirmPw" placeholder="Repita a nova senha"></div>
+                        <div id="admPwMessage"></div>
+                        <button class="btn btn-primary" onclick="adminChangePassword()">🔑 Alterar Senha</button>
+                    </div>
+
+                    <button class="perfil-logout-btn" onclick="handleLogout()" style="margin-top:16px">🚪 Sair da Conta</button>
+                </div>
+            </div>
+
+        </div>
+        <!-- end adminScreen -->
+
+        </div>
+        <!-- end main -->
+
+        <!-- STUDENT BOTTOM NAV -->
         <div class="bnav" id="bottomNav">
             <div class="bnav-inner">
-                <button class="bnav-btn active" onclick="switchTab('attendance')">
+                <button class="bnav-btn active" onclick="switchTab('attendance', event)">
                     <span class="bnav-icon">✍️</span>
                     <span class="bnav-label">Check-in</span>
                 </button>
-                <button class="bnav-btn" onclick="switchTab('ranking')">
+                <button class="bnav-btn" onclick="switchTab('ranking', event)">
                     <span class="bnav-icon">🏆</span>
                     <span class="bnav-label">Ranking</span>
                 </button>
-                <button class="bnav-btn" onclick="switchTab('evolucao')">
+                <button class="bnav-btn" onclick="switchTab('evolucao', event)">
                     <span class="bnav-icon">📈</span>
                     <span class="bnav-label">Evolução</span>
                 </button>
+                <button class="bnav-btn" onclick="switchTab('perfil', event)">
+                    <span class="bnav-icon">👤</span>
+                    <span class="bnav-label">Perfil</span>
+                </button>
             </div>
         </div>
+
+        <!-- ADMIN BOTTOM NAV -->
+        <div class="bnav" id="adminNav" style="display:none;">
+            <div class="bnav-inner">
+                <button class="bnav-btn active" onclick="switchAdminTab('adm-painel', event)">
+                    <span class="bnav-icon">🏠</span>
+                    <span class="bnav-label">Painel</span>
+                </button>
+                <button class="bnav-btn" onclick="switchAdminTab('adm-alunos', event)">
+                    <span class="bnav-icon">👥</span>
+                    <span class="bnav-label">Alunos</span>
+                </button>
+                <button class="bnav-btn" onclick="switchAdminTab('adm-cts', event)">
+                    <span class="bnav-icon">📍</span>
+                    <span class="bnav-label">CTs</span>
+                </button>
+                <button class="bnav-btn" onclick="switchAdminTab('adm-relatorios', event)">
+                    <span class="bnav-icon">📊</span>
+                    <span class="bnav-label">Relatórios</span>
+                </button>
+                <button class="bnav-btn" onclick="switchAdminTab('adm-checkin', event)">
+                    <span class="bnav-icon">✍️</span>
+                    <span class="bnav-label">Check-in</span>
+                </button>
+                <button class="bnav-btn" onclick="switchAdminTab('adm-perfil', event)">
+                    <span class="bnav-icon">👤</span>
+                    <span class="bnav-label">Perfil</span>
+                </button>
+            </div>
+        </div>
+
     </div>
+    <!-- end app -->
 
     <script>
-        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbz3xeb_MCnVzAx5i0y5YEymKN1EJMlQcQZE5PlAPmskw9R796T0yq-6Yfdg1XOz7d_LtA/exec';
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwM_qzAcutWlR0cuLS0mfpV5g5c0pIxmzDz7yiM6touAJJt7N3eS327yT-KoYQvnkEglw/exec';
         let currentUser = null;
         let selectedCT = null;
         let allCTs = [];
+        let ctSchedules = {}; // { 'CT Goodfellas': { seg: true, ter: false, ... } }
         let currentRankingPeriod = 'mes';
         let currentRankingFilter = 'geral';
         let allRankingData = null;
@@ -2163,12 +3465,23 @@
 
         // ===== INIT =====
         window.addEventListener('load', function() {
-            const s = sessionStorage.getItem('bjjUser');
+            const s = localStorage.getItem('bjjUser');
             if (s) {
-                currentUser = JSON.parse(s);
-                showAppScreen();
-                loadAttendanceInfo();
-                loadCTs();
+                try {
+                    currentUser = JSON.parse(s);
+                    showAppScreen();
+                    loadAttendanceInfo();
+                    loadCTs();
+                    // Carregar perfil do cache e atualizar do backend
+                    var cached = localStorage.getItem('bjjProfile');
+                    if (cached) {
+                        try { fillProfileFields(JSON.parse(cached)); } catch(e2) {}
+                    }
+                    fetchProfileFromBackend();
+                } catch(e) {
+                    localStorage.removeItem('bjjUser');
+                    localStorage.removeItem('bjjProfile');
+                }
             }
         });
 
@@ -2184,10 +3497,11 @@
                 const data = await r.json();
                 if (data.authenticated === true) {
                     currentUser = data;
-                    sessionStorage.setItem('bjjUser', JSON.stringify(currentUser));
+                    localStorage.setItem('bjjUser', JSON.stringify(currentUser));
                     showAppScreen();
                     loadAttendanceInfo();
                     loadCTs();
+                    fetchProfileFromBackend();
                 } else {
                     showMessage('loginMessage', data.message || 'Erro ao fazer login', 'danger');
                 }
@@ -2196,15 +3510,53 @@
             }
         }
 
+        // ===== PASSWORD UTILITIES =====
+        function togglePasswordVisibility(inputId, btn) {
+            const input = document.getElementById(inputId);
+            if (input.type === 'password') {
+                input.type = 'text';
+                btn.textContent = '🙈';
+                btn.title = 'Ocultar senha';
+            } else {
+                input.type = 'password';
+                btn.textContent = '👁';
+                btn.title = 'Mostrar senha';
+            }
+        }
+
+        function checkPasswordMatch() {
+            const pw = document.getElementById('regPassword').value;
+            const confirm = document.getElementById('regPasswordConfirm').value;
+            const hint = document.getElementById('passwordMatchHint');
+            if (!confirm) { hint.textContent = ''; hint.className = 'password-match-hint'; return; }
+            if (pw === confirm) {
+                hint.textContent = '✔ Senhas coincidem';
+                hint.className = 'password-match-hint match';
+            } else {
+                hint.textContent = '✘ Senhas não coincidem';
+                hint.className = 'password-match-hint no-match';
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const regPw = document.getElementById('regPassword');
+            const regPwC = document.getElementById('regPasswordConfirm');
+            if (regPw) regPw.addEventListener('input', checkPasswordMatch);
+            if (regPwC) regPwC.addEventListener('input', checkPasswordMatch);
+        });
+
         async function handleRegister(event) {
             event.preventDefault();
             const name = document.getElementById('regName').value;
             const email = document.getElementById('regEmail').value;
             const password = document.getElementById('regPassword').value;
+            const passwordConfirm = document.getElementById('regPasswordConfirm').value;
             const faixa = document.getElementById('regFaixa').value;
             const grau = document.getElementById('regGrau').value;
             const ct = document.getElementById('regCT').value;
 
+            if (password.length < 6) { showMessage('registerMessage', '⚠️ Senha deve ter no mínimo 6 caracteres', 'warning'); return; }
+            if (password !== passwordConfirm) { showMessage('registerMessage', '⚠️ As senhas não coincidem', 'warning'); return; }
             if (!ct) { showMessage('registerMessage', '⚠️ Escolha seu CT Principal', 'warning'); return; }
             showMessage('registerMessage', 'Cadastrando...', 'warning');
 
@@ -2223,49 +3575,162 @@
         }
 
         // ===== NAVIGATION =====
+        function isAdmin() {
+            return currentUser && (currentUser.admin === true || currentUser.admin === 'TRUE');
+        }
+
         function showAppScreen() {
             document.getElementById('loginScreen').style.display = 'none';
-            document.getElementById('appScreen').style.display = 'block';
             document.getElementById('headerUser').style.display = 'flex';
-            document.getElementById('bottomNav').style.display = 'block';
             document.getElementById('headerUserName').textContent = currentUser.name.split(' ')[0];
             document.getElementById('userInitial').textContent = currentUser.name.charAt(0).toUpperCase();
-            document.getElementById('checkinInitial').textContent = currentUser.name.charAt(0).toUpperCase();
+
+            if (isAdmin()) {
+                // ADMIN SCREEN
+                document.getElementById('appScreen').style.display = 'none';
+                document.getElementById('bottomNav').style.display = 'none';
+                document.getElementById('adminScreen').style.display = 'block';
+                document.getElementById('adminNav').style.display = 'block';
+                document.getElementById('headerSubtitle').innerHTML = 'Administrador <span class="admin-header-badge">ADMIN</span>';
+                // Admin header color
+                document.querySelector('.hdr').style.background = 'var(--adm-bg-card)';
+                document.querySelector('.hdr').style.borderBottomColor = 'var(--adm-border)';
+                document.querySelector('.hdr-title').style.background = 'linear-gradient(135deg, var(--adm-primary-bright), var(--adm-primary))';
+                document.querySelector('.hdr-title').style.webkitBackgroundClip = 'text';
+                document.querySelector('.hdr-title').style.webkitTextFillColor = 'transparent';
+                document.querySelector('.hdr-avatar').style.background = 'var(--adm-primary-dim)';
+                document.querySelector('.hdr-avatar').style.color = 'var(--adm-primary-bright)';
+                document.querySelector('.hdr-avatar').style.borderColor = 'var(--adm-border-accent)';
+                // Fill admin profile info
+                document.getElementById('adminWelcomeName').textContent = currentUser.name.split(' ')[0];
+                document.getElementById('admPerfilName').textContent = currentUser.name;
+                document.getElementById('admPerfilEmail').textContent = currentUser.email;
+                document.getElementById('admPerfilInitial').textContent = currentUser.name.charAt(0).toUpperCase();
+                document.getElementById('admCheckinInitial').textContent = currentUser.name.charAt(0).toUpperCase();
+                document.getElementById('admDisplayName').textContent = currentUser.name;
+                document.getElementById('admDisplayFaixa').textContent = currentUser.faixa;
+                document.getElementById('admDisplayCount').textContent = currentUser.treinos || '0';
+                // Load dashboard
+                loadAdminPanel();
+            } else {
+                // STUDENT SCREEN
+                document.getElementById('adminScreen').style.display = 'none';
+                document.getElementById('adminNav').style.display = 'none';
+                document.getElementById('appScreen').style.display = 'block';
+                document.getElementById('bottomNav').style.display = 'block';
+                document.getElementById('headerSubtitle').textContent = 'Checkin';
+                document.getElementById('checkinInitial').textContent = currentUser.name.charAt(0).toUpperCase();
+                // Student header color (reset to gold)
+                document.querySelector('.hdr').style.background = '';
+                document.querySelector('.hdr').style.borderBottomColor = '';
+                document.querySelector('.hdr-title').style.background = '';
+                document.querySelector('.hdr-title').style.webkitBackgroundClip = '';
+                document.querySelector('.hdr-title').style.webkitTextFillColor = '';
+                document.querySelector('.hdr-avatar').style.background = '';
+                document.querySelector('.hdr-avatar').style.color = '';
+                document.querySelector('.hdr-avatar').style.borderColor = '';
+            }
         }
 
         function showLogin() {
             document.getElementById('registerTab').style.display = 'none';
+            document.getElementById('forgotTab').style.display = 'none';
             document.getElementById('loginTab').style.display = 'block';
         }
 
         function showRegister() {
             document.getElementById('loginTab').style.display = 'none';
+            document.getElementById('forgotTab').style.display = 'none';
             document.getElementById('registerTab').style.display = 'block';
             loadCTs();
         }
 
+        function showForgotPassword() {
+            document.getElementById('loginTab').style.display = 'none';
+            document.getElementById('registerTab').style.display = 'none';
+            document.getElementById('forgotTab').style.display = 'block';
+        }
+
+        async function handleForgotPassword(e) {
+            e.preventDefault();
+            var email = document.getElementById('forgotEmail').value.trim();
+            var senha = document.getElementById('forgotPassword').value;
+            var senhaConfirm = document.getElementById('forgotPasswordConfirm').value;
+
+            if (senha !== senhaConfirm) {
+                showMessage('forgotMessage', 'As senhas não coincidem', 'error');
+                return;
+            }
+            if (senha.length < 6) {
+                showMessage('forgotMessage', 'Senha deve ter no mínimo 6 caracteres', 'error');
+                return;
+            }
+
+            showMessage('forgotMessage', 'Enviando solicitação...', 'info');
+            try {
+                var r = await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify({ action: 'requestPasswordReset', email: email, novaSenha: senha }) });
+                var data = await r.json();
+                if (data.success) {
+                    showMessage('forgotMessage', data.message || 'Solicitação enviada! Aguarde aprovação do Professor.', 'success');
+                    document.getElementById('forgotPassword').value = '';
+                    document.getElementById('forgotPasswordConfirm').value = '';
+                    setTimeout(function() { showLogin(); }, 3000);
+                } else {
+                    showMessage('forgotMessage', data.message || 'Erro ao solicitar', 'error');
+                }
+            } catch (err) {
+                showMessage('forgotMessage', 'Erro de conexão', 'error');
+            }
+        }
+
         function handleLogout() {
             if (confirm('Sair da conta?')) {
-                sessionStorage.removeItem('bjjUser');
+                localStorage.removeItem('bjjUser');
+                localStorage.removeItem('bjjProfile');
                 currentUser = null;
+                // Limpar campos do perfil
+                for (var i = 0; i < PERFIL_FIELDS.length; i++) {
+                    var el = document.getElementById(PERFIL_FIELDS[i].id);
+                    if (el) el.value = '';
+                }
                 document.getElementById('appScreen').style.display = 'none';
+                document.getElementById('adminScreen').style.display = 'none';
                 document.getElementById('loginScreen').style.display = 'flex';
                 document.getElementById('headerUser').style.display = 'none';
                 document.getElementById('bottomNav').style.display = 'none';
+                document.getElementById('adminNav').style.display = 'none';
+                document.getElementById('headerSubtitle').textContent = 'Checkin';
+                // Reset header to default gold theme
+                document.querySelector('.hdr').style.background = '';
+                document.querySelector('.hdr').style.borderBottomColor = '';
+                document.querySelector('.hdr-title').style.background = '';
+                document.querySelector('.hdr-title').style.webkitBackgroundClip = '';
+                document.querySelector('.hdr-title').style.webkitTextFillColor = '';
+                if (document.querySelector('.hdr-avatar')) {
+                    document.querySelector('.hdr-avatar').style.background = '';
+                    document.querySelector('.hdr-avatar').style.color = '';
+                    document.querySelector('.hdr-avatar').style.borderColor = '';
+                }
                 document.getElementById('loginEmail').value = '';
                 document.getElementById('loginPassword').value = '';
                 showLogin();
             }
         }
 
-        function switchTab(tabName) {
+        function switchTab(tabName, evt) {
             document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
             document.querySelectorAll('.bnav-btn').forEach(b => b.classList.remove('active'));
-            document.getElementById(tabName).classList.add('active');
-            event.target.closest('.bnav-btn').classList.add('active');
+            var tab = document.getElementById(tabName);
+            if (tab) tab.classList.add('active');
+            var e = evt || window.event;
+            if (e && e.target) {
+                var btn = e.target.closest('.bnav-btn');
+                if (btn) btn.classList.add('active');
+            }
 
             if (tabName === 'ranking') loadRanking();
             if (tabName === 'evolucao') loadEvolucao();
+            if (tabName === 'perfil') loadProfile();
         }
 
         // ===== CHECK-IN =====
@@ -2275,6 +3740,13 @@
                 const data = await r.json();
                 if (data.success && data.cts) {
                     allCTs = data.cts;
+                    // Armazenar schedules
+                    ctSchedules = {};
+                    data.cts.forEach(ct => {
+                        if (typeof ct === 'object' && ct.schedule) {
+                            ctSchedules[ct.name] = ct.schedule;
+                        }
+                    });
                     const regCT = document.getElementById('regCT');
                     if (regCT) {
                         data.cts.forEach(ct => {
@@ -2310,32 +3782,61 @@
             event.target?.classList.add('selected');
             document.getElementById('selectedCT').textContent = ctName;
             document.getElementById('selectedInfo').classList.add('active');
+
+            // Avisar se hoje não é dia de treino neste CT
+            var schedule = ctSchedules[ctName];
+            if (schedule) {
+                var dayKeys = ['dom', 'seg', 'ter', 'qua', 'qui', 'sex', 'sab'];
+                var hoje = dayKeys[new Date().getDay()];
+                var temConfig = Object.values(schedule).some(function(v) { return v === true; });
+                if (temConfig && !schedule[hoje]) {
+                    var dayLabels = ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'];
+                    var hojeDia = dayLabels[new Date().getDay()];
+                    showMessage('attendanceMessage', '⚠️ Hoje (' + hojeDia + ') não é dia de treino no ' + ctName + '. Seu check-in ficará pendente para avaliação do Professor.', 'warning');
+                } else {
+                    // Limpar mensagem se dia é permitido
+                    var msgEl = document.getElementById('attendanceMessage');
+                    if (msgEl) msgEl.innerHTML = '';
+                }
+            }
         }
 
         function confirmAttendance() {
             if (!selectedCT) { showMessage('attendanceMessage', 'Selecione o CT', 'warning'); return; }
-            showMessage('attendanceMessage', 'Registrando presença...', 'info');
 
-            const today = new Date();
-            const dateStr = today.toLocaleDateString('pt-BR');
+            // ===== VALIDAÇÃO DE HORÁRIO (sem check-in retroativo) =====
+            var now = new Date();
+            var hora = now.getHours();
+            // Horário permitido: 06:00 às 23:00
+            if (hora < 6 || hora >= 23) {
+                showMessage('attendanceMessage', '⚠️ Check-in disponível apenas das 06:00 às 23:00', 'warning');
+                return;
+            }
+
+            showMessage('attendanceMessage', 'Registrando presença...', 'info');
 
             fetch(SCRIPT_URL, {
                 method: 'POST',
                 body: JSON.stringify({
                     action: 'attendance', email: currentUser.email, name: currentUser.name,
-                    faixa: currentUser.faixa, grau: currentUser.grau, ct: selectedCT, date: dateStr
+                    faixa: currentUser.faixa, grau: currentUser.grau, ct: selectedCT
                 })
             }).then(r => r.json()).then(data => {
                 if (data.success) {
-                    currentUser.treinos = (currentUser.treinos || 0) + 1;
-                    sessionStorage.setItem('bjjUser', JSON.stringify(currentUser));
-                    document.getElementById('displayCount').textContent = currentUser.treinos;
-                    showMessage('attendanceMessage', '✅ Presença confirmada!', 'success');
+                    // Admin: check-in direto (sem aprovação)
+                    if (data.direct) {
+                        currentUser.treinos = (currentUser.treinos || 0) + 1;
+                        localStorage.setItem('bjjUser', JSON.stringify(currentUser));
+                        document.getElementById('displayCount').textContent = currentUser.treinos;
+                        showMessage('attendanceMessage', '✅ Presença confirmada!', 'success');
+                    } else {
+                        showMessage('attendanceMessage', '✅ Check-in registrado! Aguardando aprovação do Professor.', 'success');
+                    }
                     selectedCT = null;
                     document.querySelectorAll('.ct-btn').forEach(b => b.classList.remove('selected'));
                     document.getElementById('selectedCT').textContent = '-';
                     document.getElementById('selectedInfo').classList.remove('active');
-                    setTimeout(() => document.getElementById('attendanceMessage').innerHTML = '', 3000);
+                    setTimeout(() => document.getElementById('attendanceMessage').innerHTML = '', 5000);
                 } else {
                     showMessage('attendanceMessage', data.message || 'Erro', 'danger');
                 }
@@ -2352,6 +3853,17 @@
 
         // ===== RANKING =====
         async function loadRanking() {
+            // Reset UI
+            document.getElementById('rankingMessage').style.display = 'block';
+            document.getElementById('rankingMessage').textContent = 'Carregando ranking...';
+            document.getElementById('userTrainingSection').style.display = 'none';
+            document.getElementById('top3Container').style.display = 'none';
+            document.getElementById('top3Container').innerHTML = '';
+            document.getElementById('userPositionSection').style.display = 'none';
+            document.getElementById('rankingListSection').style.display = 'none';
+            document.getElementById('ctRankingContainer').style.display = 'none';
+            document.getElementById('ctFilterGrid').innerHTML = '';
+
             try {
                 const r = await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify({ action: 'getRankingMonth', email: currentUser.email, period: currentRankingPeriod }) });
                 const data = await r.json();
@@ -2365,9 +3877,10 @@
             }
         }
 
-        function switchRankingPeriod(period) {
+        function switchRankingPeriod(period, evt) {
             document.querySelectorAll('.rank-period-btn').forEach(b => b.classList.remove('active'));
-            event.target.closest('.rank-period-btn').classList.add('active');
+            var e = evt || window.event;
+            if (e && e.target) { var b = e.target.closest('.rank-period-btn'); if (b) b.classList.add('active'); }
             currentRankingPeriod = period;
             currentRankingFilter = 'geral';
             const label = document.getElementById('userTotalLabel');
@@ -2375,9 +3888,10 @@
             loadRanking();
         }
 
-        function switchRankingFilter(ctName) {
+        function switchRankingFilter(ctName, evt) {
             document.querySelectorAll('.rank-ct-chip').forEach(c => c.classList.remove('active'));
-            event.target.closest('.rank-ct-chip').classList.add('active');
+            var e = evt || window.event;
+            if (e && e.target) { var c = e.target.closest('.rank-ct-chip'); if (c) c.classList.add('active'); }
             currentRankingFilter = ctName;
 
             if (ctName === 'geral') {
@@ -2408,14 +3922,14 @@
             const geralChip = document.createElement('button');
             geralChip.className = 'rank-ct-chip geral active';
             geralChip.textContent = '📊 Geral';
-            geralChip.onclick = function() { switchRankingFilter('geral'); };
+            geralChip.onclick = function(e) { switchRankingFilter('geral', e); };
             filterGrid.appendChild(geralChip);
 
             Array.from(ctsSet).sort().forEach(ct => {
                 const chip = document.createElement('button');
                 chip.className = 'rank-ct-chip';
                 chip.textContent = ct;
-                chip.onclick = function() { switchRankingFilter(ct); };
+                chip.onclick = function(e) { switchRankingFilter(ct, e); };
                 filterGrid.appendChild(chip);
             });
 
@@ -2645,27 +4159,11 @@
 
         /* ===== IBJJF FULL BELT SYSTEM ===== */
         var IBJJF_BELTS = [
-            { id: 'branca-inf',     name: 'Branca',          cat: 'infantil', cls: 'branca',          age: '4+',    graus: 0, minMonths: 0 },
-            { id: 'cinza-branca',   name: 'Cinza/Branca',    cat: 'infantil', cls: 'cinza-branca',    age: '4-15',  graus: 4, minMonths: 0 },
-            { id: 'cinza',          name: 'Cinza',           cat: 'infantil', cls: 'cinza',           age: '4-15',  graus: 4, minMonths: 0 },
-            { id: 'cinza-preta',    name: 'Cinza/Preta',     cat: 'infantil', cls: 'cinza-preta',     age: '4-15',  graus: 4, minMonths: 0 },
-            { id: 'amarela-branca', name: 'Amarela/Branca',  cat: 'infantil', cls: 'amarela-branca',  age: '7-15',  graus: 4, minMonths: 0 },
-            { id: 'amarela',        name: 'Amarela',         cat: 'infantil', cls: 'amarela',         age: '7-15',  graus: 4, minMonths: 0 },
-            { id: 'amarela-preta',  name: 'Amarela/Preta',   cat: 'infantil', cls: 'amarela-preta',   age: '7-15',  graus: 4, minMonths: 0 },
-            { id: 'laranja-branca', name: 'Laranja/Branca',  cat: 'infantil', cls: 'laranja-branca',  age: '8-15',  graus: 4, minMonths: 0 },
-            { id: 'laranja',        name: 'Laranja',         cat: 'infantil', cls: 'laranja',         age: '8-15',  graus: 4, minMonths: 0 },
-            { id: 'laranja-preta',  name: 'Laranja/Preta',   cat: 'infantil', cls: 'laranja-preta',   age: '8-15',  graus: 4, minMonths: 0 },
-            { id: 'verde-branca',   name: 'Verde/Branca',    cat: 'infantil', cls: 'verde-branca',    age: '13-15', graus: 4, minMonths: 0 },
-            { id: 'verde',          name: 'Verde',           cat: 'infantil', cls: 'verde',           age: '13-15', graus: 4, minMonths: 0 },
-            { id: 'verde-preta',    name: 'Verde/Preta',     cat: 'infantil', cls: 'verde-preta',     age: '13-15', graus: 4, minMonths: 0 },
-            { id: 'branca',  name: 'Branca',  cat: 'adulto', cls: 'branca',  age: '16+', graus: 4, minMonths: 0,  minTreinos: 0 },
-            { id: 'azul',    name: 'Azul',    cat: 'adulto', cls: 'azul',    age: '16+', graus: 4, minMonths: 24, minTreinos: 90 },
-            { id: 'roxa',    name: 'Roxa',    cat: 'adulto', cls: 'roxa',    age: '16+', graus: 4, minMonths: 24, minTreinos: 200 },
-            { id: 'marrom',  name: 'Marrom',  cat: 'adulto', cls: 'marrom',  age: '18+', graus: 4, minMonths: 18, minTreinos: 300 },
-            { id: 'preta',   name: 'Preta',   cat: 'adulto', cls: 'preta',   age: '19+', graus: 6, minMonths: 36, minTreinos: 200 },
-            { id: 'coral',           name: 'Coral (7º grau)',         cat: 'master', cls: 'vermelha-preta',  age: '50+', graus: 0, minMonths: 84 },
-            { id: 'vermelha-branca', name: 'Verm./Branca (8º grau)', cat: 'master', cls: 'vermelha-branca', age: '57+', graus: 0, minMonths: 120 },
-            { id: 'vermelha',        name: 'Vermelha (Grão-Mestre)',  cat: 'master', cls: 'vermelha',        age: '67+', graus: 0, minMonths: 0 }
+            { id: 'branca',  name: 'Branca',  cls: 'branca',  age: '16+', graus: 4, minMonths: 0,  minTreinos: 0 },
+            { id: 'azul',    name: 'Azul',    cls: 'azul',    age: '16+', graus: 4, minMonths: 24, minTreinos: 90 },
+            { id: 'roxa',    name: 'Roxa',    cls: 'roxa',    age: '16+', graus: 4, minMonths: 24, minTreinos: 200 },
+            { id: 'marrom',  name: 'Marrom',  cls: 'marrom',  age: '18+', graus: 4, minMonths: 18, minTreinos: 300 },
+            { id: 'preta',   name: 'Preta',   cls: 'preta',   age: '19+', graus: 6, minMonths: 36, minTreinos: 200 }
         ];
 
         var FAIXA_TO_IBJJF = { 'Branca': 'branca', 'Azul': 'azul', 'Roxa': 'roxa', 'Marrom': 'marrom', 'Preta': 'preta' };
@@ -2677,41 +4175,21 @@
             track.appendChild(fillEl);
 
             var currentId = FAIXA_TO_IBJJF[faixaAtual] || 'branca';
-            var adultBelts = IBJJF_BELTS.filter(function(b) { return b.cat === 'adulto'; });
-            var currentAdultIdx = -1;
-            for (var ai = 0; ai < adultBelts.length; ai++) { if (adultBelts[ai].id === currentId) { currentAdultIdx = ai; break; } }
-            var nextAdultIdx = currentAdultIdx + 1;
+            var currentIdx = -1;
+            for (var ai = 0; ai < IBJJF_BELTS.length; ai++) { if (IBJJF_BELTS[ai].id === currentId) { currentIdx = ai; break; } }
+            var nextIdx = currentIdx + 1;
 
-            var lastCat = '';
             var completedNodes = 0;
-            var totalNodes = 0;
 
             for (var i = 0; i < IBJJF_BELTS.length; i++) {
                 var belt = IBJJF_BELTS[i];
 
-                if (belt.cat !== lastCat) {
-                    lastCat = belt.cat;
-                    var catDiv = document.createElement('div');
-                    catDiv.className = 'ibjjf-category';
-                    var catNames = { infantil: '👶 Infantil (4-15 anos)', adulto: '🥋 Adulto (16+)', master: '🏆 Master' };
-                    catDiv.textContent = catNames[belt.cat] || belt.cat;
-                    track.appendChild(catDiv);
-                }
-
                 var state = 'future';
-                if (belt.cat === 'infantil') {
-                    state = 'completed';
-                } else if (belt.cat === 'adulto') {
-                    var bIdx = -1;
-                    for (var bi = 0; bi < adultBelts.length; bi++) { if (adultBelts[bi].id === belt.id) { bIdx = bi; break; } }
-                    if (bIdx < currentAdultIdx) state = 'completed';
-                    else if (bIdx === currentAdultIdx) state = 'current';
-                    else if (bIdx === nextAdultIdx) state = 'next';
-                    else state = 'future';
-                }
+                if (i < currentIdx) state = 'completed';
+                else if (i === currentIdx) state = 'current';
+                else if (i === nextIdx) state = 'next';
 
                 if (state === 'completed' || state === 'current') completedNodes++;
-                totalNodes++;
 
                 var node = document.createElement('div');
                 node.className = 'ibjjf-node ' + state;
@@ -2723,9 +4201,8 @@
 
                 var meta = [];
                 if (belt.age) meta.push('Idade: ' + belt.age);
-                if (belt.cat === 'adulto' && belt.minMonths > 0) meta.push('min ' + belt.minMonths + ' meses');
-                if (belt.cat === 'adulto' && belt.minTreinos > 0) meta.push(belt.minTreinos + ' treinos');
-                if (belt.cat === 'master' && belt.minMonths > 0) meta.push('min ' + Math.round(belt.minMonths / 12) + ' anos');
+                if (belt.minMonths > 0) meta.push('min ' + belt.minMonths + ' meses');
+                if (belt.minTreinos > 0) meta.push(belt.minTreinos + ' treinos');
                 h += '<div class="ibjjf-belt-meta">' + meta.join(' · ') + '</div>';
                 h += '</div>';
 
@@ -2740,7 +4217,7 @@
                     h += '<div class="ibjjf-status-tag here" style="margin-left:8px">VOCÊ</div>';
                 } else if (state === 'next') {
                     h += '<div class="ibjjf-status-tag goal">META</div>';
-                } else if (state === 'completed' && belt.cat === 'adulto') {
+                } else if (state === 'completed') {
                     h += '<div class="ibjjf-status-tag done">✓</div>';
                 }
                 h += '</div></div>';
@@ -2749,16 +4226,16 @@
                 track.appendChild(node);
             }
 
-            var fillPct = totalNodes > 0 ? Math.round((completedNodes / totalNodes) * 100) : 0;
+            var fillPct = IBJJF_BELTS.length > 0 ? Math.round((completedNodes / IBJJF_BELTS.length) * 100) : 0;
             setTimeout(function() { fillEl.style.height = Math.min(fillPct, 100) + '%'; }, 200);
 
             var overallPct = 0;
-            if (currentAdultIdx >= 0) {
-                overallPct = Math.round((currentAdultIdx / (adultBelts.length - 1)) * 100);
-                if (currentAdultIdx < adultBelts.length - 1) {
+            if (currentIdx >= 0) {
+                overallPct = Math.round((currentIdx / (IBJJF_BELTS.length - 1)) * 100);
+                if (currentIdx < IBJJF_BELTS.length - 1) {
                     var cfg = BELT_CONFIG[faixaAtual];
                     if (cfg && cfg.minTreinos > 0) {
-                        var segPct = Math.round((1 / (adultBelts.length - 1)) * 100);
+                        var segPct = Math.round((1 / (IBJJF_BELTS.length - 1)) * 100);
                         overallPct += Math.round(Math.min(totalTreinos / cfg.minTreinos, 0.99) * segPct);
                     }
                 }
@@ -2778,6 +4255,184 @@
             else { iconEl.textContent = '🌅'; textEl.textContent = '"A jornada de mil milhas começa com um único passo."'; subEl.textContent = 'Nunca é tarde para recomeçar'; }
         }
 
+        // ===== PROFILE (Aba Alunos, colunas I-T) =====
+        // I:Nascimento|J:Genero|K:Profissao|L:Bairro|M:Telefone|N:Instagram|O:Emergencia|P:Origem|Q:Objetivo|R:Horario|S:Experiencia|T:Saude
+        var PERFIL_FIELDS = [
+            { id: 'perfilNascimento', key: 'nascimento' },
+            { id: 'perfilGenero',     key: 'genero' },
+            { id: 'perfilProfissao',  key: 'profissao' },
+            { id: 'perfilBairro',     key: 'bairro' },
+            { id: 'perfilTelefone',   key: 'telefone' },
+            { id: 'perfilInstagram',  key: 'instagram' },
+            { id: 'perfilEmergencia', key: 'emergencia' },
+            { id: 'perfilOrigem',     key: 'origem' },
+            { id: 'perfilObjetivo',   key: 'objetivo' },
+            { id: 'perfilHorario',    key: 'horario' },
+            { id: 'perfilExperiencia',key: 'experiencia' },
+            { id: 'perfilSaude',      key: 'saude' }
+        ];
+
+        function loadProfile() {
+            if (!currentUser) return;
+            document.getElementById('perfilAvatar').textContent = (currentUser.name || '?')[0].toUpperCase();
+            document.getElementById('perfilNome').textContent = currentUser.name || '—';
+            document.getElementById('perfilFaixaTag').textContent = (currentUser.faixa || 'Branca') + ' • ' + (currentUser.grau || 0) + '/4 graus • ' + (currentUser.treinos || 0) + ' treinos';
+            
+            // 1) Load from localStorage cache first (instant)
+            var cached = localStorage.getItem('bjjProfile');
+            if (cached) {
+                try {
+                    var cachedProfile = JSON.parse(cached);
+                    fillProfileFields(cachedProfile);
+                } catch(e) { localStorage.removeItem('bjjProfile'); }
+            }
+            
+            // 2) Then fetch from backend to get latest data
+            fetchProfileFromBackend();
+            
+            document.getElementById('perfilSenhaAtual').value = '';
+            document.getElementById('perfilSenhaNova').value = '';
+            document.getElementById('perfilSenhaConfirma').value = '';
+        }
+
+        function fillProfileFields(p) {
+            if (!p) return;
+            for (var i = 0; i < PERFIL_FIELDS.length; i++) {
+                var f = PERFIL_FIELDS[i];
+                var el = document.getElementById(f.id);
+                if (!el) continue;
+                var val = p[f.key];
+                if (val === undefined || val === null) val = '';
+                val = val.toString();
+                // Convert ISO date to YYYY-MM-DD
+                if (f.key === 'nascimento' && val.indexOf('T') > -1) {
+                    val = val.substring(0, 10);
+                }
+                el.value = val;
+            }
+            updateProfileCompleteness();
+        }
+
+        async function fetchProfileFromBackend() {
+            if (!currentUser || !currentUser.email) return;
+            try {
+                var r = await fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    body: JSON.stringify({ action: 'getProfile', email: currentUser.email })
+                });
+                var data = await r.json();
+                if (data.success && data.profile) {
+                    // Cache in localStorage
+                    localStorage.setItem('bjjProfile', JSON.stringify(data.profile));
+                    fillProfileFields(data.profile);
+                }
+            } catch (err) { console.error('Erro perfil:', err); }
+        }
+
+        function updateProfileCompleteness() {
+            var filled = 0;
+            for (var i = 0; i < PERFIL_FIELDS.length; i++) {
+                var el = document.getElementById(PERFIL_FIELDS[i].id);
+                if (el && el.value && el.value.trim() !== '') filled++;
+            }
+            var pct = Math.round((filled / PERFIL_FIELDS.length) * 100);
+            document.getElementById('perfilCompletePct').textContent = pct + '%';
+            setTimeout(function() { document.getElementById('perfilCompleteFill').style.width = pct + '%'; }, 100);
+        }
+
+        async function saveProfile() {
+            if (!currentUser) return;
+            var btn = document.getElementById('perfilSaveBtn');
+            btn.disabled = true;
+            btn.textContent = '⏳ Salvando...';
+
+            var profileData = {};
+            for (var i = 0; i < PERFIL_FIELDS.length; i++) {
+                var f = PERFIL_FIELDS[i];
+                var el = document.getElementById(f.id);
+                profileData[f.key] = el ? el.value || '' : '';
+            }
+
+            try {
+                var r = await fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        action: 'saveProfile',
+                        email: currentUser.email,
+                        profile: profileData
+                    })
+                });
+                var data = await r.json();
+                if (data.success) {
+                    // Cache locally for persistence
+                    localStorage.setItem('bjjProfile', JSON.stringify(profileData));
+                    showMessage('perfilMessage', '✅ Perfil salvo com sucesso!', 'success');
+                    updateProfileCompleteness();
+                } else {
+                    showMessage('perfilMessage', '❌ ' + (data.message || data.error || 'Erro ao salvar'), 'danger');
+                }
+            } catch (err) {
+                showMessage('perfilMessage', '❌ Erro de conexão', 'danger');
+            }
+
+            btn.disabled = false;
+            btn.textContent = '💾 Salvar Perfil';
+            setTimeout(function() { document.getElementById('perfilMessage').innerHTML = ''; }, 4000);
+        }
+
+        async function changePassword() {
+            if (!currentUser) return;
+            var atual = document.getElementById('perfilSenhaAtual').value;
+            var nova = document.getElementById('perfilSenhaNova').value;
+            var confirma = document.getElementById('perfilSenhaConfirma').value;
+
+            if (!atual || !nova || !confirma) { showMessage('perfilPwdMessage', '⚠️ Preencha todos os campos', 'warning'); return; }
+            if (nova.length < 6) { showMessage('perfilPwdMessage', '⚠️ Mínimo 6 caracteres', 'warning'); return; }
+            if (nova !== confirma) { showMessage('perfilPwdMessage', '⚠️ As senhas não coincidem', 'warning'); return; }
+
+            try {
+                var r = await fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    body: JSON.stringify({ action: 'changePassword', email: currentUser.email, currentPassword: atual, newPassword: nova })
+                });
+                var data = await r.json();
+                if (data.success) {
+                    showMessage('perfilPwdMessage', '✅ Senha alterada!', 'success');
+                    document.getElementById('perfilSenhaAtual').value = '';
+                    document.getElementById('perfilSenhaNova').value = '';
+                    document.getElementById('perfilSenhaConfirma').value = '';
+                } else {
+                    showMessage('perfilPwdMessage', '❌ ' + (data.message || data.error || 'Erro'), 'danger');
+                }
+            } catch (err) {
+                showMessage('perfilPwdMessage', '❌ Erro de conexão', 'danger');
+            }
+            setTimeout(function() { document.getElementById('perfilPwdMessage').innerHTML = ''; }, 4000);
+        }
+
+        // Phone mask
+        (function() {
+            var tel = document.getElementById('perfilTelefone');
+            if (tel) {
+                tel.addEventListener('input', function(e) {
+                    var v = e.target.value.replace(/\D/g, '');
+                    if (v.length > 11) v = v.substring(0, 11);
+                    if (v.length > 6) v = '(' + v.substring(0, 2) + ') ' + v.substring(2, 7) + '-' + v.substring(7);
+                    else if (v.length > 2) v = '(' + v.substring(0, 2) + ') ' + v.substring(2);
+                    else if (v.length > 0) v = '(' + v;
+                    e.target.value = v;
+                    updateProfileCompleteness();
+                });
+            }
+            var allFields = document.querySelectorAll('#perfil input, #perfil select, #perfil textarea');
+            for (var i = 0; i < allFields.length; i++) {
+                allFields[i].addEventListener('change', updateProfileCompleteness);
+                allFields[i].addEventListener('input', function(e) {
+                    if (e.target.id !== 'perfilTelefone') updateProfileCompleteness();
+                });
+            }
+        })();
+
         // ===== AUTO UPDATE GRAU =====
         async function autoUpdateGrau(novoGrau) {
             if (!currentUser) return;
@@ -2789,10 +4444,755 @@
                 const data = await r.json();
                 if (data.success) {
                     currentUser.grau = novoGrau;
-                    sessionStorage.setItem('bjjUser', JSON.stringify(currentUser));
+                    localStorage.setItem('bjjUser', JSON.stringify(currentUser));
                 }
             } catch (err) { console.error('Erro grau:', err); }
             finally { currentUser._updatingGrau = false; }
+        }
+
+        // ===== ADMIN PANEL =====
+        let adminCheckinFilter = 'hoje';
+        let adminPendingCheckins = [];
+        let adminApprovedCheckins = [];
+        let adminSelectedCT = null;
+        let adminStudentsCache = [];
+
+        function switchAdminTab(tabName, evt) {
+            document.querySelectorAll('.adm-tab').forEach(function(t) { t.classList.remove('active'); });
+            document.querySelectorAll('#adminNav .bnav-btn').forEach(function(b) { b.classList.remove('active'); });
+            var tab = document.getElementById(tabName);
+            if (tab) tab.classList.add('active');
+            var e = evt || window.event;
+            if (e && e.target) {
+                var btn = e.target.closest('.bnav-btn');
+                if (btn) btn.classList.add('active');
+            }
+            if (tabName === 'adm-painel') loadAdminPanel();
+            if (tabName === 'adm-alunos') loadStudentsList();
+            if (tabName === 'adm-cts') loadCTScheduleAdmin();
+            if (tabName === 'adm-relatorios') loadAttendanceReport();
+            if (tabName === 'adm-checkin') loadAdminCTs();
+            if (tabName === 'adm-perfil') loadAdminProfile();
+        }
+
+        function loadAdminProfile() {
+            if (!currentUser) return;
+            document.getElementById('admPerfilName').textContent = currentUser.name;
+            document.getElementById('admPerfilEmail').textContent = currentUser.email;
+            document.getElementById('admPerfilInitial').textContent = currentUser.name.charAt(0).toUpperCase();
+        }
+
+        async function loadAdminPanel() {
+            if (!currentUser || !isAdmin()) return;
+            loadPendingAccounts();
+            loadPendingResets();
+            loadPendingCheckins();
+        }
+
+        // --- ADMIN OWN CHECK-IN ---
+        async function loadAdminCTs() {
+            try {
+                var r = await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify({ action: 'getCTsList' }) });
+                var data = await r.json();
+                if (data.success && data.cts) {
+                    var grid = document.getElementById('admCtGrid');
+                    if (grid) {
+                        grid.innerHTML = '';
+                        data.cts.forEach(function(ct) {
+                            var name = typeof ct === 'string' ? ct : ct.name || ct.toString();
+                            var btn = document.createElement('button');
+                            btn.type = 'button';
+                            btn.className = 'ct-btn';
+                            if (adminSelectedCT === name) btn.classList.add('selected');
+                            btn.textContent = name;
+                            btn.addEventListener('click', function() {
+                                adminSelectedCT = name;
+                                document.querySelectorAll('#admCtGrid .ct-btn').forEach(function(b) { b.classList.remove('selected'); });
+                                btn.classList.add('selected');
+                                document.getElementById('admSelectedCT').textContent = name;
+                                document.getElementById('admSelectedInfo').classList.add('active');
+                            });
+                            grid.appendChild(btn);
+                        });
+                    }
+                }
+            } catch (err) { console.error('Erro CTs admin:', err); }
+        }
+
+        function adminConfirmAttendance() {
+            if (!adminSelectedCT) { showMessage('admAttendanceMessage', 'Selecione o CT', 'warning'); return; }
+            var now = new Date();
+            var hora = now.getHours();
+            if (hora < 6 || hora >= 23) {
+                showMessage('admAttendanceMessage', '⚠️ Check-in disponível apenas das 06:00 às 23:00', 'warning');
+                return;
+            }
+            showMessage('admAttendanceMessage', 'Registrando...', 'info');
+            fetch(SCRIPT_URL, {
+                method: 'POST',
+                body: JSON.stringify({
+                    action: 'attendance', email: currentUser.email, name: currentUser.name,
+                    faixa: currentUser.faixa, grau: currentUser.grau, ct: adminSelectedCT
+                })
+            }).then(function(r) { return r.json(); }).then(function(data) {
+                if (data.success) {
+                    currentUser.treinos = (currentUser.treinos || 0) + 1;
+                    localStorage.setItem('bjjUser', JSON.stringify(currentUser));
+                    document.getElementById('admDisplayCount').textContent = currentUser.treinos;
+                    showMessage('admAttendanceMessage', '✅ Presença confirmada!', 'success');
+                    adminSelectedCT = null;
+                    document.querySelectorAll('#admCtGrid .ct-btn').forEach(function(b) { b.classList.remove('selected'); });
+                    document.getElementById('admSelectedCT').textContent = '-';
+                    document.getElementById('admSelectedInfo').classList.remove('active');
+                    setTimeout(function() { document.getElementById('admAttendanceMessage').innerHTML = ''; }, 4000);
+                } else {
+                    showMessage('admAttendanceMessage', data.message || 'Erro', 'danger');
+                }
+            }).catch(function() { showMessage('admAttendanceMessage', 'Erro de conexão', 'danger'); });
+        }
+
+        // --- ADMIN CHANGE PASSWORD ---
+        async function adminChangePassword() {
+            var cur = document.getElementById('admCurrentPw').value;
+            var nw = document.getElementById('admNewPw').value;
+            var confirm = document.getElementById('admConfirmPw').value;
+            if (!cur || !nw) { showMessage('admPwMessage', 'Preencha todos os campos', 'warning'); return; }
+            if (nw.length < 6) { showMessage('admPwMessage', 'Mínimo 6 caracteres', 'warning'); return; }
+            if (nw !== confirm) { showMessage('admPwMessage', 'Senhas não conferem', 'warning'); return; }
+            showMessage('admPwMessage', 'Alterando...', 'info');
+            try {
+                var r = await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify({
+                    action: 'changePassword', email: currentUser.email, currentPassword: cur, newPassword: nw
+                })});
+                var data = await r.json();
+                if (data.success) {
+                    showMessage('admPwMessage', '✅ Senha alterada!', 'success');
+                    document.getElementById('admCurrentPw').value = '';
+                    document.getElementById('admNewPw').value = '';
+                    document.getElementById('admConfirmPw').value = '';
+                } else {
+                    showMessage('admPwMessage', data.message || 'Erro', 'danger');
+                }
+            } catch (err) { showMessage('admPwMessage', 'Erro de conexão', 'danger'); }
+        }
+
+        // --- STUDENTS LIST ---
+        // --- ATTENDANCE REPORT ---
+        var reportData = null;
+        var reportSelectedCT = 'todos';
+
+        function switchReportCT(ct) {
+            reportSelectedCT = ct;
+            loadAttendanceReport();
+        }
+
+        async function loadAttendanceReport() {
+            document.getElementById('rptTotal').textContent = '...';
+            document.getElementById('rptAlunos').textContent = '...';
+            document.getElementById('rptMedia').textContent = '...';
+            document.getElementById('rptMediaAluno').textContent = '...';
+            try {
+                var payload = { action: 'getAttendanceReport' };
+                if (reportSelectedCT && reportSelectedCT !== 'todos') payload.ct = reportSelectedCT;
+                var r = await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify(payload) });
+                var data = await r.json();
+                if (data.success) {
+                    reportData = data;
+                    renderReportCTFilter(data);
+                    renderReport(data);
+                } else {
+                    document.getElementById('rptTotal').textContent = '0';
+                }
+            } catch (err) {
+                document.getElementById('rptTotal').textContent = 'Erro';
+            }
+        }
+
+        function renderReportCTFilter(d) {
+            var container = document.getElementById('rptCTFilter');
+            container.innerHTML = '';
+            var allCTs = d.allCTs || [];
+            var current = d.filterCT || 'todos';
+
+            // Botão "Todos"
+            var allBtn = document.createElement('button');
+            allBtn.className = 'report-filter-btn' + (current === 'todos' ? ' active' : '');
+            allBtn.textContent = 'Todos os CTs';
+            allBtn.onclick = function() { switchReportCT('todos'); };
+            container.appendChild(allBtn);
+
+            // Botão por CT
+            for (var i = 0; i < allCTs.length; i++) {
+                var btn = document.createElement('button');
+                btn.className = 'report-filter-btn' + (current === allCTs[i] ? ' active' : '');
+                btn.textContent = allCTs[i];
+                btn.setAttribute('data-ct', allCTs[i]);
+                btn.onclick = (function(ct) { return function() { switchReportCT(ct); }; })(allCTs[i]);
+                container.appendChild(btn);
+            }
+        }
+
+        function renderReport(d) {
+            var isFiltered = d.filterCT && d.filterCT !== 'todos';
+            var ctLabel = isFiltered ? ' (' + d.filterCT + ')' : '';
+
+            // KPIs
+            document.getElementById('rptTotal').textContent = d.totalGeral || 0;
+            document.getElementById('rptAlunos').textContent = d.totalAlunos || 0;
+            var mediaMes = d.byMonth && d.byMonth.length > 0 ? Math.round(d.totalGeral / d.byMonth.length) : 0;
+            document.getElementById('rptMedia').textContent = mediaMes;
+            var mediaAluno = d.totalAlunos > 0 ? (d.totalGeral / d.totalAlunos).toFixed(1) : '0';
+            document.getElementById('rptMediaAluno').textContent = mediaAluno;
+
+            // Picos
+            var DAY_LABELS_RPT = { dom: 'Domingo', seg: 'Segunda', ter: 'Terça', qua: 'Quarta', qui: 'Quinta', sex: 'Sexta', sab: 'Sábado' };
+            if (d.pico) {
+                document.getElementById('rptPicoMes').textContent = d.pico.mes ? d.pico.mes.label + ' (' + d.pico.mes.total + ')' : '-';
+                document.getElementById('rptPicoDia').textContent = d.pico.dia ? DAY_LABELS_RPT[d.pico.dia] || d.pico.dia : '-';
+                document.getElementById('rptPicoHora').textContent = d.pico.hora ? d.pico.hora.hour + ' (' + d.pico.hora.total + ')' : '-';
+            }
+
+            // By Month
+            renderBarChart('rptByMonth', (d.byMonth || []).map(function(m) { return { label: m.label, value: m.total }; }), 'gold');
+
+            // By Day
+            var dayOrder = ['seg', 'ter', 'qua', 'qui', 'sex', 'sab', 'dom'];
+            var dayLabels = { seg: 'Seg', ter: 'Ter', qua: 'Qua', qui: 'Qui', sex: 'Sex', sab: 'Sáb', dom: 'Dom' };
+            var dayData = dayOrder.map(function(k) { return { label: dayLabels[k], value: d.byDayOfWeek ? d.byDayOfWeek[k] || 0 : 0 }; });
+            renderBarChart('rptByDay', dayData, 'green');
+
+            // By Hour
+            renderBarChart('rptByHour', (d.byHour || []).map(function(h) { return { label: h.hour, value: h.total }; }), 'cyan');
+
+            // By CT — só mostra quando "Todos"
+            var ctSection = document.getElementById('rptByCTSection');
+            if (isFiltered) {
+                ctSection.style.display = 'none';
+            } else {
+                ctSection.style.display = 'block';
+                renderBarChart('rptByCT', (d.byCT || []).map(function(c) { return { label: c.ct, value: c.total }; }), 'purple');
+            }
+
+            // Top Alunos
+            var topHtml = '';
+            if (d.byAluno && d.byAluno.length > 0) {
+                var maxAluno = d.byAluno[0].total;
+                for (var a = 0; a < Math.min(15, d.byAluno.length); a++) {
+                    var al = d.byAluno[a];
+                    var pct = maxAluno > 0 ? Math.round((al.total / maxAluno) * 100) : 0;
+                    topHtml += '<div class="report-bar-row">' +
+                        '<div class="report-bar-label" style="min-width:100px;font-size:11px;">' + (a + 1) + '. ' + al.name + '</div>' +
+                        '<div class="report-bar-track"><div class="report-bar-fill gold" style="width:' + pct + '%"></div></div>' +
+                        '<div class="report-bar-value">' + al.total + '</div>' +
+                    '</div>';
+                }
+            } else {
+                topHtml = '<div style="text-align:center;color:var(--adm-text-3);padding:12px;">Sem dados</div>';
+            }
+            document.getElementById('rptTopAlunos').innerHTML = topHtml;
+
+            // Records
+            var tbody = document.getElementById('rptRecords');
+            var rHtml = '';
+            if (d.records && d.records.length > 0) {
+                for (var r = 0; r < d.records.length; r++) {
+                    var rec = d.records[r];
+                    rHtml += '<tr><td>' + rec.name + '</td><td>' + rec.ct + '</td><td>' + rec.data + '</td><td>' + rec.hora + '</td><td>' + (rec.dia || '') + '</td></tr>';
+                }
+            } else {
+                rHtml = '<tr><td colspan="5" style="text-align:center;padding:16px;color:var(--adm-text-3);">Nenhuma presença registrada</td></tr>';
+            }
+            tbody.innerHTML = rHtml;
+        }
+
+        function renderBarChart(containerId, data, colorClass) {
+            var container = document.getElementById(containerId);
+            if (!data || data.length === 0) {
+                container.innerHTML = '<div style="text-align:center;color:var(--adm-text-3);padding:12px;font-size:12px;">Sem dados</div>';
+                return;
+            }
+            var maxVal = Math.max.apply(null, data.map(function(d) { return d.value; }));
+            if (maxVal === 0) maxVal = 1;
+            var html = '';
+            for (var i = 0; i < data.length; i++) {
+                var pct = Math.round((data[i].value / maxVal) * 100);
+                html += '<div class="report-bar-row">' +
+                    '<div class="report-bar-label">' + data[i].label + '</div>' +
+                    '<div class="report-bar-track"><div class="report-bar-fill ' + colorClass + '" style="width:' + pct + '%"></div></div>' +
+                    '<div class="report-bar-value">' + data[i].value + '</div>' +
+                '</div>';
+            }
+            container.innerHTML = html;
+        }
+
+        // --- CT SCHEDULE MANAGEMENT ---
+        var ctScheduleCache = {};
+
+        async function loadCTScheduleAdmin() {
+            var container = document.getElementById('adminCTScheduleList');
+            container.innerHTML = '<div class="admin-empty">Carregando...</div>';
+            try {
+                var r = await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify({ action: 'getCTsList' }) });
+                var data = await r.json();
+                if (data.success && data.cts && data.cts.length > 0) {
+                    ctScheduleCache = {};
+                    var html = '';
+                    var DAY_LABELS = ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'];
+                    var DAY_KEYS = ['seg', 'ter', 'qua', 'qui', 'sex', 'sab', 'dom'];
+
+                    for (var i = 0; i < data.cts.length; i++) {
+                        var ct = data.cts[i];
+                        var ctName = typeof ct === 'string' ? ct : ct.name;
+                        var schedule = (typeof ct === 'object' && ct.schedule) ? ct.schedule : {};
+                        ctScheduleCache[ctName] = JSON.parse(JSON.stringify(schedule));
+
+                        html += '<div class="ct-schedule-card" id="ctSched_' + i + '">';
+                        html += '<div class="ct-schedule-header">';
+                        html += '<div class="ct-schedule-name">📍 ' + ctName + '</div>';
+                        html += '<span class="ct-schedule-status saved" id="ctSchedStatus_' + i + '">salvo</span>';
+                        html += '</div>';
+                        html += '<div class="ct-schedule-days">';
+
+                        for (var d = 0; d < DAY_KEYS.length; d++) {
+                            var active = schedule[DAY_KEYS[d]] === true;
+                            html += '<div class="ct-day-toggle ' + (active ? 'active' : '') + '" ';
+                            html += 'onclick="toggleCTDay(\'' + ctName.replace(/'/g, "\\'") + '\', \'' + DAY_KEYS[d] + '\', this, ' + i + ')">';
+                            html += '<span class="ct-day-label">' + DAY_LABELS[d] + '</span>';
+                            html += '<span class="ct-day-icon"></span>';
+                            html += '</div>';
+                        }
+
+                        html += '</div>';
+                        html += '<div class="ct-schedule-actions">';
+                        html += '<button class="ct-schedule-save" id="ctSchedSave_' + i + '" onclick="saveCTSchedule(\'' + ctName.replace(/'/g, "\\'") + '\', ' + i + ')">Salvar Horário</button>';
+                        html += '</div>';
+                        html += '</div>';
+                    }
+
+                    container.innerHTML = html;
+                } else {
+                    container.innerHTML = '<div class="admin-empty">Nenhum CT cadastrado</div>';
+                }
+            } catch (err) {
+                container.innerHTML = '<div class="admin-empty">Erro ao carregar CTs</div>';
+            }
+        }
+
+        function toggleCTDay(ctName, dayKey, el, cardIdx) {
+            var isActive = el.classList.contains('active');
+            if (isActive) {
+                el.classList.remove('active');
+            } else {
+                el.classList.add('active');
+            }
+            // Update cache
+            if (!ctScheduleCache[ctName]) ctScheduleCache[ctName] = {};
+            ctScheduleCache[ctName][dayKey] = !isActive;
+            // Mark as unsaved
+            var statusEl = document.getElementById('ctSchedStatus_' + cardIdx);
+            if (statusEl) {
+                statusEl.textContent = 'alterado';
+                statusEl.className = 'ct-schedule-status unsaved';
+            }
+        }
+
+        async function saveCTSchedule(ctName, cardIdx) {
+            var saveBtn = document.getElementById('ctSchedSave_' + cardIdx);
+            if (saveBtn) { saveBtn.disabled = true; saveBtn.textContent = 'Salvando...'; }
+
+            var schedule = ctScheduleCache[ctName] || {};
+            try {
+                var r = await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify({ action: 'saveCTSchedule', ctName: ctName, schedule: schedule }) });
+                var data = await r.json();
+                if (data.success) {
+                    var statusEl = document.getElementById('ctSchedStatus_' + cardIdx);
+                    if (statusEl) {
+                        statusEl.textContent = '✓ salvo';
+                        statusEl.className = 'ct-schedule-status saved';
+                    }
+                    // Atualiza ctSchedules global
+                    ctSchedules[ctName] = JSON.parse(JSON.stringify(schedule));
+                } else {
+                    alert(data.message || 'Erro ao salvar');
+                }
+            } catch (err) {
+                alert('Erro de conexão');
+            }
+            if (saveBtn) { saveBtn.disabled = false; saveBtn.textContent = 'Salvar Horário'; }
+        }
+
+        // --- STUDENTS LIST ---
+        async function loadStudentsList() {
+            var container = document.getElementById('adminStudentsList');
+            container.innerHTML = '<div class="admin-empty">Carregando...</div>';
+            try {
+                var r = await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify({ action: 'getStudentsList' }) });
+                var data = await r.json();
+                if (data.success && data.students) {
+                    adminStudentsCache = data.students;
+                    renderStudentsList(adminStudentsCache);
+                    var badge = document.getElementById('adminStudentsBadge');
+                    badge.textContent = data.students.length;
+                    badge.style.display = 'inline-block';
+                } else {
+                    container.innerHTML = '<div class="admin-empty">Nenhum aluno cadastrado</div>';
+                }
+            } catch (err) {
+                container.innerHTML = '<div class="admin-empty">Erro ao carregar</div>';
+            }
+        }
+
+        function renderStudentsList(students) {
+            var container = document.getElementById('adminStudentsList');
+            if (students.length === 0) {
+                container.innerHTML = '<div class="admin-empty">Nenhum aluno encontrado</div>';
+                return;
+            }
+            var html = '';
+            for (var i = 0; i < students.length; i++) {
+                var s = students[i];
+                var initial = (s.name || '?').charAt(0).toUpperCase();
+                var isAdm = (s.admin === true || s.admin === 'TRUE');
+                html += '<div class="admin-student-card">' +
+                    '<div class="admin-card-avatar">' + initial + '</div>' +
+                    '<div class="admin-student-info">' +
+                        '<div class="admin-student-name">' + (s.name || '-') + (isAdm ? ' <span class="admin-header-badge">ADMIN</span>' : '') + '</div>' +
+                        '<div class="admin-student-meta">' + (s.email || '') + '</div>' +
+                        '<div class="admin-student-belt">🥋 ' + (s.faixa || '-') + ' · 📍 ' + (s.ct || '-') + '</div>' +
+                    '</div>' +
+                    (isAdm ? '' : '<button class="admin-student-delete" onclick="deleteStudent(\'' + (s.email || '').replace(/'/g, "\\'") + '\')">✕</button>') +
+                '</div>';
+            }
+            container.innerHTML = html;
+        }
+
+        function filterStudentsList() {
+            var q = (document.getElementById('adminStudentSearch').value || '').toLowerCase();
+            if (!q) { renderStudentsList(adminStudentsCache); return; }
+            var filtered = adminStudentsCache.filter(function(s) {
+                return ((s.name || '').toLowerCase().indexOf(q) !== -1) || ((s.email || '').toLowerCase().indexOf(q) !== -1);
+            });
+            renderStudentsList(filtered);
+        }
+
+        async function deleteStudent(email) {
+            if (!confirm('Remover o aluno ' + email + '? Esta ação não pode ser desfeita.')) return;
+            try {
+                var r = await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify({ action: 'deleteStudent', email: email }) });
+                var data = await r.json();
+                if (data.success) {
+                    loadStudentsList();
+                } else { alert(data.message || 'Erro'); }
+            } catch (err) { alert('Erro de conexão'); }
+        }
+
+        // --- PENDING ACCOUNTS ---
+        async function loadPendingAccounts() {
+            var container = document.getElementById('adminAccountsList');
+            container.innerHTML = '<div class="admin-empty">Carregando...</div>';
+            try {
+                var r = await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify({ action: 'getPendingAccounts' }) });
+                var data = await r.json();
+                if (data.success && data.accounts && data.accounts.length > 0) {
+                    var html = '';
+                    for (var i = 0; i < data.accounts.length; i++) {
+                        var acc = data.accounts[i];
+                        html += renderAccountCard(acc, i);
+                    }
+                    container.innerHTML = html;
+                    var badge = document.getElementById('adminAccBadge');
+                    badge.textContent = data.accounts.length;
+                    badge.style.display = 'inline-block';
+                    document.getElementById('adminPendingAccountsCount').textContent = data.accounts.length;
+                } else {
+                    container.innerHTML = '<div class="admin-empty">Nenhum cadastro pendente 🎉</div>';
+                    document.getElementById('adminAccBadge').style.display = 'none';
+                    document.getElementById('adminPendingAccountsCount').textContent = '0';
+                }
+            } catch (err) {
+                container.innerHTML = '<div class="admin-empty">Erro ao carregar</div>';
+            }
+        }
+
+        function renderAccountCard(acc, idx) {
+            var initial = (acc.name || '?').charAt(0).toUpperCase();
+            var faixa = acc.faixa || 'Branca';
+            var ct = acc.ct || '-';
+            var dataStr = acc.data ? new Date(acc.data).toLocaleDateString('pt-BR') : '-';
+            return '<div class="admin-card" id="accCard' + idx + '">' +
+                '<div class="admin-card-top">' +
+                    '<div class="admin-card-avatar">' + initial + '</div>' +
+                    '<div class="admin-card-info">' +
+                        '<div class="admin-card-name">' + (acc.name || 'Sem nome') + '</div>' +
+                        '<div class="admin-card-meta">' + (acc.email || '') + '</div>' +
+                    '</div>' +
+                '</div>' +
+                '<div class="admin-card-detail">🥋 ' + faixa + ' · 📍 ' + ct + ' · 📅 ' + dataStr + '</div>' +
+                '<div class="admin-card-actions">' +
+                    '<button class="admin-btn approve" onclick="approveAccount(\'' + (acc.email || '').replace(/'/g, "\\'") + '\',' + idx + ')">✓ Aprovar</button>' +
+                    '<button class="admin-btn reject" onclick="rejectAccount(\'' + (acc.email || '').replace(/'/g, "\\'") + '\',' + idx + ')">✕ Rejeitar</button>' +
+                '</div>' +
+            '</div>';
+        }
+
+        async function approveAccount(email, idx) {
+            var card = document.getElementById('accCard' + idx);
+            if (card) card.style.opacity = '0.5';
+            try {
+                var r = await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify({ action: 'approveAccount', email: email }) });
+                var data = await r.json();
+                if (data.success) {
+                    if (card) { card.style.background = 'rgba(45,138,78,0.1)'; card.innerHTML = '<div class="admin-empty" style="color:#2d8a4e">✅ ' + email + ' aprovado!</div>'; }
+                    setTimeout(loadPendingAccounts, 1500);
+                } else {
+                    alert(data.message || 'Erro ao aprovar');
+                    if (card) card.style.opacity = '1';
+                }
+            } catch (err) {
+                alert('Erro de conexão');
+                if (card) card.style.opacity = '1';
+            }
+        }
+
+        async function rejectAccount(email, idx) {
+            if (!confirm('Rejeitar cadastro de ' + email + '?')) return;
+            var card = document.getElementById('accCard' + idx);
+            if (card) card.style.opacity = '0.5';
+            try {
+                var r = await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify({ action: 'rejectAccount', email: email }) });
+                var data = await r.json();
+                if (data.success) {
+                    if (card) { card.style.background = 'rgba(232,93,93,0.1)'; card.innerHTML = '<div class="admin-empty" style="color:var(--coral)">❌ ' + email + ' rejeitado</div>'; }
+                    setTimeout(loadPendingAccounts, 1500);
+                } else { alert(data.message || 'Erro'); if (card) card.style.opacity = '1'; }
+            } catch (err) { alert('Erro de conexão'); if (card) card.style.opacity = '1'; }
+        }
+
+        // --- PENDING PASSWORD RESETS ---
+        async function loadPendingResets() {
+            var container = document.getElementById('adminResetsList');
+            container.innerHTML = '<div class="admin-empty">Carregando...</div>';
+            try {
+                var r = await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify({ action: 'getPendingResets' }) });
+                var data = await r.json();
+                if (data.success && data.resets && data.resets.length > 0) {
+                    var html = '';
+                    for (var i = 0; i < data.resets.length; i++) {
+                        var rst = data.resets[i];
+                        var initial = (rst.name || '?').charAt(0).toUpperCase();
+                        html += '<div class="admin-card" id="rstCard' + i + '">' +
+                            '<div class="admin-card-top">' +
+                                '<div class="admin-card-avatar">' + initial + '</div>' +
+                                '<div class="admin-card-info">' +
+                                    '<div class="admin-card-name">' + (rst.name || 'Aluno') + '</div>' +
+                                    '<div class="admin-card-meta">' + (rst.email || '') + '</div>' +
+                                '</div>' +
+                            '</div>' +
+                            '<div class="admin-card-detail">🔑 Solicitação de nova senha · 📅 ' + (rst.data || '-') + '</div>' +
+                            '<div class="admin-card-actions">' +
+                                '<button class="admin-btn approve" onclick="approveReset(\'' + (rst.email || '').replace(/'/g, "\\'") + '\',' + i + ')">✓ Aprovar</button>' +
+                                '<button class="admin-btn reject" onclick="rejectReset(\'' + (rst.email || '').replace(/'/g, "\\'") + '\',' + i + ')">✕ Rejeitar</button>' +
+                            '</div>' +
+                        '</div>';
+                    }
+                    container.innerHTML = html;
+                    var badge = document.getElementById('adminResetBadge');
+                    badge.textContent = data.resets.length;
+                    badge.style.display = 'inline-block';
+                    document.getElementById('adminPendingResetsCount').textContent = data.resets.length;
+                } else {
+                    container.innerHTML = '<div class="admin-empty">Nenhum reset pendente 🎉</div>';
+                    document.getElementById('adminResetBadge').style.display = 'none';
+                    document.getElementById('adminPendingResetsCount').textContent = '0';
+                }
+            } catch (err) {
+                container.innerHTML = '<div class="admin-empty">Erro ao carregar</div>';
+            }
+        }
+
+        async function approveReset(email, idx) {
+            var card = document.getElementById('rstCard' + idx);
+            if (card) card.style.opacity = '0.5';
+            try {
+                var r = await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify({ action: 'approvePasswordReset', email: email }) });
+                var data = await r.json();
+                if (data.success) {
+                    if (card) { card.style.background = 'rgba(45,138,78,0.1)'; card.innerHTML = '<div class="admin-empty" style="color:#2d8a4e">✅ Senha de ' + email + ' atualizada!</div>'; }
+                    setTimeout(loadPendingResets, 1500);
+                } else {
+                    alert(data.message || 'Erro ao aprovar');
+                    if (card) card.style.opacity = '1';
+                }
+            } catch (err) {
+                alert('Erro de conexão');
+                if (card) card.style.opacity = '1';
+            }
+        }
+
+        async function rejectReset(email, idx) {
+            if (!confirm('Rejeitar reset de senha de ' + email + '?')) return;
+            var card = document.getElementById('rstCard' + idx);
+            if (card) card.style.opacity = '0.5';
+            try {
+                var r = await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify({ action: 'rejectPasswordReset', email: email }) });
+                var data = await r.json();
+                if (data.success) {
+                    if (card) { card.style.background = 'rgba(232,93,93,0.1)'; card.innerHTML = '<div class="admin-empty" style="color:var(--coral)">❌ Reset rejeitado</div>'; }
+                    setTimeout(loadPendingResets, 1500);
+                } else { alert(data.message || 'Erro'); if (card) card.style.opacity = '1'; }
+            } catch (err) { alert('Erro de conexão'); if (card) card.style.opacity = '1'; }
+        }
+
+        // --- PENDING CHECK-INS ---
+        async function loadPendingCheckins() {
+            var container = document.getElementById('adminCheckinsList');
+            var approvedContainer = document.getElementById('adminApprovedList');
+            container.innerHTML = '<div class="admin-empty">Carregando...</div>';
+            try {
+                var r = await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify({ action: 'getPendingCheckins', filter: adminCheckinFilter }) });
+                var data = await r.json();
+
+                // Pending
+                adminPendingCheckins = (data.pending || []);
+                adminApprovedCheckins = (data.approved || []);
+
+                renderPendingCheckins();
+                renderApprovedCheckins();
+
+                // Stats
+                document.getElementById('adminPendingCheckinsCount').textContent = adminPendingCheckins.length;
+                document.getElementById('adminTodayCheckinsCount').textContent = (data.todayTotal || 0);
+
+            } catch (err) {
+                container.innerHTML = '<div class="admin-empty">Erro ao carregar</div>';
+            }
+        }
+
+        function renderPendingCheckins() {
+            var container = document.getElementById('adminCheckinsList');
+            var bulkBtn = document.getElementById('adminBulkApproveBtn');
+            if (adminPendingCheckins.length === 0) {
+                container.innerHTML = '<div class="admin-empty">Nenhum check-in pendente 🎉</div>';
+                document.getElementById('adminCheckinBadge').style.display = 'none';
+                bulkBtn.style.display = 'none';
+                return;
+            }
+
+            var html = '';
+            for (var i = 0; i < adminPendingCheckins.length; i++) {
+                var ck = adminPendingCheckins[i];
+                html += renderCheckinCard(ck, i);
+            }
+            container.innerHTML = html;
+
+            var badge = document.getElementById('adminCheckinBadge');
+            badge.textContent = adminPendingCheckins.length;
+            badge.style.display = 'inline-block';
+
+            bulkBtn.style.display = adminPendingCheckins.length > 1 ? 'block' : 'none';
+            bulkBtn.textContent = '✓ Aprovar Todos (' + adminPendingCheckins.length + ')';
+        }
+
+        function renderApprovedCheckins() {
+            var container = document.getElementById('adminApprovedList');
+            if (adminApprovedCheckins.length === 0) {
+                container.innerHTML = '<div class="admin-empty">Nenhum check-in aprovado hoje</div>';
+                document.getElementById('adminApprovedBadge').style.display = 'none';
+                return;
+            }
+            var html = '';
+            for (var i = 0; i < adminApprovedCheckins.length; i++) {
+                var ck = adminApprovedCheckins[i];
+                var initial = (ck.name || '?').charAt(0).toUpperCase();
+                html += '<div class="admin-card">' +
+                    '<div class="admin-card-top">' +
+                        '<div class="admin-card-avatar">' + initial + '</div>' +
+                        '<div class="admin-card-info">' +
+                            '<div class="admin-card-name">' + (ck.name || '-') + '</div>' +
+                            '<div class="admin-card-meta">' + (ck.ct || '') + ' · <span class="admin-checkin-time">' + (ck.hora || '') + '</span></div>' +
+                        '</div>' +
+                        '<span class="admin-checkin-status aprovado">aprovado</span>' +
+                    '</div>' +
+                '</div>';
+            }
+            container.innerHTML = html;
+            var badge = document.getElementById('adminApprovedBadge');
+            badge.textContent = adminApprovedCheckins.length;
+            badge.style.display = 'inline-block';
+        }
+
+        function renderCheckinCard(ck, idx) {
+            var initial = (ck.name || '?').charAt(0).toUpperCase();
+            var dataStr = ck.dataFormatada || '-';
+            var rowIndex = ck.rowIndex || 0;
+            return '<div class="admin-card" id="ckCard' + idx + '">' +
+                '<div class="admin-card-top">' +
+                    '<div class="admin-card-avatar">' + initial + '</div>' +
+                    '<div class="admin-card-info">' +
+                        '<div class="admin-card-name">' + (ck.name || '-') + '</div>' +
+                        '<div class="admin-card-meta">' + (ck.email || '') + '</div>' +
+                    '</div>' +
+                    '<span class="admin-checkin-status pendente">pendente</span>' +
+                '</div>' +
+                '<div class="admin-card-detail">📍 ' + (ck.ct || '-') + ' · ⏰ ' + (ck.hora || '-') + ' · 📅 ' + dataStr + '</div>' +
+                '<div class="admin-card-actions">' +
+                    '<button class="admin-btn approve" onclick="approveCheckin(' + rowIndex + ',' + idx + ')">✓ Aprovar</button>' +
+                    '<button class="admin-btn reject" onclick="rejectCheckin(' + rowIndex + ',' + idx + ')">✕ Rejeitar</button>' +
+                '</div>' +
+            '</div>';
+        }
+
+        function filterAdminCheckins(filter, evt) {
+            document.querySelectorAll('.admin-filter-btn').forEach(function(b) { b.classList.remove('active'); });
+            if (evt && evt.target) evt.target.classList.add('active');
+            adminCheckinFilter = filter;
+            loadPendingCheckins();
+        }
+
+        async function approveCheckin(rowIndex, cardIdx) {
+            var card = document.getElementById('ckCard' + cardIdx);
+            if (card) card.style.opacity = '0.5';
+            try {
+                var r = await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify({ action: 'approveCheckin', rowIndex: rowIndex, approvedBy: currentUser.email }) });
+                var data = await r.json();
+                if (data.success) {
+                    if (card) { card.style.background = 'rgba(45,138,78,0.1)'; card.innerHTML = '<div class="admin-empty" style="color:#2d8a4e">✅ Aprovado!</div>'; }
+                    setTimeout(loadPendingCheckins, 1000);
+                } else {
+                    alert(data.message || 'Erro');
+                    if (card) card.style.opacity = '1';
+                }
+            } catch (err) { alert('Erro de conexão'); if (card) card.style.opacity = '1'; }
+        }
+
+        async function rejectCheckin(rowIndex, cardIdx) {
+            if (!confirm('Rejeitar este check-in?')) return;
+            var card = document.getElementById('ckCard' + cardIdx);
+            if (card) card.style.opacity = '0.5';
+            try {
+                var r = await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify({ action: 'rejectCheckin', rowIndex: rowIndex }) });
+                var data = await r.json();
+                if (data.success) {
+                    if (card) { card.style.background = 'rgba(232,93,93,0.1)'; card.innerHTML = '<div class="admin-empty" style="color:var(--coral)">❌ Rejeitado</div>'; }
+                    setTimeout(loadPendingCheckins, 1000);
+                } else { alert(data.message || 'Erro'); if (card) card.style.opacity = '1'; }
+            } catch (err) { alert('Erro de conexão'); if (card) card.style.opacity = '1'; }
+        }
+
+        async function bulkApproveCheckins() {
+            if (!confirm('Aprovar todos os ' + adminPendingCheckins.length + ' check-ins pendentes?')) return;
+            var btn = document.getElementById('adminBulkApproveBtn');
+            btn.disabled = true;
+            btn.textContent = 'Aprovando...';
+            try {
+                var r = await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify({ action: 'bulkApproveCheckins', approvedBy: currentUser.email, filter: adminCheckinFilter }) });
+                var data = await r.json();
+                if (data.success) {
+                    btn.textContent = '✅ ' + (data.count || 0) + ' aprovados!';
+                    setTimeout(loadPendingCheckins, 1500);
+                } else { alert(data.message || 'Erro'); }
+            } catch (err) { alert('Erro de conexão'); }
+            btn.disabled = false;
         }
     </script>
 </body>

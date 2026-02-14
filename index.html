@@ -128,6 +128,7 @@
             -ms-flex-pack: justify;
             justify-content: space-between;
             padding: 14px 20px;
+            padding-top: calc(14px + env(safe-area-inset-top, 0px));
             background: #08080a;
             border-bottom: 1px solid var(--border);
             position: relative;
@@ -1348,123 +1349,381 @@
             box-shadow: 0 4px 20px rgba(212,165,41,0.3);
         }
 
-        /* Timeline */
-        .evo-timeline {
+        /* ===== IBJJF ROADMAP ===== */
+        .ibjjf-roadmap {
             background: var(--bg-card);
             border: 1px solid var(--border);
             border-radius: var(--radius-lg);
-            padding: 20px;
+            padding: 20px 16px;
         }
 
-        .evo-timeline-title {
+        .ibjjf-title {
             font-family: 'Sora', sans-serif;
             font-size: 13px;
             font-weight: 700;
             color: var(--text-2);
             text-transform: uppercase;
             letter-spacing: 1px;
-            margin-bottom: 20px;
+            margin-bottom: 6px;
         }
 
-        .evo-tl-track {
+        .ibjjf-subtitle {
+            font-size: 11px;
+            color: var(--text-3);
+            margin-bottom: 16px;
+        }
+
+        /* Legend row */
+        .ibjjf-legend {
+            display: -webkit-box;
+            display: -webkit-flex;
             display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            position: relative;
-            padding: 0 8px;
-            margin-bottom: 20px;
+            -webkit-flex-wrap: wrap;
+            flex-wrap: wrap;
+            margin-bottom: 16px;
+            gap: 0;
         }
 
-        .evo-tl-line-bg {
+        .ibjjf-legend-item {
+            display: -webkit-box;
+            display: -webkit-flex;
+            display: flex;
+            -webkit-box-align: center;
+            -webkit-align-items: center;
+            align-items: center;
+            font-size: 10px;
+            color: var(--text-3);
+            margin-right: 14px;
+            margin-bottom: 4px;
+        }
+
+        .ibjjf-legend-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-right: 5px;
+            -webkit-flex-shrink: 0;
+            flex-shrink: 0;
+        }
+
+        .ibjjf-legend-dot.past { background: var(--accent); opacity: 0.6; }
+        .ibjjf-legend-dot.current { background: var(--accent); box-shadow: 0 0 6px rgba(212,165,41,0.5); }
+        .ibjjf-legend-dot.next { border: 2px solid var(--accent); background: transparent; }
+        .ibjjf-legend-dot.future { border: 1.5px dashed var(--text-3); background: transparent; opacity: 0.5; }
+
+        /* Vertical track */
+        .ibjjf-track {
+            position: relative;
+            padding-left: 32px;
+        }
+
+        .ibjjf-track::before {
+            content: '';
             position: absolute;
-            top: 18px;
-            left: 28px;
-            right: 28px;
-            height: 4px;
+            left: 11px;
+            top: 0;
+            bottom: 0;
+            width: 3px;
             background: var(--bg-elevated);
             border-radius: 2px;
-            z-index: 0;
         }
 
-        .evo-tl-line-fill {
-            height: 100%;
-            background: linear-gradient(90deg, var(--accent), var(--gold-light));
+        .ibjjf-track-fill {
+            position: absolute;
+            left: 11px;
+            top: 0;
+            width: 3px;
+            background: linear-gradient(180deg, var(--accent), var(--gold-light));
             border-radius: 2px;
-            transition: width 1s ease;
+            -webkit-transition: height 1s ease;
+            transition: height 1s ease;
         }
 
-        .evo-tl-node {
+        /* Belt node */
+        .ibjjf-node {
+            position: relative;
+            margin-bottom: 4px;
+            padding: 10px 12px;
+            border-radius: var(--radius-md);
+            -webkit-transition: all 0.3s ease;
+            transition: all 0.3s ease;
+        }
+
+        .ibjjf-node:last-child { margin-bottom: 0; }
+
+        /* Dot on left */
+        .ibjjf-node::before {
+            content: '';
+            position: absolute;
+            left: -27px;
+            top: 50%;
+            -webkit-transform: translateY(-50%);
+            transform: translateY(-50%);
+            width: 13px;
+            height: 13px;
+            border-radius: 50%;
+            background: var(--bg-elevated);
+            border: 2px solid var(--text-3);
+            z-index: 2;
+        }
+
+        /* States */
+        .ibjjf-node.completed::before {
+            background: var(--accent);
+            border-color: var(--accent);
+            opacity: 0.7;
+        }
+
+        .ibjjf-node.completed {
+            opacity: 0.55;
+        }
+
+        .ibjjf-node.current {
+            background: rgba(212,165,41,0.08);
+            border: 1.5px solid var(--border-accent);
+        }
+
+        .ibjjf-node.current::before {
+            background: var(--accent);
+            border-color: var(--gold-light);
+            width: 15px;
+            height: 15px;
+            left: -28px;
+            box-shadow: 0 0 12px rgba(212,165,41,0.5);
+        }
+
+        .ibjjf-node.next {
+            background: rgba(212,165,41,0.04);
+            border: 1px dashed var(--border-accent);
+        }
+
+        .ibjjf-node.next::before {
+            border-color: var(--accent);
+            border-style: dashed;
+            background: transparent;
+        }
+
+        .ibjjf-node.future {
+            opacity: 0.35;
+        }
+
+        .ibjjf-node.future::before {
+            border-style: dashed;
+            opacity: 0.5;
+        }
+
+        /* Node inner layout */
+        .ibjjf-node-inner {
+            display: -webkit-box;
+            display: -webkit-flex;
             display: flex;
-            flex-direction: column;
+            -webkit-box-align: center;
+            -webkit-align-items: center;
             align-items: center;
-            gap: 4px;
-            z-index: 1;
-            min-width: 44px;
         }
 
-        .evo-tl-dot {
+        /* Belt color band */
+        .ibjjf-belt-band {
             width: 36px;
-            height: 36px;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 14px;
+            height: 10px;
+            border-radius: 3px;
+            -webkit-flex-shrink: 0;
+            flex-shrink: 0;
+            margin-right: 10px;
+            position: relative;
+            overflow: hidden;
         }
 
-        .evo-tl-dot.future { background: var(--bg-elevated); border: 2px dashed var(--text-3); opacity: 0.5; }
-        .evo-tl-dot.current { background: var(--accent-dim); border: 2px solid var(--accent); box-shadow: 0 0 15px rgba(212,165,41,0.3); }
-        .evo-tl-dot.completed { background: var(--accent); }
+        /* Belt stripe indicator */
+        .ibjjf-belt-band .stripe {
+            position: absolute;
+            right: 2px;
+            top: 0;
+            height: 100%;
+            width: 6px;
+            background: #111;
+        }
 
-        .evo-tl-label {
+        .ibjjf-belt-band .stripe-inner {
+            position: absolute;
+            top: 1px;
+            bottom: 1px;
+            width: 2px;
+        }
+
+        /* Belt colors */
+        .ibjjf-belt-band.branca { background: linear-gradient(90deg, #e8e8e8, #f5f5f5); }
+        .ibjjf-belt-band.cinza-branca { background: linear-gradient(90deg, #bbb, #e8e8e8); }
+        .ibjjf-belt-band.cinza { background: linear-gradient(90deg, #999, #bbb); }
+        .ibjjf-belt-band.cinza-preta { background: linear-gradient(90deg, #999, #333); }
+        .ibjjf-belt-band.amarela-branca { background: linear-gradient(90deg, #F5D04E, #e8e8e8); }
+        .ibjjf-belt-band.amarela { background: linear-gradient(90deg, #E8C425, #F5D04E); }
+        .ibjjf-belt-band.amarela-preta { background: linear-gradient(90deg, #E8C425, #333); }
+        .ibjjf-belt-band.laranja-branca { background: linear-gradient(90deg, #FF8C00, #e8e8e8); }
+        .ibjjf-belt-band.laranja { background: linear-gradient(90deg, #E67300, #FF8C00); }
+        .ibjjf-belt-band.laranja-preta { background: linear-gradient(90deg, #E67300, #333); }
+        .ibjjf-belt-band.verde-branca { background: linear-gradient(90deg, #2E8B57, #e8e8e8); }
+        .ibjjf-belt-band.verde { background: linear-gradient(90deg, #228B22, #2E8B57); }
+        .ibjjf-belt-band.verde-preta { background: linear-gradient(90deg, #228B22, #333); }
+        .ibjjf-belt-band.azul { background: linear-gradient(90deg, #1565C0, #2196F3); }
+        .ibjjf-belt-band.roxa { background: linear-gradient(90deg, #6A1B9A, #9C27B0); }
+        .ibjjf-belt-band.marrom { background: linear-gradient(90deg, #5D4037, #8D6E63); }
+        .ibjjf-belt-band.preta { background: linear-gradient(90deg, #1a1a1a, #424242); }
+        .ibjjf-belt-band.vermelha-preta { background: linear-gradient(90deg, #C62828, #333); }
+        .ibjjf-belt-band.vermelha-branca { background: linear-gradient(90deg, #C62828, #e8e8e8); }
+        .ibjjf-belt-band.vermelha { background: linear-gradient(90deg, #B71C1C, #D32F2F); }
+
+        /* Belt info */
+        .ibjjf-belt-info {
+            -webkit-box-flex: 1;
+            -webkit-flex: 1;
+            flex: 1;
+            min-width: 0;
+        }
+
+        .ibjjf-belt-name {
+            font-family: 'Sora', sans-serif;
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--text-1);
+            line-height: 1.2;
+        }
+
+        .ibjjf-node.completed .ibjjf-belt-name { color: var(--text-2); }
+        .ibjjf-node.current .ibjjf-belt-name { color: var(--accent); }
+        .ibjjf-node.future .ibjjf-belt-name { color: var(--text-3); }
+
+        .ibjjf-belt-meta {
             font-size: 10px;
-            font-weight: 600;
             color: var(--text-3);
+            margin-top: 1px;
         }
 
-        .evo-tl-label.current { color: var(--accent); }
+        .ibjjf-node.current .ibjjf-belt-meta { color: var(--text-2); }
 
-        .evo-tl-meta {
+        /* Right side badges */
+        .ibjjf-belt-badges {
+            display: -webkit-box;
+            display: -webkit-flex;
+            display: flex;
+            -webkit-box-align: center;
+            -webkit-align-items: center;
+            align-items: center;
+            -webkit-flex-shrink: 0;
+            flex-shrink: 0;
+            margin-left: 8px;
+        }
+
+        /* Grau dots */
+        .ibjjf-grau-dots {
+            display: -webkit-box;
+            display: -webkit-flex;
+            display: flex;
+        }
+
+        .ibjjf-grau-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            margin-left: 3px;
+            background: var(--bg-elevated);
+            border: 1px solid var(--text-3);
+        }
+
+        .ibjjf-grau-dot.filled {
+            background: var(--accent);
+            border-color: var(--accent);
+        }
+
+        /* Status tag on right */
+        .ibjjf-status-tag {
+            font-family: 'Sora', sans-serif;
             font-size: 9px;
-            color: var(--text-3);
+            font-weight: 700;
+            padding: 3px 8px;
+            border-radius: 50px;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            white-space: nowrap;
         }
 
-        .evo-overall-progress {
+        .ibjjf-status-tag.here {
+            background: rgba(212,165,41,0.15);
+            color: var(--accent);
+            border: 1px solid var(--border-accent);
+        }
+
+        .ibjjf-status-tag.goal {
+            background: transparent;
+            color: var(--text-2);
+            border: 1px dashed var(--border-accent);
+        }
+
+        .ibjjf-status-tag.done {
+            color: var(--text-3);
+            font-size: 12px;
+        }
+
+        /* Category dividers */
+        .ibjjf-category {
+            font-family: 'Sora', sans-serif;
+            font-size: 9px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--text-3);
+            padding: 8px 0 4px;
+            margin-left: -32px;
+            padding-left: 32px;
+            opacity: 0.6;
+        }
+
+        /* Progress summary below roadmap */
+        .ibjjf-summary {
+            margin-top: 16px;
+            padding: 14px;
             background: var(--bg-elevated);
             border-radius: var(--radius-sm);
-            padding: 14px;
         }
 
-        .evo-overall-header {
+        .ibjjf-summary-row {
+            display: -webkit-box;
+            display: -webkit-flex;
             display: flex;
+            -webkit-box-pack: justify;
+            -webkit-justify-content: space-between;
             justify-content: space-between;
+            -webkit-box-align: center;
+            -webkit-align-items: center;
+            align-items: center;
             margin-bottom: 8px;
         }
 
-        .evo-overall-label {
+        .ibjjf-summary-label {
             font-size: 12px;
             font-weight: 600;
             color: var(--text-2);
         }
 
-        .evo-overall-pct {
+        .ibjjf-summary-val {
             font-family: 'Sora', sans-serif;
             font-size: 14px;
             font-weight: 800;
             color: var(--accent);
         }
 
-        .evo-overall-bar-bg {
+        .ibjjf-summary-bar-bg {
             height: 6px;
             background: var(--bg-deep);
             border-radius: 3px;
             overflow: hidden;
         }
 
-        .evo-overall-bar-fill {
+        .ibjjf-summary-bar-fill {
             height: 100%;
             background: linear-gradient(90deg, var(--accent), var(--gold-light));
             border-radius: 3px;
+            -webkit-transition: width 1s ease;
             transition: width 1s ease;
         }
 
@@ -1837,20 +2096,28 @@
 
                         <button class="evo-exam-btn disabled" id="evoExamBtn" disabled>🔒 Critérios pendentes para Exame de Faixa</button>
 
-                        <div class="evo-timeline">
-                            <div class="evo-timeline-title">🥋 Caminho até a Faixa Preta</div>
-                            <div class="evo-tl-track" id="evoTimeline">
-                                <div class="evo-tl-line-bg">
-                                    <div class="evo-tl-line-fill" id="evoTlFill" style="width:0%"></div>
-                                </div>
+                        <div class="ibjjf-roadmap">
+                            <div class="ibjjf-title">🥋 Sistema de Graduação IBJJF</div>
+                            <div class="ibjjf-subtitle">Onde você estava · Onde está · Onde quer chegar</div>
+
+                            <div class="ibjjf-legend">
+                                <div class="ibjjf-legend-item"><div class="ibjjf-legend-dot past"></div>Concluída</div>
+                                <div class="ibjjf-legend-item"><div class="ibjjf-legend-dot current"></div>Atual</div>
+                                <div class="ibjjf-legend-item"><div class="ibjjf-legend-dot next"></div>Próxima</div>
+                                <div class="ibjjf-legend-item"><div class="ibjjf-legend-dot future"></div>Futuro</div>
                             </div>
-                            <div class="evo-overall-progress">
-                                <div class="evo-overall-header">
-                                    <div class="evo-overall-label">Progresso Geral</div>
-                                    <div class="evo-overall-pct" id="evoOverallPct">0%</div>
+
+                            <div class="ibjjf-track" id="ibjjfTrack">
+                                <div class="ibjjf-track-fill" id="ibjjfTrackFill" style="height:0%"></div>
+                            </div>
+
+                            <div class="ibjjf-summary">
+                                <div class="ibjjf-summary-row">
+                                    <div class="ibjjf-summary-label">Progresso Geral</div>
+                                    <div class="ibjjf-summary-val" id="ibjjfOverallPct">0%</div>
                                 </div>
-                                <div class="evo-overall-bar-bg">
-                                    <div class="evo-overall-bar-fill" id="evoOverallFill" style="width:0%"></div>
+                                <div class="ibjjf-summary-bar-bg">
+                                    <div class="ibjjf-summary-bar-fill" id="ibjjfOverallFill" style="width:0%"></div>
                                 </div>
                             </div>
                         </div>
@@ -2280,7 +2547,7 @@
             renderSeals(grau, treinosSemestre);
             renderFrequencyNew(freq, treinosSemestre);
             renderFaixaCriteria(faixa, grau, totalTreinos, freq, tempoNaFaixa, avaliacao, compromisso);
-            renderTimeline(faixa, totalTreinos);
+            renderIBJJFRoadmap(faixa, grau, totalTreinos);
             renderMotivation(freq);
         }
 
@@ -2376,43 +2643,129 @@
             }
         }
 
-        function renderTimeline(faixaAtual, totalTreinos) {
-            const currentIdx = BELT_ORDER.indexOf(faixaAtual);
-            const track = document.getElementById('evoTimeline');
-            const lineBg = track.querySelector('.evo-tl-line-bg');
-            track.innerHTML = '';
-            track.appendChild(lineBg);
+        /* ===== IBJJF FULL BELT SYSTEM ===== */
+        var IBJJF_BELTS = [
+            { id: 'branca-inf',     name: 'Branca',          cat: 'infantil', cls: 'branca',          age: '4+',    graus: 0, minMonths: 0 },
+            { id: 'cinza-branca',   name: 'Cinza/Branca',    cat: 'infantil', cls: 'cinza-branca',    age: '4-15',  graus: 4, minMonths: 0 },
+            { id: 'cinza',          name: 'Cinza',           cat: 'infantil', cls: 'cinza',           age: '4-15',  graus: 4, minMonths: 0 },
+            { id: 'cinza-preta',    name: 'Cinza/Preta',     cat: 'infantil', cls: 'cinza-preta',     age: '4-15',  graus: 4, minMonths: 0 },
+            { id: 'amarela-branca', name: 'Amarela/Branca',  cat: 'infantil', cls: 'amarela-branca',  age: '7-15',  graus: 4, minMonths: 0 },
+            { id: 'amarela',        name: 'Amarela',         cat: 'infantil', cls: 'amarela',         age: '7-15',  graus: 4, minMonths: 0 },
+            { id: 'amarela-preta',  name: 'Amarela/Preta',   cat: 'infantil', cls: 'amarela-preta',   age: '7-15',  graus: 4, minMonths: 0 },
+            { id: 'laranja-branca', name: 'Laranja/Branca',  cat: 'infantil', cls: 'laranja-branca',  age: '8-15',  graus: 4, minMonths: 0 },
+            { id: 'laranja',        name: 'Laranja',         cat: 'infantil', cls: 'laranja',         age: '8-15',  graus: 4, minMonths: 0 },
+            { id: 'laranja-preta',  name: 'Laranja/Preta',   cat: 'infantil', cls: 'laranja-preta',   age: '8-15',  graus: 4, minMonths: 0 },
+            { id: 'verde-branca',   name: 'Verde/Branca',    cat: 'infantil', cls: 'verde-branca',    age: '13-15', graus: 4, minMonths: 0 },
+            { id: 'verde',          name: 'Verde',           cat: 'infantil', cls: 'verde',           age: '13-15', graus: 4, minMonths: 0 },
+            { id: 'verde-preta',    name: 'Verde/Preta',     cat: 'infantil', cls: 'verde-preta',     age: '13-15', graus: 4, minMonths: 0 },
+            { id: 'branca',  name: 'Branca',  cat: 'adulto', cls: 'branca',  age: '16+', graus: 4, minMonths: 0,  minTreinos: 0 },
+            { id: 'azul',    name: 'Azul',    cat: 'adulto', cls: 'azul',    age: '16+', graus: 4, minMonths: 24, minTreinos: 90 },
+            { id: 'roxa',    name: 'Roxa',    cat: 'adulto', cls: 'roxa',    age: '16+', graus: 4, minMonths: 24, minTreinos: 200 },
+            { id: 'marrom',  name: 'Marrom',  cat: 'adulto', cls: 'marrom',  age: '18+', graus: 4, minMonths: 18, minTreinos: 300 },
+            { id: 'preta',   name: 'Preta',   cat: 'adulto', cls: 'preta',   age: '19+', graus: 6, minMonths: 36, minTreinos: 200 },
+            { id: 'coral',           name: 'Coral (7º grau)',         cat: 'master', cls: 'vermelha-preta',  age: '50+', graus: 0, minMonths: 84 },
+            { id: 'vermelha-branca', name: 'Verm./Branca (8º grau)', cat: 'master', cls: 'vermelha-branca', age: '57+', graus: 0, minMonths: 120 },
+            { id: 'vermelha',        name: 'Vermelha (Grão-Mestre)',  cat: 'master', cls: 'vermelha',        age: '67+', graus: 0, minMonths: 0 }
+        ];
 
-            let fillPct = 0;
-            if (currentIdx >= 0) {
-                const seg = 100 / (BELT_ORDER.length - 1);
-                fillPct = currentIdx * seg;
-                if (currentIdx < BELT_ORDER.length - 1) {
-                    const need = BELT_CONFIG[faixaAtual].minTreinos;
-                    if (need > 0) fillPct += Math.min(totalTreinos / need, 1) * seg * 0.8;
+        var FAIXA_TO_IBJJF = { 'Branca': 'branca', 'Azul': 'azul', 'Roxa': 'roxa', 'Marrom': 'marrom', 'Preta': 'preta' };
+
+        function renderIBJJFRoadmap(faixaAtual, grauAtual, totalTreinos) {
+            var track = document.getElementById('ibjjfTrack');
+            var fillEl = document.getElementById('ibjjfTrackFill');
+            track.innerHTML = '';
+            track.appendChild(fillEl);
+
+            var currentId = FAIXA_TO_IBJJF[faixaAtual] || 'branca';
+            var adultBelts = IBJJF_BELTS.filter(function(b) { return b.cat === 'adulto'; });
+            var currentAdultIdx = -1;
+            for (var ai = 0; ai < adultBelts.length; ai++) { if (adultBelts[ai].id === currentId) { currentAdultIdx = ai; break; } }
+            var nextAdultIdx = currentAdultIdx + 1;
+
+            var lastCat = '';
+            var completedNodes = 0;
+            var totalNodes = 0;
+
+            for (var i = 0; i < IBJJF_BELTS.length; i++) {
+                var belt = IBJJF_BELTS[i];
+
+                if (belt.cat !== lastCat) {
+                    lastCat = belt.cat;
+                    var catDiv = document.createElement('div');
+                    catDiv.className = 'ibjjf-category';
+                    var catNames = { infantil: '👶 Infantil (4-15 anos)', adulto: '🥋 Adulto (16+)', master: '🏆 Master' };
+                    catDiv.textContent = catNames[belt.cat] || belt.cat;
+                    track.appendChild(catDiv);
+                }
+
+                var state = 'future';
+                if (belt.cat === 'infantil') {
+                    state = 'completed';
+                } else if (belt.cat === 'adulto') {
+                    var bIdx = -1;
+                    for (var bi = 0; bi < adultBelts.length; bi++) { if (adultBelts[bi].id === belt.id) { bIdx = bi; break; } }
+                    if (bIdx < currentAdultIdx) state = 'completed';
+                    else if (bIdx === currentAdultIdx) state = 'current';
+                    else if (bIdx === nextAdultIdx) state = 'next';
+                    else state = 'future';
+                }
+
+                if (state === 'completed' || state === 'current') completedNodes++;
+                totalNodes++;
+
+                var node = document.createElement('div');
+                node.className = 'ibjjf-node ' + state;
+
+                var h = '<div class="ibjjf-node-inner">';
+                h += '<div class="ibjjf-belt-band ' + belt.cls + '"></div>';
+                h += '<div class="ibjjf-belt-info">';
+                h += '<div class="ibjjf-belt-name">' + belt.name + '</div>';
+
+                var meta = [];
+                if (belt.age) meta.push('Idade: ' + belt.age);
+                if (belt.cat === 'adulto' && belt.minMonths > 0) meta.push('min ' + belt.minMonths + ' meses');
+                if (belt.cat === 'adulto' && belt.minTreinos > 0) meta.push(belt.minTreinos + ' treinos');
+                if (belt.cat === 'master' && belt.minMonths > 0) meta.push('min ' + Math.round(belt.minMonths / 12) + ' anos');
+                h += '<div class="ibjjf-belt-meta">' + meta.join(' · ') + '</div>';
+                h += '</div>';
+
+                h += '<div class="ibjjf-belt-badges">';
+                if (state === 'current') {
+                    var maxG = belt.graus || 4;
+                    h += '<div class="ibjjf-grau-dots">';
+                    for (var g = 0; g < maxG; g++) {
+                        h += '<div class="ibjjf-grau-dot' + (g < grauAtual ? ' filled' : '') + '"></div>';
+                    }
+                    h += '</div>';
+                    h += '<div class="ibjjf-status-tag here" style="margin-left:8px">VOCÊ</div>';
+                } else if (state === 'next') {
+                    h += '<div class="ibjjf-status-tag goal">META</div>';
+                } else if (state === 'completed' && belt.cat === 'adulto') {
+                    h += '<div class="ibjjf-status-tag done">✓</div>';
+                }
+                h += '</div></div>';
+
+                node.innerHTML = h;
+                track.appendChild(node);
+            }
+
+            var fillPct = totalNodes > 0 ? Math.round((completedNodes / totalNodes) * 100) : 0;
+            setTimeout(function() { fillEl.style.height = Math.min(fillPct, 100) + '%'; }, 200);
+
+            var overallPct = 0;
+            if (currentAdultIdx >= 0) {
+                overallPct = Math.round((currentAdultIdx / (adultBelts.length - 1)) * 100);
+                if (currentAdultIdx < adultBelts.length - 1) {
+                    var cfg = BELT_CONFIG[faixaAtual];
+                    if (cfg && cfg.minTreinos > 0) {
+                        var segPct = Math.round((1 / (adultBelts.length - 1)) * 100);
+                        overallPct += Math.round(Math.min(totalTreinos / cfg.minTreinos, 0.99) * segPct);
+                    }
                 }
             }
-            const fillEl = lineBg.querySelector('.evo-tl-line-fill');
-            setTimeout(() => { fillEl.style.width = Math.min(fillPct, 100) + '%'; }, 200);
-
-            const emojis = { 'Branca': '⚪', 'Azul': '🔵', 'Roxa': '🟣', 'Marrom': '🟤', 'Preta': '⚫' };
-            const years = { 'Branca': '~1a', 'Azul': '~2a', 'Roxa': '~2a', 'Marrom': '~1.5a', 'Preta': '🏆' };
-
-            BELT_ORDER.forEach((belt, idx) => {
-                const node = document.createElement('div');
-                node.className = 'evo-tl-node';
-                let state = 'future';
-                if (idx < currentIdx) state = 'completed';
-                else if (idx === currentIdx) state = 'current';
-                node.innerHTML = '<div class="evo-tl-dot ' + BELT_CONFIG[belt].class + ' ' + state + '">' + emojis[belt] + '</div><div class="evo-tl-label ' + (state === 'current' ? 'current' : '') + '">' + belt + '</div><div class="evo-tl-meta">' + years[belt] + '</div>';
-                track.appendChild(node);
-            });
-
-            const totalNeeded = BELT_ACCUMULATED['Preta'];
-            const accumulated = BELT_ACCUMULATED[faixaAtual] + totalTreinos;
-            const overallPct = Math.min(Math.round((accumulated / totalNeeded) * 100), 100);
-            document.getElementById('evoOverallPct').textContent = overallPct + '%';
-            setTimeout(() => { document.getElementById('evoOverallFill').style.width = overallPct + '%'; }, 300);
+            overallPct = Math.min(overallPct, 100);
+            document.getElementById('ibjjfOverallPct').textContent = overallPct + '%';
+            setTimeout(function() { document.getElementById('ibjjfOverallFill').style.width = overallPct + '%'; }, 300);
         }
 
         function renderMotivation(freq) {

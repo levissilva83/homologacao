@@ -1071,6 +1071,205 @@ h2.sh em.teal{
 .sec-d{font-size:12px;color:var(--t2);line-height:1.7;}
 
 /* ═══════════════════════════════════════
+   PLANS SECTION
+═══════════════════════════════════════ */
+.plans-bg{
+  background:var(--ink2);
+  border-top:1px solid rgba(212,165,41,.07);
+  border-bottom:1px solid rgba(212,165,41,.07);
+}
+/* Toggle tabs */
+.plan-toggle{
+  display:inline-flex;align-items:center;
+  background:var(--ink3);border:1px solid var(--t3);border-radius:50px;
+  padding:4px;margin-top:clamp(20px,4vh,40px);
+}
+.ptog-btn{
+  padding:9px 24px;border-radius:50px;border:none;cursor:pointer;
+  font-family:'Outfit',sans-serif;font-size:12px;font-weight:700;
+  letter-spacing:1.5px;text-transform:uppercase;transition:all .3s;
+  background:transparent;color:var(--t2);
+}
+.ptog-btn.on{
+  background:linear-gradient(135deg,var(--g),var(--gl));
+  color:#000;box-shadow:0 0 20px rgba(212,165,41,.25);
+}
+/* Cards grid */
+.plans-grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:clamp(8px,1.5vw,16px);
+  margin-top:clamp(32px,5vh,56px);
+  align-items:stretch;
+}
+@media(max-width:1100px){.plans-grid{grid-template-columns:repeat(2,1fr);}}
+@media(max-width:580px){.plans-grid{grid-template-columns:1fr;}}
+/* Plan card */
+.plan-card{
+  background:var(--ink);border:1px solid var(--t3);
+  border-radius:clamp(16px,2.5vw,24px);
+  padding:clamp(22px,3vw,32px);
+  display:flex;flex-direction:column;
+  position:relative;overflow:hidden;
+  transition:border-color .35s,transform .35s,box-shadow .35s;
+}
+.plan-card:hover{
+  border-color:rgba(212,165,41,.35);
+  transform:translateY(-6px);
+  box-shadow:0 24px 60px rgba(0,0,0,.5),0 0 30px rgba(212,165,41,.06);
+}
+/* Popular badge */
+.plan-card.popular{
+  border-color:rgba(212,165,41,.35);
+  background:linear-gradient(160deg,rgba(212,165,41,.05),var(--ink) 50%);
+  box-shadow:0 0 40px rgba(212,165,41,.06);
+}
+.plan-card.popular:hover{transform:translateY(-8px);box-shadow:0 32px 70px rgba(0,0,0,.6),0 0 50px rgba(212,165,41,.1);}
+.pop-badge{
+  position:absolute;top:0;right:clamp(16px,2vw,24px);
+  background:linear-gradient(135deg,var(--g),var(--gl));
+  color:#000;font-size:9px;font-weight:900;letter-spacing:2px;
+  text-transform:uppercase;padding:4px 12px 6px;
+  border-radius:0 0 10px 10px;
+}
+/* Elite card */
+.plan-card.elite{
+  border-color:rgba(168,85,247,.3);
+  background:linear-gradient(160deg,rgba(168,85,247,.04),var(--ink) 50%);
+}
+.plan-card.elite:hover{border-color:rgba(168,85,247,.5);box-shadow:0 24px 60px rgba(0,0,0,.5),0 0 30px rgba(168,85,247,.08);}
+/* Card top */
+.pc-tier{
+  font-size:9px;font-weight:700;letter-spacing:3px;text-transform:uppercase;
+  color:var(--t2);margin-bottom:10px;
+}
+.plan-card.popular .pc-tier{color:var(--g);}
+.plan-card.elite .pc-tier{color:var(--purple);}
+.pc-name{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:clamp(28px,3.5vw,38px);letter-spacing:1px;line-height:1;
+  margin-bottom:10px;
+}
+.pc-desc{font-size:12px;color:var(--t2);line-height:1.65;margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid var(--t3);}
+/* Ideal for pills */
+.pc-ideal{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:20px;}
+.pc-ideal-pill{
+  padding:4px 10px;border-radius:50px;
+  font-size:10px;font-weight:600;
+  background:var(--ink3);border:1px solid var(--t3);color:var(--t2);
+}
+.plan-card.popular .pc-ideal-pill{background:var(--gdim);border-color:rgba(212,165,41,.2);color:var(--g);}
+.plan-card.elite .pc-ideal-pill{background:rgba(168,85,247,.08);border-color:rgba(168,85,247,.2);color:var(--purple);}
+/* Feature list */
+.pc-features{flex:1;display:flex;flex-direction:column;gap:8px;margin-bottom:24px;}
+.pc-feat{
+  display:flex;align-items:flex-start;gap:9px;
+  font-size:12px;color:var(--t2);line-height:1.5;
+}
+.pc-feat-ico{
+  width:18px;height:18px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:10px;flex-shrink:0;margin-top:1px;
+}
+.pc-feat-ico.yes{background:rgba(34,197,94,.12);color:#22c55e;}
+.pc-feat-ico.plus{background:var(--gdim);color:var(--g);}
+.pc-feat-ico.star{background:rgba(168,85,247,.1);color:var(--purple);}
+.pc-feat strong{color:var(--t1);font-weight:600;}
+/* Section label inside features */
+.pc-feat-label{
+  font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;
+  color:var(--t3);margin-top:4px;padding-top:10px;border-top:1px solid rgba(255,255,255,.04);
+  width:100%;
+}
+/* CTA */
+.pc-cta{
+  display:block;width:100%;padding:clamp(12px,2vw,14px);text-align:center;
+  border-radius:12px;font-family:'Outfit',sans-serif;
+  font-size:12px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;
+  text-decoration:none;cursor:pointer;border:none;
+  transition:transform .25s,box-shadow .25s,background .25s;
+  margin-top:auto;
+}
+.pc-cta.outline{
+  background:transparent;color:var(--t2);
+  border:1.5px solid var(--t3);
+}
+.pc-cta.outline:hover{border-color:rgba(212,165,41,.4);color:var(--t1);background:rgba(212,165,41,.04);}
+.pc-cta.gold{
+  background:linear-gradient(135deg,var(--g),var(--gl));
+  color:#000;box-shadow:0 0 24px rgba(212,165,41,.25);
+}
+.pc-cta.gold:hover{transform:translateY(-2px);box-shadow:0 8px 36px rgba(212,165,41,.4);}
+.pc-cta.purple{
+  background:linear-gradient(135deg,#a855f7,#c084fc);
+  color:#fff;box-shadow:0 0 24px rgba(168,85,247,.2);
+}
+.pc-cta.purple:hover{transform:translateY(-2px);box-shadow:0 8px 36px rgba(168,85,247,.35);}
+/* ── COMPARISON TABLE ── */
+.cmp-wrap{
+  margin-top:clamp(48px,7vh,80px);
+  overflow-x:auto;-webkit-overflow-scrolling:touch;
+}
+.cmp-scroll-hint{
+  display:none;text-align:center;
+  font-size:11px;color:var(--t2);margin-bottom:12px;
+}
+@media(max-width:700px){.cmp-scroll-hint{display:block;}}
+.cmp-table{
+  width:100%;min-width:580px;border-collapse:collapse;
+  font-size:clamp(11px,1.5vw,13px);
+}
+.cmp-table thead tr th{
+  padding:clamp(10px,2vw,16px) clamp(8px,1.5vw,14px);
+  font-family:'Bebas Neue',sans-serif;font-size:clamp(16px,2.5vw,22px);
+  font-weight:400;letter-spacing:1px;
+  border-bottom:2px solid rgba(212,165,41,.12);
+  white-space:nowrap;
+}
+.cmp-table thead th:first-child{text-align:left;color:var(--t2);font-size:clamp(12px,1.5vw,14px);font-family:'Outfit',sans-serif;font-weight:700;letter-spacing:2px;text-transform:uppercase;}
+.cmp-table thead th.th-basic{color:var(--t2);}
+.cmp-table thead th.th-pro{color:var(--teal);}
+.cmp-table thead th.th-adv{color:var(--g);}
+.cmp-table thead th.th-elite{color:var(--purple);}
+.cmp-table tbody tr{border-bottom:1px solid rgba(255,255,255,.04);transition:background .2s;}
+.cmp-table tbody tr:hover{background:rgba(212,165,41,.02);}
+.cmp-table tbody tr.cmp-group td{
+  padding:14px clamp(8px,1.5vw,14px) 6px;
+  font-size:9px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;
+  color:var(--t3);border-bottom:1px solid rgba(255,255,255,.06);
+  background:var(--ink3);
+}
+.cmp-table tbody td{
+  padding:clamp(10px,1.5vw,14px) clamp(8px,1.5vw,14px);
+  vertical-align:middle;
+  color:var(--t2);
+}
+.cmp-table tbody td:first-child{color:var(--t1);font-weight:500;}
+.cmp-table tbody td.ct{text-align:center;}
+.ct-yes{color:#22c55e;font-size:16px;}
+.ct-no{color:var(--t3);font-size:14px;opacity:.4;}
+.ct-star{font-size:14px;}
+/* Bottom CTA row */
+.cmp-table tfoot td{
+  padding:clamp(12px,2vw,18px) clamp(8px,1.5vw,14px);
+  text-align:center;border-top:2px solid rgba(212,165,41,.08);
+}
+.cmp-cta-sm{
+  display:inline-block;padding:10px 18px;border-radius:10px;
+  font-size:10px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;
+  text-decoration:none;cursor:pointer;border:none;font-family:'Outfit',sans-serif;
+  transition:transform .2s,box-shadow .2s;
+}
+.cmp-cta-sm.outline{background:transparent;border:1.5px solid var(--t3);color:var(--t2);}
+.cmp-cta-sm.outline:hover{border-color:var(--teal);color:var(--teal);}
+.cmp-cta-sm.main-gold{background:linear-gradient(135deg,var(--g),var(--gl));color:#000;box-shadow:0 0 16px rgba(212,165,41,.2);}
+.cmp-cta-sm.main-gold:hover{transform:translateY(-2px);box-shadow:0 6px 28px rgba(212,165,41,.4);}
+.cmp-cta-sm.adv{background:var(--gdim);border:1px solid rgba(212,165,41,.3);color:var(--g);}
+.cmp-cta-sm.adv:hover{background:rgba(212,165,41,.15);}
+.cmp-cta-sm.main-purple{background:linear-gradient(135deg,#a855f7,#c084fc);color:#fff;box-shadow:0 0 16px rgba(168,85,247,.2);}
+.cmp-cta-sm.main-purple:hover{transform:translateY(-2px);box-shadow:0 6px 28px rgba(168,85,247,.35);}
+
+/* ═══════════════════════════════════════
    FORM SECTION
 ═══════════════════════════════════════ */
 .form-bg{background:var(--ink2);border-top:1px solid rgba(212,165,41,.06);}
@@ -1181,6 +1380,7 @@ footer{
     <a href="#telas">Telas</a>
     <a href="#modulos">Módulos</a>
     <a href="#seguranca">Segurança</a>
+    <a href="#planos">Planos</a>
     <a href="#cadastro" class="nav-cta">Solicitar Demo</a>
   </div>
   <button class="burger" id="burger" aria-label="Menu">
@@ -1193,6 +1393,7 @@ footer{
   <a href="#telas" onclick="closeMob()">Telas do Sistema</a>
   <a href="#modulos" onclick="closeMob()">Módulos</a>
   <a href="#seguranca" onclick="closeMob()">Segurança</a>
+  <a href="#planos" onclick="closeMob()">Planos</a>
   <a href="#cadastro" class="mob-cta" onclick="closeMob()">🥋 Solicitar Demo Gratuita</a>
 </div>
 
@@ -1885,6 +2086,188 @@ footer{
   </div>
 </section>
 
+<!-- ══════ PLANS ══════ -->
+<section class="sec plans-bg" id="planos">
+  <div class="wrap">
+    <span class="eyebrow r">Conheça os Planos</span>
+    <h2 class="sh r" data-d="1">Escolha o plano <em>certo</em><br>para sua academia.</h2>
+    <p class="s-sub r" data-d="2">Progressão clara de valor. Comece simples, cresça com o sistema. Cada plano inclui tudo do anterior.</p>
+
+    <!-- PLAN CARDS -->
+    <div class="plans-grid">
+
+      <!-- BÁSICO -->
+      <div class="plan-card r" data-d="1">
+        <div class="pc-tier">Plano 01</div>
+        <div class="pc-name">Básico</div>
+        <div class="pc-desc">Para academias que querem começar a digitalizar a gestão. Substitua planilhas e papel de uma vez por todas.</div>
+        <div class="pc-ideal">
+          <span class="pc-ideal-pill">Até 80 alunos</span>
+          <span class="pc-ideal-pill">Iniciando digital</span>
+        </div>
+        <div class="pc-features">
+          <div class="pc-feat-label">Gestão de Alunos</div>
+          <div class="pc-feat"><div class="pc-feat-ico yes">✓</div><span><strong>Cadastro</strong> completo de alunos</span></div>
+          <div class="pc-feat"><div class="pc-feat-ico yes">✓</div><span><strong>Perfil</strong> completo do aluno</span></div>
+          <div class="pc-feat-label">Check-in & Presença</div>
+          <div class="pc-feat"><div class="pc-feat-ico yes">✓</div><span><strong>Check-in digital</strong> de presença</span></div>
+          <div class="pc-feat"><div class="pc-feat-ico yes">✓</div><span><strong>Histórico</strong> de treinos</span></div>
+          <div class="pc-feat-label">Cronograma & Admin</div>
+          <div class="pc-feat"><div class="pc-feat-ico yes">✓</div><span><strong>Cronograma</strong> de aulas</span></div>
+          <div class="pc-feat"><div class="pc-feat-ico yes">✓</div><span><strong>Dashboard básico</strong> do administrador</span></div>
+          <div class="pc-feat"><div class="pc-feat-ico yes">✓</div><span><strong>Gestão simples</strong> de alunos</span></div>
+        </div>
+        <a href="#cadastro" class="pc-cta outline">Solicitar Demo →</a>
+      </div>
+
+      <!-- PROFISSIONAL -->
+      <div class="plan-card r" data-d="2">
+        <div class="pc-tier">Plano 02</div>
+        <div class="pc-name">Profissional</div>
+        <div class="pc-desc">Para academias que querem aumentar engajamento e controle. Ranking e multi CT incluídos.</div>
+        <div class="pc-ideal">
+          <span class="pc-ideal-pill">Até 150 alunos</span>
+          <span class="pc-ideal-pill">Multi professor</span>
+        </div>
+        <div class="pc-features">
+          <div class="pc-feat-label">Tudo do Básico +</div>
+          <div class="pc-feat"><div class="pc-feat-ico plus">+</div><span><strong>Ranking mensal</strong> de frequência</span></div>
+          <div class="pc-feat"><div class="pc-feat-ico plus">+</div><span><strong>Ranking anual</strong> de treinos</span></div>
+          <div class="pc-feat"><div class="pc-feat-ico plus">+</div><span><strong>Aprovação</strong> de check-ins esquecidos</span></div>
+          <div class="pc-feat"><div class="pc-feat-ico plus">+</div><span><strong>Gestão completa</strong> de presenças</span></div>
+          <div class="pc-feat"><div class="pc-feat-ico plus">+</div><span><strong>Notificações</strong> de treino</span></div>
+          <div class="pc-feat"><div class="pc-feat-ico plus">+</div><span><strong>Multi CT</strong> — múltiplas unidades</span></div>
+          <div class="pc-feat"><div class="pc-feat-ico plus">+</div><span><strong>Painel admin</strong> ampliado</span></div>
+        </div>
+        <a href="#cadastro" class="pc-cta outline">Solicitar Demo →</a>
+      </div>
+
+      <!-- AVANÇADO — POPULAR -->
+      <div class="plan-card popular r" data-d="3">
+        <div class="pop-badge">⭐ Mais Popular</div>
+        <div class="pc-tier">Plano 03</div>
+        <div class="pc-name">Avançado</div>
+        <div class="pc-desc">Para academias que querem gestão completa da evolução dos atletas. Graduação IBJJF e campeonatos.</div>
+        <div class="pc-ideal">
+          <span class="pc-ideal-pill">Até 300 alunos</span>
+          <span class="pc-ideal-pill">Equipes competição</span>
+        </div>
+        <div class="pc-features">
+          <div class="pc-feat-label">Tudo do Profissional +</div>
+          <div class="pc-feat"><div class="pc-feat-ico plus">+</div><span><strong>Sistema de evolução</strong> de faixas</span></div>
+          <div class="pc-feat"><div class="pc-feat-ico plus">+</div><span><strong>Progressão IBJJF</strong> adulto e kids</span></div>
+          <div class="pc-feat"><div class="pc-feat-ico plus">+</div><span><strong>Prova teórica</strong> de graduação</span></div>
+          <div class="pc-feat"><div class="pc-feat-ico plus">+</div><span><strong>Prova prática</strong> de graduação</span></div>
+          <div class="pc-feat"><div class="pc-feat-ico plus">+</div><span><strong>Campeonatos internos</strong> com pódio</span></div>
+          <div class="pc-feat"><div class="pc-feat-ico plus">+</div><span><strong>Dashboard avançado</strong> com estatísticas</span></div>
+        </div>
+        <a href="#cadastro" class="pc-cta gold">Solicitar Demo →</a>
+      </div>
+
+      <!-- ELITE -->
+      <div class="plan-card elite r" data-d="4">
+        <div class="pc-tier">Plano 04</div>
+        <div class="pc-name">Elite</div>
+        <div class="pc-desc">A versão completa da plataforma. Gamificação, modo kids, preparação física e customização total.</div>
+        <div class="pc-ideal">
+          <span class="pc-ideal-pill">Alunos ilimitados</span>
+          <span class="pc-ideal-pill">Redes de academias</span>
+        </div>
+        <div class="pc-features">
+          <div class="pc-feat-label">Tudo do Avançado +</div>
+          <div class="pc-feat"><div class="pc-feat-ico star">★</div><span><strong>Gamificação</strong> completa (quiz, memória, XP)</span></div>
+          <div class="pc-feat"><div class="pc-feat-ico star">★</div><span><strong>Ranking de jogos</strong> entre alunos</span></div>
+          <div class="pc-feat"><div class="pc-feat-ico star">★</div><span><strong>Manual digital</strong> de Jiu-Jitsu</span></div>
+          <div class="pc-feat"><div class="pc-feat-ico star">★</div><span><strong>Modo Kids automático</strong> por idade</span></div>
+          <div class="pc-feat"><div class="pc-feat-ico star">★</div><span><strong>Preparação física</strong> integrada</span></div>
+          <div class="pc-feat"><div class="pc-feat-ico star">★</div><span><strong>Customização completa</strong> da plataforma</span></div>
+        </div>
+        <a href="#cadastro" class="pc-cta purple">Solicitar Demo →</a>
+      </div>
+
+    </div>
+
+    <!-- COMPARISON TABLE -->
+    <div class="cmp-wrap r" data-d="1" style="margin-top:clamp(48px,7vh,80px);">
+      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:clamp(20px,3vh,32px);">
+        <div>
+          <span class="eyebrow" style="margin-bottom:6px;display:block;">Tabela Comparativa</span>
+          <h3 style="font-family:'Bebas Neue',sans-serif;font-size:clamp(24px,4vw,40px);letter-spacing:1px;line-height:1;">Todos os recursos, lado a lado.</h3>
+        </div>
+      </div>
+      <p class="cmp-scroll-hint">← Deslize para ver todos os planos →</p>
+      <table class="cmp-table">
+        <thead>
+          <tr>
+            <th style="text-align:left;min-width:160px;">Recurso</th>
+            <th class="th-basic" style="text-align:center;min-width:90px;">Básico</th>
+            <th class="th-pro" style="text-align:center;min-width:110px;">Profissional</th>
+            <th class="th-adv" style="text-align:center;min-width:100px;">Avançado</th>
+            <th class="th-elite" style="text-align:center;min-width:90px;">Elite</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- GESTÃO -->
+          <tr class="cmp-group"><td colspan="5">Gestão de Alunos</td></tr>
+          <tr><td>Cadastro de alunos</td><td class="ct"><span class="ct-yes">✓</span></td><td class="ct"><span class="ct-yes">✓</span></td><td class="ct"><span class="ct-yes">✓</span></td><td class="ct"><span class="ct-yes">✓</span></td></tr>
+          <tr><td>Perfil completo do aluno</td><td class="ct"><span class="ct-yes">✓</span></td><td class="ct"><span class="ct-yes">✓</span></td><td class="ct"><span class="ct-yes">✓</span></td><td class="ct"><span class="ct-yes">✓</span></td></tr>
+          <!-- CHECK-IN -->
+          <tr class="cmp-group"><td colspan="5">Check-in & Presença</td></tr>
+          <tr><td>Check-in digital</td><td class="ct"><span class="ct-yes">✓</span></td><td class="ct"><span class="ct-yes">✓</span></td><td class="ct"><span class="ct-yes">✓</span></td><td class="ct"><span class="ct-yes">✓</span></td></tr>
+          <tr><td>Histórico de treinos</td><td class="ct"><span class="ct-yes">✓</span></td><td class="ct"><span class="ct-yes">✓</span></td><td class="ct"><span class="ct-yes">✓</span></td><td class="ct"><span class="ct-yes">✓</span></td></tr>
+          <tr><td>Aprovação de esquecimentos</td><td class="ct"><span class="ct-no">—</span></td><td class="ct"><span class="ct-yes">✓</span></td><td class="ct"><span class="ct-yes">✓</span></td><td class="ct"><span class="ct-yes">✓</span></td></tr>
+          <tr><td>Notificações de treino</td><td class="ct"><span class="ct-no">—</span></td><td class="ct"><span class="ct-yes">✓</span></td><td class="ct"><span class="ct-yes">✓</span></td><td class="ct"><span class="ct-yes">✓</span></td></tr>
+          <!-- CRONOGRAMA -->
+          <tr class="cmp-group"><td colspan="5">Cronograma & Administração</td></tr>
+          <tr><td>Cronograma de aulas</td><td class="ct"><span class="ct-yes">✓</span></td><td class="ct"><span class="ct-yes">✓</span></td><td class="ct"><span class="ct-yes">✓</span></td><td class="ct"><span class="ct-yes">✓</span></td></tr>
+          <tr><td>Dashboard administrativo</td><td class="ct" style="color:var(--t2);font-size:11px;">Básico</td><td class="ct" style="color:var(--teal);font-size:11px;">Ampliado</td><td class="ct" style="color:var(--g);font-size:11px;">Avançado</td><td class="ct" style="color:var(--purple);font-size:11px;">Completo</td></tr>
+          <tr><td>Multi CT (múltiplas unidades)</td><td class="ct"><span class="ct-no">—</span></td><td class="ct"><span class="ct-yes">✓</span></td><td class="ct"><span class="ct-yes">✓</span></td><td class="ct"><span class="ct-yes">✓</span></td></tr>
+          <!-- RANKING -->
+          <tr class="cmp-group"><td colspan="5">Ranking & Motivação</td></tr>
+          <tr><td>Ranking mensal de frequência</td><td class="ct"><span class="ct-no">—</span></td><td class="ct"><span class="ct-yes">✓</span></td><td class="ct"><span class="ct-yes">✓</span></td><td class="ct"><span class="ct-yes">✓</span></td></tr>
+          <tr><td>Ranking anual de treinos</td><td class="ct"><span class="ct-no">—</span></td><td class="ct"><span class="ct-yes">✓</span></td><td class="ct"><span class="ct-yes">✓</span></td><td class="ct"><span class="ct-yes">✓</span></td></tr>
+          <tr><td>Posição do aluno em destaque</td><td class="ct"><span class="ct-no">—</span></td><td class="ct"><span class="ct-yes">✓</span></td><td class="ct"><span class="ct-yes">✓</span></td><td class="ct"><span class="ct-yes">✓</span></td></tr>
+          <!-- EVOLUÇÃO -->
+          <tr class="cmp-group"><td colspan="5">Evolução & Graduação</td></tr>
+          <tr><td>Sistema de evolução de faixas</td><td class="ct"><span class="ct-no">—</span></td><td class="ct"><span class="ct-no">—</span></td><td class="ct"><span class="ct-yes">✓</span></td><td class="ct"><span class="ct-yes">✓</span></td></tr>
+          <tr><td>Progressão IBJJF (adulto + kids)</td><td class="ct"><span class="ct-no">—</span></td><td class="ct"><span class="ct-no">—</span></td><td class="ct"><span class="ct-yes">✓</span></td><td class="ct"><span class="ct-yes">✓</span></td></tr>
+          <tr><td>Prova teórica de graduação</td><td class="ct"><span class="ct-no">—</span></td><td class="ct"><span class="ct-no">—</span></td><td class="ct"><span class="ct-yes">✓</span></td><td class="ct"><span class="ct-yes">✓</span></td></tr>
+          <tr><td>Prova prática de graduação</td><td class="ct"><span class="ct-no">—</span></td><td class="ct"><span class="ct-no">—</span></td><td class="ct"><span class="ct-yes">✓</span></td><td class="ct"><span class="ct-yes">✓</span></td></tr>
+          <tr><td>Gestão de campeonatos internos</td><td class="ct"><span class="ct-no">—</span></td><td class="ct"><span class="ct-no">—</span></td><td class="ct"><span class="ct-yes">✓</span></td><td class="ct"><span class="ct-yes">✓</span></td></tr>
+          <!-- ELITE -->
+          <tr class="cmp-group"><td colspan="5">Recursos Exclusivos Elite</td></tr>
+          <tr><td>Gamificação (quiz, memória, XP)</td><td class="ct"><span class="ct-no">—</span></td><td class="ct"><span class="ct-no">—</span></td><td class="ct"><span class="ct-no">—</span></td><td class="ct"><span class="ct-star">★</span></td></tr>
+          <tr><td>Ranking de jogadores</td><td class="ct"><span class="ct-no">—</span></td><td class="ct"><span class="ct-no">—</span></td><td class="ct"><span class="ct-no">—</span></td><td class="ct"><span class="ct-star">★</span></td></tr>
+          <tr><td>Manual digital de Jiu-Jitsu</td><td class="ct"><span class="ct-no">—</span></td><td class="ct"><span class="ct-no">—</span></td><td class="ct"><span class="ct-no">—</span></td><td class="ct"><span class="ct-star">★</span></td></tr>
+          <tr><td>Modo Kids automático</td><td class="ct"><span class="ct-no">—</span></td><td class="ct"><span class="ct-no">—</span></td><td class="ct"><span class="ct-no">—</span></td><td class="ct"><span class="ct-star">★</span></td></tr>
+          <tr><td>Preparação física integrada</td><td class="ct"><span class="ct-no">—</span></td><td class="ct"><span class="ct-no">—</span></td><td class="ct"><span class="ct-no">—</span></td><td class="ct"><span class="ct-star">★</span></td></tr>
+          <tr><td>Customização da plataforma</td><td class="ct"><span class="ct-no">—</span></td><td class="ct"><span class="ct-no">—</span></td><td class="ct"><span class="ct-no">—</span></td><td class="ct"><span class="ct-star">★</span></td></tr>
+          <tr><td style="color:var(--t2);font-size:12px;">Capacidade</td><td class="ct" style="font-size:11px;color:var(--t2);">~80</td><td class="ct" style="font-size:11px;color:var(--teal);">~150</td><td class="ct" style="font-size:11px;color:var(--g);">~300</td><td class="ct" style="font-size:11px;color:var(--purple);">Ilimitado</td></tr>
+        </tbody>
+        <tfoot>
+          <tr>
+            <td style="color:var(--t2);font-size:12px;font-weight:700;text-align:left;">Solicitar Demo</td>
+            <td><button class="cmp-cta-sm outline" onclick="location.href='#cadastro'">Básico →</button></td>
+            <td><button class="cmp-cta-sm outline" style="border-color:rgba(20,184,166,.35);color:var(--teal);" onclick="location.href='#cadastro'">Profissional →</button></td>
+            <td><button class="cmp-cta-sm main-gold" onclick="location.href='#cadastro'">Avançado →</button></td>
+            <td><button class="cmp-cta-sm main-purple" onclick="location.href='#cadastro'">Elite →</button></td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+
+    <!-- BOTTOM NOTE -->
+    <div class="r" data-d="2" style="margin-top:clamp(24px,4vh,40px);padding:clamp(20px,3vw,28px);background:var(--gdim);border:1px solid rgba(212,165,41,.18);border-radius:20px;display:flex;gap:clamp(16px,2vw,24px);align-items:center;flex-wrap:wrap;">
+      <div style="font-size:clamp(32px,5vw,44px);">🥋</div>
+      <div style="flex:1;min-width:200px;">
+        <div style="font-size:clamp(15px,2vw,18px);font-weight:800;margin-bottom:6px;">Não sabe qual plano escolher?</div>
+        <div style="font-size:clamp(12px,1.5vw,14px);color:var(--t2);line-height:1.7;">Nossa equipe analisa o perfil da sua academia e indica o plano ideal. Solicite a demo gratuita — sem compromisso.</div>
+      </div>
+      <a href="#cadastro" class="btn-primary" style="white-space:nowrap;font-size:12px;padding:14px 28px;">Falar com especialista →</a>
+    </div>
+  </div>
+</section>
+
 <!-- ══════ FORM ══════ -->
 <section class="sec form-bg" id="cadastro">
   <div class="wrap">
@@ -1963,6 +2346,7 @@ footer{
       <a href="#telas">Telas</a>
       <a href="#modulos">Módulos</a>
       <a href="#seguranca">Segurança</a>
+      <a href="#planos">Planos</a>
       <a href="#cadastro">Demo</a>
     </div>
     <div class="footer-copy">© 2025 IDESystems · Todos os direitos reservados</div>

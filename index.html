@@ -2,1400 +2,2061 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>JIU JITSU ACADEMY — Sistema Elite de Gestão</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="theme-color" content="#08080a">
+<title>IDESystems — Gestão Elite para Academias de Jiu Jitsu</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700;800;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Outfit:wght@300;400;500;600;700;800;900&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
 <style>
-*{margin:0;padding:0;box-sizing:border-box;}
+/* ═══════════════════════════════════════
+   RESET & VARIABLES
+═══════════════════════════════════════ */
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
 :root{
-  --gold:#D4A529;
-  --gold-light:#F5D04E;
-  --gold-dim:rgba(212,165,41,0.12);
-  --gold-glow:rgba(212,165,41,0.25);
-  --bg:#08080a;
-  --bg2:#0e0e12;
-  --bg3:#161619;
-  --teal:#14B8A6;
-  --teal-dim:rgba(20,184,166,0.12);
-  --coral:#E85D5D;
-  --text1:#f0ede5;
-  --text2:#8a8678;
-  --text3:#3e3c35;
+  --g:#D4A529; --gl:#F5D04E; --gd:#8B6914;
+  --gdim:rgba(212,165,41,.10); --gglow:rgba(212,165,41,.22);
+  --teal:#14B8A6; --tdim:rgba(20,184,166,.10);
+  --coral:#E85D5D; --purple:#a855f7;
+  --ink:#08080a; --ink2:#0e0e12; --ink3:#151519; --ink4:#1c1c22;
+  --t1:#f0ede5; --t2:#8a8678; --t3:#3e3c38;
+  --r:16px; --nav-h:68px;
 }
 html{scroll-behavior:smooth;}
 body{
-  font-family:'Sora',sans-serif;
-  background:var(--bg);
-  color:var(--text1);
-  overflow-x:hidden;
-  line-height:1.6;
+  font-family:'Outfit',sans-serif;
+  background:var(--ink); color:var(--t1);
+  overflow-x:hidden; line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+}
+::selection{background:var(--gdim);color:var(--gl);}
+::-webkit-scrollbar{width:3px;}
+::-webkit-scrollbar-thumb{background:var(--g);border-radius:2px;}
+
+/* ═══════════════════════════════════════
+   NAVBAR
+═══════════════════════════════════════ */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:9000;
+  height:var(--nav-h);
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 5vw;
+  background:rgba(8,8,10,.75);
+  backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);
+  border-bottom:1px solid rgba(212,165,41,.07);
+  transition:background .3s;
+}
+nav.solid{background:rgba(8,8,10,.97);}
+.logo{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:clamp(20px,4vw,26px);letter-spacing:3px;
+  background:linear-gradient(90deg,var(--g),var(--gl));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  text-decoration:none;flex-shrink:0;
+}
+.logo span{color:var(--t2);-webkit-text-fill-color:var(--t2);}
+.nav-links{display:flex;align-items:center;gap:clamp(16px,3vw,36px);}
+.nav-links a{
+  font-size:12px;font-weight:600;letter-spacing:2px;text-transform:uppercase;
+  color:var(--t2);text-decoration:none;transition:color .2s;white-space:nowrap;
+}
+.nav-links a:hover{color:var(--t1);}
+.nav-cta{
+  padding:10px 22px;
+  background:linear-gradient(135deg,var(--g),var(--gl));
+  color:#000 !important;font-weight:800 !important;font-size:12px !important;
+  letter-spacing:1.5px;text-transform:uppercase;border-radius:50px;
+  box-shadow:0 0 24px var(--gglow);transition:transform .2s,box-shadow .2s;white-space:nowrap;
+}
+.nav-cta:hover{transform:translateY(-2px);box-shadow:0 0 40px var(--gglow);}
+/* Hamburger */
+.burger{
+  display:none;flex-direction:column;gap:5px;
+  background:none;border:none;cursor:pointer;padding:6px;
+}
+.burger span{display:block;width:24px;height:2px;background:var(--t1);border-radius:2px;transition:all .3s;}
+.burger.open span:nth-child(1){transform:translateY(7px) rotate(45deg);}
+.burger.open span:nth-child(2){opacity:0;}
+.burger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg);}
+/* Mobile menu */
+.mobile-menu{
+  display:none;position:fixed;top:var(--nav-h);left:0;right:0;
+  background:rgba(8,8,10,.98);backdrop-filter:blur(24px);
+  padding:20px 24px 32px;z-index:8999;
+  border-bottom:1px solid rgba(212,165,41,.1);
+  transform:translateY(-100%);transition:transform .35s cubic-bezier(.4,0,.2,1);
+}
+.mobile-menu.open{transform:translateY(0);}
+.mobile-menu a{
+  display:block;padding:16px 0;font-size:14px;font-weight:600;letter-spacing:2px;
+  text-transform:uppercase;color:var(--t2);text-decoration:none;
+  border-bottom:1px solid rgba(255,255,255,.05);transition:color .2s;
+}
+.mobile-menu a:hover{color:var(--t1);}
+.mobile-menu .mob-cta{
+  display:block;margin-top:20px;padding:16px;text-align:center;
+  background:linear-gradient(135deg,var(--g),var(--gl));
+  color:#000;font-weight:800;font-size:14px;letter-spacing:1.5px;
+  text-transform:uppercase;border-radius:14px;
+  box-shadow:0 0 30px var(--gglow);
+}
+@media(max-width:768px){
+  .nav-links{display:none;}
+  .burger{display:flex;}
+  .mobile-menu{display:block;}
 }
 
-/* ── NOISE OVERLAY ── */
-body::before{
-  content:'';position:fixed;inset:0;
-  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
-  pointer-events:none;z-index:0;opacity:.4;
-}
-
-/* ── HERO ── */
+/* ═══════════════════════════════════════
+   HERO
+═══════════════════════════════════════ */
 .hero{
-  min-height:100vh;
-  display:flex;flex-direction:column;
-  align-items:center;justify-content:center;
-  position:relative;text-align:center;
-  padding:60px 24px;overflow:hidden;
+  position:relative;min-height:100svh;min-height:100vh;
+  display:flex;align-items:center;
+  padding:calc(var(--nav-h) + 40px) 5vw 60px;
+  overflow:hidden;
 }
-.hero-glow{
-  position:absolute;top:-200px;left:50%;
-  transform:translateX(-50%);
-  width:900px;height:900px;
-  background:radial-gradient(ellipse at center,rgba(212,165,41,0.08) 0%,transparent 70%);
-  pointer-events:none;
+/* Animated gradient mesh bg */
+.hero-mesh{
+  position:absolute;inset:0;z-index:0;overflow:hidden;
 }
-.hero-glow2{
-  position:absolute;bottom:-300px;right:-200px;
+.hero-mesh::before{
+  content:'';position:absolute;
   width:600px;height:600px;
-  background:radial-gradient(ellipse at center,rgba(20,184,166,0.06) 0%,transparent 70%);
-  pointer-events:none;
+  background:radial-gradient(circle,rgba(212,165,41,.07) 0%,transparent 70%);
+  top:-100px;right:-100px;
+  animation:meshFloat 8s ease-in-out infinite;
 }
-.hero-badge{
-  display:inline-flex;align-items:center;gap:8px;
-  padding:6px 18px;
-  border:1px solid var(--gold);
-  border-radius:50px;
-  font-size:10px;font-weight:700;letter-spacing:3px;
-  text-transform:uppercase;color:var(--gold);
-  margin-bottom:32px;
-  background:var(--gold-dim);
-  animation:fadeUp .8s ease both;
+.hero-mesh::after{
+  content:'';position:absolute;
+  width:400px;height:400px;
+  background:radial-gradient(circle,rgba(20,184,166,.05) 0%,transparent 70%);
+  bottom:-80px;left:5%;
+  animation:meshFloat 10s 2s ease-in-out infinite reverse;
 }
-.hero-title{
-  font-size:clamp(48px,10vw,120px);
-  font-weight:900;line-height:.9;
-  letter-spacing:-3px;
-  background:linear-gradient(135deg,#fff 30%,var(--gold) 60%,var(--gold-light) 100%);
-  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
-  margin-bottom:12px;
-  animation:fadeUp .8s .1s ease both;
+@keyframes meshFloat{
+  0%,100%{transform:translate(0,0) scale(1);}
+  50%{transform:translate(20px,-30px) scale(1.08);}
 }
-.hero-sub{
-  font-size:clamp(14px,3vw,24px);
-  font-weight:300;color:var(--text2);
-  letter-spacing:6px;text-transform:uppercase;
-  margin-bottom:40px;
-  animation:fadeUp .8s .2s ease both;
+/* Grid lines */
+.hero-grid-bg{
+  position:absolute;inset:0;
+  background-image:
+    linear-gradient(rgba(212,165,41,.025) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(212,165,41,.025) 1px,transparent 1px);
+  background-size:50px 50px;
+  mask-image:radial-gradient(ellipse 70% 80% at 60% 40%,black 20%,transparent 100%);
+  -webkit-mask-image:radial-gradient(ellipse 70% 80% at 60% 40%,black 20%,transparent 100%);
 }
-.hero-desc{
-  max-width:600px;
-  font-size:16px;color:var(--text2);
-  line-height:1.8;margin-bottom:50px;
-  animation:fadeUp .8s .3s ease both;
-}
-.hero-desc strong{color:var(--text1);}
-.hero-cta-row{
-  display:flex;gap:16px;flex-wrap:wrap;justify-content:center;
-  animation:fadeUp .8s .4s ease both;
-}
-.btn-gold{
-  padding:16px 36px;
-  background:linear-gradient(135deg,var(--gold),var(--gold-light));
-  color:#000;font-weight:800;font-size:14px;letter-spacing:1px;
-  border-radius:50px;border:none;cursor:pointer;
-  text-transform:uppercase;text-decoration:none;
-  display:inline-flex;align-items:center;gap:8px;
-  box-shadow:0 0 40px rgba(212,165,41,.35);
-  transition:transform .2s,box-shadow .2s;
-}
-.btn-gold:hover{transform:translateY(-2px);box-shadow:0 0 60px rgba(212,165,41,.5);}
-.btn-ghost{
-  padding:15px 36px;
-  background:transparent;
-  color:var(--text1);font-weight:700;font-size:14px;letter-spacing:1px;
-  border-radius:50px;border:1px solid rgba(255,255,255,0.15);cursor:pointer;
-  text-transform:uppercase;text-decoration:none;
-  transition:border-color .2s,background .2s;
-  display:inline-flex;align-items:center;gap:8px;
-}
-.btn-ghost:hover{border-color:var(--gold);background:var(--gold-dim);}
-
-/* HERO STATS */
-.hero-stats{
-  display:flex;gap:60px;flex-wrap:wrap;justify-content:center;
-  margin-top:80px;padding-top:60px;
-  border-top:1px solid var(--text3);
-  animation:fadeUp .8s .5s ease both;
-  width:100%;max-width:800px;
-}
-.h-stat-num{
-  font-size:clamp(36px,6vw,56px);font-weight:900;
-  background:linear-gradient(135deg,var(--gold),var(--gold-light));
-  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
-  line-height:1;
-}
-.h-stat-lbl{font-size:11px;color:var(--text2);letter-spacing:2px;text-transform:uppercase;margin-top:4px;}
-
-/* ── DIVIDER BAND ── */
-.band{
-  padding:24px;
-  background:linear-gradient(90deg,var(--gold),var(--gold-light),var(--gold));
-  overflow:hidden;position:relative;
-}
-.band-inner{
-  display:flex;gap:60px;white-space:nowrap;
-  animation:marquee 25s linear infinite;
-}
-.band-item{
-  font-weight:800;font-size:13px;letter-spacing:3px;
-  text-transform:uppercase;color:#000;flex-shrink:0;
-}
-@keyframes marquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
-
-/* ── SECTIONS ── */
-section{position:relative;padding:100px 24px;overflow:hidden;}
-.container{max-width:1100px;margin:0 auto;}
-.section-eyebrow{
-  font-size:10px;font-weight:700;letter-spacing:4px;text-transform:uppercase;
-  color:var(--gold);margin-bottom:12px;display:block;
-}
-.section-title{
-  font-size:clamp(32px,6vw,60px);font-weight:900;line-height:1.05;
-  letter-spacing:-1.5px;margin-bottom:20px;
-}
-.section-title em{
-  font-style:normal;
-  background:linear-gradient(135deg,var(--gold),var(--gold-light));
-  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
-}
-.section-subtitle{font-size:17px;color:var(--text2);max-width:550px;line-height:1.8;}
-
-/* ── FEATURE STRIP ── */
-.feature-strip{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
-  gap:2px;margin-top:60px;
-}
-.feat-card{
-  background:var(--bg2);padding:36px 28px;
-  border:1px solid var(--text3);
-  transition:border-color .3s,background .3s,transform .3s;
-  cursor:default;position:relative;overflow:hidden;
-}
-.feat-card::before{
-  content:'';position:absolute;inset:0;
-  background:linear-gradient(135deg,var(--gold-dim),transparent);
-  opacity:0;transition:opacity .3s;
-}
-.feat-card:hover{border-color:var(--gold);background:var(--bg3);transform:translateY(-4px);}
-.feat-card:hover::before{opacity:1;}
-.feat-icon{font-size:36px;margin-bottom:20px;display:block;}
-.feat-name{font-size:15px;font-weight:700;margin-bottom:8px;}
-.feat-desc{font-size:13px;color:var(--text2);line-height:1.7;}
-.feat-tag{
-  display:inline-block;padding:3px 10px;
-  background:var(--gold-dim);color:var(--gold);
-  font-size:9px;font-weight:700;letter-spacing:2px;
-  text-transform:uppercase;border-radius:4px;margin-top:12px;
-}
-
-/* ── MODULES MEGA SECTION ── */
-.modules-bg{background:var(--bg2);}
-.modules-grid{
-  display:grid;grid-template-columns:1fr 1fr;
-  gap:24px;margin-top:60px;
-}
-@media(max-width:700px){.modules-grid{grid-template-columns:1fr;}}
-.module-card{
-  background:var(--bg);border:1px solid var(--text3);
-  border-radius:20px;padding:32px;
-  transition:border-color .3s,transform .3s,box-shadow .3s;
-  position:relative;overflow:hidden;
-}
-.module-card:hover{
-  border-color:var(--gold);
-  transform:translateY(-4px);
-  box-shadow:0 20px 60px rgba(212,165,41,0.1);
-}
-.module-card-header{display:flex;align-items:center;gap:14px;margin-bottom:20px;}
-.module-icon-box{
-  width:52px;height:52px;border-radius:14px;
-  display:flex;align-items:center;justify-content:center;
-  font-size:24px;flex-shrink:0;
-}
-.mc-gold .module-icon-box{background:var(--gold-dim);}
-.mc-teal .module-icon-box{background:var(--teal-dim);}
-.mc-coral .module-icon-box{background:rgba(232,93,93,.12);}
-.mc-purple .module-icon-box{background:rgba(155,138,206,.12);}
-.module-card-title{font-size:18px;font-weight:800;letter-spacing:-0.5px;}
-.module-badge{
-  margin-left:auto;padding:4px 12px;border-radius:50px;
-  font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;
-}
-.mc-gold .module-badge{background:var(--gold-dim);color:var(--gold);}
-.mc-teal .module-badge{background:var(--teal-dim);color:var(--teal);}
-.mc-coral .module-badge{background:rgba(232,93,93,.12);color:var(--coral);}
-.mc-purple .module-badge{background:rgba(155,138,206,.12);color:#9B8ACE;}
-.module-desc{font-size:13px;color:var(--text2);line-height:1.8;margin-bottom:20px;}
-.module-features{list-style:none;display:flex;flex-direction:column;gap:8px;}
-.module-features li{
-  font-size:12px;color:var(--text2);
-  display:flex;align-items:flex-start;gap:8px;
-}
-.module-features li::before{
-  content:'→';color:var(--gold);font-weight:700;flex-shrink:0;margin-top:1px;
-}
-.mc-teal .module-features li::before{color:var(--teal);}
-.mc-coral .module-features li::before{color:var(--coral);}
-.mc-purple .module-features li::before{color:#9B8ACE;}
-
-/* ── ADMIN SECTION ── */
-.admin-section{
-  background:linear-gradient(135deg,#0a1a18,#081210);
-  border-top:1px solid rgba(20,184,166,0.2);
-  border-bottom:1px solid rgba(20,184,166,0.2);
-}
-.admin-grid{
-  display:grid;grid-template-columns:1fr 1fr 1fr;
-  gap:20px;margin-top:60px;
-}
-@media(max-width:900px){.admin-grid{grid-template-columns:1fr 1fr;}}
-@media(max-width:600px){.admin-grid{grid-template-columns:1fr;}}
-.admin-card{
-  background:rgba(20,184,166,0.04);
-  border:1px solid rgba(20,184,166,0.15);
-  border-radius:16px;padding:28px 24px;
-  transition:border-color .3s,background .3s;
-}
-.admin-card:hover{
-  border-color:rgba(20,184,166,0.4);
-  background:rgba(20,184,166,0.08);
-}
-.adm-card-num{
-  font-size:clamp(36px,5vw,48px);font-weight:900;
-  color:var(--teal);line-height:1;margin-bottom:12px;
-  font-family:'Space Mono',monospace;
-}
-.adm-card-title{font-size:14px;font-weight:700;margin-bottom:8px;}
-.adm-card-desc{font-size:12px;color:var(--text2);line-height:1.7;}
-.adm-tag{
-  display:inline-block;padding:3px 10px;
-  background:var(--teal-dim);color:var(--teal);
-  font-size:9px;font-weight:700;letter-spacing:2px;
-  text-transform:uppercase;border-radius:4px;margin-top:12px;
-}
-
-/* ── SECURITY ── */
-.security-section{background:var(--bg);}
-.sec-hero{
-  display:grid;grid-template-columns:1fr 1fr;
-  gap:80px;align-items:center;margin-top:60px;
-}
-@media(max-width:800px){.sec-hero{grid-template-columns:1fr;gap:40px;}}
-.sec-shield{
-  display:flex;align-items:center;justify-content:center;
-  font-size:clamp(140px,20vw,200px);
-  position:relative;
-}
-.sec-shield::before{
-  content:'';position:absolute;inset:-40px;
-  background:radial-gradient(circle,rgba(212,165,41,0.08) 0%,transparent 70%);
-  border-radius:50%;animation:pulseSec 3s ease-in-out infinite;
-}
-@keyframes pulseSec{
-  0%,100%{transform:scale(1);opacity:.6;}
-  50%{transform:scale(1.1);opacity:1;}
-}
-.sec-list{display:flex;flex-direction:column;gap:24px;}
-.sec-item{
-  display:flex;gap:20px;align-items:flex-start;
-  padding:20px;background:var(--bg2);
-  border:1px solid var(--text3);border-radius:14px;
-  transition:border-color .3s;
-}
-.sec-item:hover{border-color:var(--gold);}
-.sec-item-icon{
-  font-size:28px;flex-shrink:0;
-  width:52px;height:52px;border-radius:12px;
-  background:var(--gold-dim);display:flex;align-items:center;justify-content:center;
-}
-.sec-item-title{font-size:14px;font-weight:700;margin-bottom:4px;}
-.sec-item-desc{font-size:12px;color:var(--text2);line-height:1.7;}
-
-/* ── KIDS MODE ── */
-.kids-section{
-  background:linear-gradient(135deg,#0d0a1a,#100c1e);
-  border-top:1px solid rgba(108,60,224,0.2);
-}
-.kids-inner{
+.hero-inner{
+  position:relative;z-index:2;
+  max-width:1240px;width:100%;margin:0 auto;
   display:grid;grid-template-columns:1fr 1fr;
   gap:60px;align-items:center;
 }
-@media(max-width:700px){.kids-inner{grid-template-columns:1fr;}}
-.kids-visual{
-  font-size:100px;text-align:center;
-  position:relative;
+@media(max-width:900px){
+  .hero-inner{grid-template-columns:1fr;gap:40px;}
 }
-.kids-visual::after{
-  content:'KIDS MODE';
-  position:absolute;bottom:-10px;left:50%;transform:translateX(-50%);
-  font-size:10px;font-weight:800;letter-spacing:4px;
-  color:#6c3ce0;white-space:nowrap;
+.hero-copy{}
+.badge-pill{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:7px 16px;border:1px solid rgba(212,165,41,.3);
+  border-radius:50px;background:rgba(212,165,41,.07);
+  font-size:10px;font-weight:700;letter-spacing:3px;
+  color:var(--g);text-transform:uppercase;margin-bottom:28px;
 }
-.kids-chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:20px;}
-.kids-chip{
-  padding:6px 14px;border-radius:50px;
-  background:rgba(108,60,224,0.12);
-  color:#a988f5;font-size:11px;font-weight:700;letter-spacing:1px;
-  border:1px solid rgba(108,60,224,0.2);
+.badge-dot{width:6px;height:6px;background:var(--g);border-radius:50%;animation:blink 2s ease-in-out infinite;flex-shrink:0;}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
+h1.hero-h{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:clamp(58px,10vw,118px);
+  line-height:.9;letter-spacing:1px;margin-bottom:24px;
 }
-
-/* ── GAMIFICATION ── */
-.game-section{background:var(--bg2);}
-.game-grid{
-  display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
-  gap:16px;margin-top:60px;
+h1.hero-h .w1{display:block;color:var(--t1);}
+h1.hero-h .w2{
+  display:block;
+  background:linear-gradient(135deg,var(--g) 0%,var(--gl) 55%,var(--g) 100%);
+  background-size:200%;
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  animation:shine 4s linear infinite;
 }
-.game-card{
-  background:var(--bg);border:1px solid var(--text3);
-  border-radius:16px;padding:28px 20px;text-align:center;
-  transition:transform .3s,border-color .3s,box-shadow .3s;
+h1.hero-h .w3{display:block;color:var(--t2);font-size:.6em;}
+@keyframes shine{to{background-position:200% center;}}
+.hero-desc{
+  font-size:clamp(15px,2vw,18px);font-weight:300;color:var(--t2);
+  line-height:1.8;margin-bottom:40px;max-width:500px;
 }
-.game-card:hover{
-  transform:translateY(-6px);
-  border-color:var(--gold);
-  box-shadow:0 20px 40px rgba(212,165,41,0.1);
+.hero-desc strong{color:var(--t1);font-weight:600;}
+.hero-btns{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:48px;}
+.btn-primary{
+  padding:15px 32px;
+  background:linear-gradient(135deg,var(--g),var(--gl));
+  color:#000;font-weight:800;font-size:13px;letter-spacing:1.5px;
+  text-transform:uppercase;border-radius:50px;border:none;cursor:pointer;
+  text-decoration:none;display:inline-flex;align-items:center;gap:8px;
+  box-shadow:0 0 36px rgba(212,165,41,.35);
+  transition:transform .25s,box-shadow .25s;
 }
-.game-card-icon{font-size:48px;margin-bottom:16px;}
-.game-card-title{font-size:14px;font-weight:800;margin-bottom:6px;}
-.game-card-desc{font-size:11px;color:var(--text2);line-height:1.7;}
-
-/* ── BELT SECTION ── */
-.belt-section{background:var(--bg);}
-.belt-row{
-  display:flex;gap:8px;flex-wrap:wrap;justify-content:center;
-  margin-top:50px;
+.btn-primary:hover{transform:translateY(-3px);box-shadow:0 8px 48px rgba(212,165,41,.45);}
+.btn-outline{
+  padding:14px 32px;background:transparent;
+  color:var(--t1);font-weight:700;font-size:13px;letter-spacing:1.5px;
+  text-transform:uppercase;border-radius:50px;
+  border:1px solid rgba(255,255,255,.13);cursor:pointer;
+  text-decoration:none;display:inline-flex;align-items:center;gap:8px;
+  transition:border-color .25s,background .25s;
 }
-.belt{
-  height:36px;width:120px;border-radius:6px;
-  display:flex;align-items:center;justify-content:center;
-  font-size:9px;font-weight:800;letter-spacing:2px;
-  text-transform:uppercase;position:relative;overflow:hidden;
+.btn-outline:hover{border-color:rgba(212,165,41,.5);background:rgba(212,165,41,.06);}
+/* Mini stats */
+.hero-kpis{
+  display:flex;gap:0;
+  border-top:1px solid rgba(212,165,41,.1);padding-top:28px;
+  flex-wrap:wrap;
 }
-.belt-white{background:#fff;color:#111;}
-.belt-gray{background:#6b7280;color:#fff;}
-.belt-yellow{background:#eab308;color:#000;}
-.belt-orange{background:#f97316;color:#fff;}
-.belt-green{background:#22c55e;color:#000;}
-.belt-blue{background:#3b82f6;color:#fff;}
-.belt-purple{background:#a855f7;color:#fff;}
-.belt-brown{background:#92400e;color:#fff;}
-.belt-black{background:#111;color:#D4A529;border:1px solid #333;}
-.belt-coral{background:linear-gradient(90deg,#ef4444 50%,#fff 50%);color:inherit;}
-.belt-coral span{color:#111;text-shadow:none;}
-.belt-red{background:#dc2626;color:#fff;}
-.belt-label{position:relative;z-index:1;}
-
-/* ── TESTIMONIAL / IMPACT ── */
-.impact-section{
-  text-align:center;
-  background:linear-gradient(180deg,var(--bg2),var(--bg));
-  padding:120px 24px;
-}
-.impact-quote{
-  font-size:clamp(24px,5vw,52px);
-  font-weight:900;line-height:1.1;
-  letter-spacing:-1.5px;
-  max-width:800px;margin:0 auto 40px;
-}
-.impact-quote em{
-  font-style:normal;
-  background:linear-gradient(135deg,var(--gold),var(--gold-light));
+.hkpi{padding:0 32px 0 0;margin-right:0;}
+.hkpi+.hkpi{padding-left:32px;border-left:1px solid rgba(212,165,41,.1);}
+.hkpi-n{
+  font-family:'Space Mono',monospace;
+  font-size:clamp(28px,4vw,40px);font-weight:700;line-height:1;
+  background:linear-gradient(135deg,var(--g),var(--gl));
   -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
 }
-.impact-sub{font-size:15px;color:var(--text2);max-width:500px;margin:0 auto;}
+.hkpi-l{font-size:10px;color:var(--t2);letter-spacing:2px;text-transform:uppercase;margin-top:4px;}
 
-/* ── HASHTAG SECTION ── */
-.hashtag-section{
-  background:var(--bg2);
-  padding:60px 24px;text-align:center;
+/* PHONE CLUSTER */
+.hero-phones{
+  position:relative;
+  display:flex;justify-content:center;align-items:flex-end;
+  gap:-20px;
+  min-height:560px;
 }
-.hashtag-grid{
-  display:flex;flex-wrap:wrap;gap:12px;justify-content:center;
-  max-width:800px;margin:32px auto 0;
+@media(max-width:900px){.hero-phones{display:none;}}
+/* Main phone */
+.phone-main{
+  width:240px;z-index:3;
+  animation:phoneFloat 7s ease-in-out infinite;
 }
-.hashtag{
-  padding:10px 20px;border-radius:50px;
-  background:var(--bg);border:1px solid var(--text3);
-  font-size:13px;font-weight:700;color:var(--gold);
-  transition:border-color .2s,background .2s;
-  cursor:pointer;
+.phone-back{
+  width:200px;z-index:2;
+  animation:phoneFloat 7s 1.2s ease-in-out infinite;
+  position:absolute;right:-20px;bottom:0;
+  opacity:.85;
 }
-.hashtag:hover{border-color:var(--gold);background:var(--gold-dim);}
+@keyframes phoneFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-14px)}}
+.phone-shell{
+  background:linear-gradient(160deg,#1e1e26,#0d0d12);
+  border-radius:40px;
+  border:1px solid rgba(212,165,41,.18);
+  padding:12px;
+  box-shadow:0 50px 100px rgba(0,0,0,.8),inset 0 1px 0 rgba(255,255,255,.06);
+  overflow:hidden;
+}
+.phone-shell.teal-shell{border-color:rgba(20,184,166,.2);}
+.p-notch{
+  width:72px;height:20px;background:#090910;
+  border-radius:0 0 14px 14px;margin:0 auto 8px;
+  display:flex;align-items:center;justify-content:center;gap:5px;
+}
+.p-cam{width:7px;height:7px;background:#151520;border-radius:50%;}
+.p-spk{width:30px;height:3px;background:#151520;border-radius:2px;}
+.p-screen{background:var(--ink);border-radius:28px;overflow:hidden;}
+/* Floating stat cards */
+.float-stat{
+  position:absolute;
+  background:linear-gradient(135deg,var(--ink3),var(--ink4));
+  border:1px solid rgba(212,165,41,.25);
+  border-radius:16px;padding:14px 18px;
+  box-shadow:0 20px 60px rgba(0,0,0,.6);
+  white-space:nowrap;z-index:10;
+  animation:phoneFloat 6s ease-in-out infinite;
+}
+.float-stat.fs1{left:-50px;top:80px;animation-delay:.5s;}
+.float-stat.fs2{right:-40px;bottom:100px;animation-delay:1s;}
+.fs-ico{font-size:24px;margin-bottom:6px;}
+.fs-n{font-size:22px;font-weight:900;color:var(--g);line-height:1;font-family:'Space Mono',monospace;}
+.fs-l{font-size:9px;color:var(--t2);letter-spacing:1.5px;text-transform:uppercase;margin-top:3px;}
 
-/* ── CTA FOOTER ── */
-.cta-footer{
-  background:var(--bg);
-  padding:120px 24px;text-align:center;
+/* ═══════════════════════════════════════
+   MARQUEE
+═══════════════════════════════════════ */
+.marquee-wrap{
+  padding:22px 0;overflow:hidden;
+  background:linear-gradient(90deg,var(--g),var(--gl));
+  border-top:1px solid rgba(212,165,41,.3);
+  border-bottom:1px solid rgba(212,165,41,.3);
+}
+.marquee-track{display:flex;gap:60px;white-space:nowrap;animation:marquee 20s linear infinite;}
+.mi{font-size:12px;font-weight:800;letter-spacing:3px;text-transform:uppercase;color:#000;flex-shrink:0;}
+@keyframes marquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+/* ═══════════════════════════════════════
+   SECTION BASE
+═══════════════════════════════════════ */
+.sec{padding:clamp(60px,10vh,120px) 5vw;}
+.wrap{max-width:1200px;margin:0 auto;}
+.eyebrow{
+  display:block;font-size:10px;font-weight:700;letter-spacing:4px;
+  text-transform:uppercase;color:var(--g);margin-bottom:12px;
+}
+.eyebrow.teal{color:var(--teal);}
+.eyebrow.coral{color:var(--coral);}
+h2.sh{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:clamp(40px,7vw,82px);
+  line-height:.95;letter-spacing:1px;margin-bottom:18px;
+}
+h2.sh em{
+  font-style:normal;
+  background:linear-gradient(135deg,var(--g),var(--gl));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+h2.sh em.teal{
+  background:linear-gradient(135deg,var(--teal),#5eead4);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+.s-sub{font-size:clamp(14px,2vw,17px);font-weight:300;color:var(--t2);max-width:540px;line-height:1.8;}
+/* Reveal */
+.r{opacity:0;transform:translateY(36px);transition:opacity .85s ease,transform .85s ease;}
+.r.v{opacity:1;transform:none;}
+.r[data-d="1"]{transition-delay:.08s}
+.r[data-d="2"]{transition-delay:.16s}
+.r[data-d="3"]{transition-delay:.24s}
+.r[data-d="4"]{transition-delay:.32s}
+.r[data-d="5"]{transition-delay:.4s}
+
+/* ═══════════════════════════════════════
+   STORY SECTION — TATAME
+═══════════════════════════════════════ */
+.story-bg{background:var(--ink2);}
+.story-grid{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:clamp(40px,6vw,100px);align-items:center;
+  margin-top:clamp(40px,5vh,72px);
+}
+@media(max-width:820px){.story-grid{grid-template-columns:1fr;gap:40px;}}
+/* Scene on tatame */
+.tatame-scene{position:relative;}
+.tatame-card{
+  background:linear-gradient(160deg,var(--ink3),var(--ink));
+  border:1px solid rgba(212,165,41,.15);
+  border-radius:24px;overflow:hidden;padding:32px;
+  position:relative;
+}
+.tatame-card::before{
+  content:'';position:absolute;inset:0;
+  background:
+    radial-gradient(ellipse at 80% 20%,rgba(212,165,41,.06),transparent 60%),
+    radial-gradient(ellipse at 20% 80%,rgba(20,184,166,.04),transparent 60%);
+}
+.tatame-visual{
+  display:flex;align-items:flex-end;gap:12px;
+  margin-bottom:24px;position:relative;z-index:1;
+}
+/* Silhuetas dos atletas */
+.athlete{
+  display:flex;flex-direction:column;align-items:center;gap:8px;
+  flex:1;
+}
+.athlete-body{
+  width:100%;background:var(--ink4);border-radius:16px;
+  display:flex;flex-direction:column;align-items:center;
+  padding:16px 8px 12px;border:1px solid var(--t3);
+  transition:border-color .3s;position:relative;overflow:hidden;
+}
+.athlete-body::after{
+  content:'';position:absolute;bottom:0;left:0;right:0;
+  height:3px;background:linear-gradient(90deg,var(--g),var(--gl));
+  transform:scaleX(0);transform-origin:left;
+  transition:transform .5s ease;
+}
+.athlete.checked .athlete-body{border-color:rgba(212,165,41,.4);}
+.athlete.checked .athlete-body::after{transform:scaleX(1);}
+.athlete-gi{font-size:clamp(28px,5vw,40px);}
+.athlete-name{font-size:11px;font-weight:700;color:var(--t2);margin-top:4px;}
+.athlete.checked .athlete-name{color:var(--t1);}
+.athlete-belt{
+  padding:2px 8px;border-radius:4px;
+  font-size:8px;font-weight:800;letter-spacing:1px;text-transform:uppercase;
+  margin-top:4px;
+}
+.b-blue{background:#3b82f6;color:#fff;}
+.b-purple{background:#a855f7;color:#fff;}
+.b-brown{background:#92400e;color:#fff;}
+.b-white{background:#ddd;color:#111;}
+.b-black{background:#222;color:var(--g);border:1px solid var(--t3);}
+/* Check badge floating */
+.check-badge{
+  position:absolute;top:-8px;right:-8px;
+  width:26px;height:26px;background:linear-gradient(135deg,#22c55e,#4ade80);
+  border-radius:50%;border:2px solid var(--ink);
+  display:flex;align-items:center;justify-content:center;
+  font-size:12px;
+  transform:scale(0);transition:transform .4s cubic-bezier(.34,1.56,.64,1);
+}
+.athlete.checked .check-badge{transform:scale(1);}
+.mat-label{
+  font-size:8px;font-weight:800;letter-spacing:2px;text-transform:uppercase;
+  color:var(--t3);text-align:center;
+}
+.mat-label.gold{color:var(--g);}
+/* Checkin live card */
+.checkin-live{
+  background:var(--ink);border:1px solid rgba(212,165,41,.2);
+  border-radius:16px;padding:16px;position:relative;z-index:1;
+}
+.cl-header{
+  display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;
+}
+.cl-title{font-size:11px;font-weight:700;letter-spacing:2px;color:var(--g);text-transform:uppercase;}
+.cl-live{
+  display:flex;align-items:center;gap:6px;
+  font-size:9px;font-weight:700;color:#22c55e;text-transform:uppercase;letter-spacing:1.5px;
+}
+.cl-live::before{content:'';width:6px;height:6px;background:#22c55e;border-radius:50%;animation:blink 1.5s ease-in-out infinite;}
+.cl-rows{display:flex;flex-direction:column;gap:6px;}
+.cl-row{
+  display:flex;align-items:center;gap:10px;
+  padding:9px 12px;background:var(--ink2);border-radius:10px;
+  border:1px solid var(--t3);
+  animation:slideRight .4s ease both;
+}
+@keyframes slideRight{from{opacity:0;transform:translateX(-12px)}to{opacity:1;transform:none}}
+.cl-av{
+  width:30px;height:30px;border-radius:9px;flex-shrink:0;
+  background:linear-gradient(135deg,var(--g),var(--gl));
+  display:flex;align-items:center;justify-content:center;
+  font-size:13px;font-weight:900;color:#000;
+}
+.cl-info{flex:1;}
+.cl-name{font-size:11px;font-weight:700;}
+.cl-meta{font-size:9px;color:var(--t2);margin-top:1px;}
+.cl-time{font-size:10px;font-weight:700;color:var(--g);font-family:'Space Mono',monospace;}
+.cl-check{font-size:16px;}
+/* Story copy */
+.story-copy{}
+.story-points{display:flex;flex-direction:column;gap:20px;margin-top:32px;}
+.sp{
+  display:flex;gap:16px;align-items:flex-start;
+  padding:20px;background:var(--ink);border:1px solid var(--t3);border-radius:16px;
+  transition:border-color .3s,transform .3s;
+}
+.sp:hover{border-color:rgba(212,165,41,.25);transform:translateX(6px);}
+.sp-ico{
+  width:46px;height:46px;flex-shrink:0;border-radius:12px;
+  background:var(--gdim);display:flex;align-items:center;justify-content:center;
+  font-size:22px;
+}
+.sp-title{font-size:14px;font-weight:700;margin-bottom:4px;}
+.sp-desc{font-size:12px;color:var(--t2);line-height:1.7;}
+
+/* ═══════════════════════════════════════
+   RANKING SECTION — MOTIVAÇÃO
+═══════════════════════════════════════ */
+.rank-bg{background:var(--ink);}
+.rank-hero{
+  margin-top:clamp(40px,5vh,72px);
+  background:linear-gradient(135deg,var(--ink2),var(--ink3));
+  border:1px solid rgba(212,165,41,.15);border-radius:28px;overflow:hidden;
+}
+.rank-hero-top{
+  padding:clamp(28px,4vw,48px);
+  background:linear-gradient(135deg,rgba(212,165,41,.06),transparent);
+  border-bottom:1px solid rgba(212,165,41,.08);
+}
+.rank-hero-title{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:clamp(28px,4vw,48px);letter-spacing:1px;margin-bottom:6px;
+}
+.rank-hero-sub{font-size:14px;color:var(--t2);}
+/* Podium */
+.podium-row{
+  display:flex;gap:0;align-items:flex-end;
+  justify-content:center;padding:0 clamp(20px,4vw,60px) 0;
+}
+.pod-col{display:flex;flex-direction:column;align-items:center;flex:1;max-width:180px;}
+.pod-rank-num{
+  font-family:'Space Mono',monospace;
+  font-size:clamp(36px,6vw,64px);font-weight:700;line-height:1;
+  color:var(--t3);
+}
+.pod-rank-num.gold{color:#FFD700;text-shadow:0 0 30px rgba(255,215,0,.3);}
+.pod-rank-num.silver{color:#C0C0C0;}
+.pod-rank-num.bronze{color:#CD7F32;}
+.pod-av{
+  width:clamp(52px,8vw,72px);height:clamp(52px,8vw,72px);
+  border-radius:20px;background:var(--ink4);
+  display:flex;align-items:center;justify-content:center;
+  font-size:clamp(22px,4vw,32px);font-weight:900;
+  border:2px solid var(--t3);margin:8px 0;
+}
+.pod-col.p1 .pod-av{
+  background:linear-gradient(135deg,rgba(212,165,41,.2),rgba(245,208,78,.1));
+  border-color:var(--g);
+  box-shadow:0 0 30px rgba(212,165,41,.2);
+  width:clamp(60px,9vw,80px);height:clamp(60px,9vw,80px);
+}
+.pod-name{font-size:clamp(11px,2vw,14px);font-weight:800;text-align:center;}
+.pod-belt{
+  padding:2px 8px;border-radius:4px;font-size:8px;font-weight:800;
+  letter-spacing:1px;text-transform:uppercase;margin-top:4px;
+}
+.pod-count{
+  font-family:'Space Mono',monospace;
+  font-size:clamp(18px,3vw,26px);font-weight:700;color:var(--g);
+  margin-top:6px;line-height:1;
+}
+.pod-count span{font-size:10px;color:var(--t2);font-weight:400;}
+.pod-plat{
+  width:100%;padding:clamp(10px,2vw,16px) 0;
+  border-radius:0 0 10px 10px;margin-top:12px;
+}
+.pod-col.p1 .pod-plat{
+  background:linear-gradient(180deg,rgba(212,165,41,.15),rgba(212,165,41,.05));
+  border-top:2px solid rgba(212,165,41,.4);
+  height:clamp(60px,8vw,90px);
+}
+.pod-col.p2 .pod-plat{
+  background:rgba(192,192,192,.05);border-top:2px solid rgba(192,192,192,.2);
+  height:clamp(40px,5vw,60px);
+}
+.pod-col.p3 .pod-plat{
+  background:rgba(205,127,50,.05);border-top:2px solid rgba(205,127,50,.2);
+  height:clamp(30px,4vw,44px);
+}
+/* Rank list */
+.rank-list{padding:clamp(20px,3vw,32px) clamp(20px,4vw,48px);}
+.rank-item{
+  display:flex;align-items:center;gap:clamp(8px,2vw,14px);
+  padding:clamp(10px,1.5vw,14px) 0;
+  border-bottom:1px solid rgba(255,255,255,.04);
+}
+.ri-pos{
+  font-family:'Space Mono',monospace;font-size:13px;font-weight:700;
+  width:28px;color:var(--t3);text-align:center;flex-shrink:0;
+}
+.ri-av{
+  width:36px;height:36px;border-radius:10px;flex-shrink:0;
+  background:var(--ink4);display:flex;align-items:center;justify-content:center;
+  font-size:15px;font-weight:800;
+}
+.ri-info{flex:1;min-width:0;}
+.ri-name{font-size:13px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.ri-sub{font-size:10px;color:var(--t2);margin-top:2px;}
+.ri-bar-wrap{width:clamp(60px,12vw,120px);flex-shrink:0;}
+.ri-bar-bg{height:4px;background:rgba(255,255,255,.05);border-radius:4px;overflow:hidden;}
+.ri-bar-fill{height:100%;background:linear-gradient(90deg,var(--g),var(--gl));border-radius:4px;}
+.ri-count{
+  font-family:'Space Mono',monospace;font-size:14px;font-weight:700;
+  color:var(--g);flex-shrink:0;width:clamp(40px,5vw,60px);text-align:right;
+}
+/* Motivation banner */
+.motivation-banner{
+  margin:0 clamp(20px,4vw,48px) clamp(20px,3vw,32px);
+  padding:clamp(16px,2.5vw,24px) clamp(20px,3vw,28px);
+  background:linear-gradient(135deg,rgba(232,93,93,.07),rgba(232,93,93,.04));
+  border:1px solid rgba(232,93,93,.2);border-radius:16px;
+  display:flex;gap:clamp(12px,2vw,20px);align-items:center;flex-wrap:wrap;
+}
+.mb-icon{font-size:clamp(28px,4vw,36px);flex-shrink:0;}
+.mb-text{flex:1;}
+.mb-title{font-size:clamp(14px,2vw,17px);font-weight:800;margin-bottom:4px;}
+.mb-desc{font-size:clamp(12px,1.5vw,14px);color:var(--t2);line-height:1.6;}
+
+/* ═══════════════════════════════════════
+   SCREENS SHOWCASE
+═══════════════════════════════════════ */
+.screens-bg{background:var(--ink2);}
+.screens-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:clamp(12px,2vw,24px);
+  margin-top:clamp(40px,5vh,72px);
+  align-items:end;
+}
+@media(max-width:900px){.screens-grid{grid-template-columns:1fr 1fr;}}
+@media(max-width:560px){.screens-grid{grid-template-columns:1fr;}}
+.screen-frame{
+  background:linear-gradient(160deg,#1c1c24,#0e0e14);
+  border-radius:clamp(20px,3vw,32px);
+  border:1px solid rgba(212,165,41,.14);
+  padding:clamp(8px,1.5vw,12px);
+  box-shadow:0 40px 80px rgba(0,0,0,.7);
+  transition:transform .4s,box-shadow .4s,border-color .4s;
+}
+.screen-frame:hover{
+  transform:translateY(-8px);
+  box-shadow:0 60px 100px rgba(0,0,0,.8),0 0 40px rgba(212,165,41,.07);
+  border-color:rgba(212,165,41,.3);
+}
+.screen-frame.elevated{margin-bottom:clamp(20px,3vw,40px);}
+.screen-frame.teal-frame{border-color:rgba(20,184,166,.18);}
+.screen-frame.teal-frame:hover{border-color:rgba(20,184,166,.4);box-shadow:0 60px 100px rgba(0,0,0,.8),0 0 40px rgba(20,184,166,.07);}
+.sf-inner{border-radius:clamp(14px,2.5vw,22px);overflow:hidden;background:var(--ink);}
+.sf-notch-bar{
+  height:20px;background:#08080c;
+  display:flex;align-items:center;justify-content:center;
+}
+.sf-notch-pill{width:54px;height:4px;background:#13131a;border-radius:2px;}
+.sf-label{
+  text-align:center;margin-top:14px;
+  font-size:10px;font-weight:700;letter-spacing:2.5px;
+  text-transform:uppercase;color:var(--t3);
+}
+.sf-label.gold{color:var(--g);}
+.sf-label.tl{color:var(--teal);}
+
+/* ── REAL SCREEN CONTENT ── */
+/* App Header */
+.ah{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:10px 12px 8px;
+  background:var(--ink);
+  border-bottom:1px solid rgba(212,165,41,.06);
+}
+.ah-logo{
+  font-family:'Bebas Neue',sans-serif;font-size:10px;letter-spacing:3px;
+  background:linear-gradient(90deg,var(--g),var(--gl));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+.ah-av{
+  width:24px;height:24px;border-radius:50%;
+  background:linear-gradient(135deg,var(--g),var(--gl));
+  display:flex;align-items:center;justify-content:center;
+  font-size:10px;font-weight:900;color:#000;
+}
+.ah-tag{
+  padding:2px 7px;background:var(--gdim);border-radius:6px;
+  font-size:7px;font-weight:800;letter-spacing:1.5px;color:var(--g);text-transform:uppercase;
+}
+/* App bottom nav */
+.abn{
+  display:flex;justify-content:space-around;
+  padding:7px 4px 9px;
+  background:rgba(8,8,10,.96);border-top:1px solid rgba(212,165,41,.06);
+}
+.abn-b{display:flex;flex-direction:column;align-items:center;gap:2px;}
+.abn-b .ico{font-size:14px;}
+.abn-b .lbl{font-size:6px;color:var(--t3);font-weight:700;letter-spacing:.5px;text-transform:uppercase;}
+.abn-b.on .lbl{color:var(--g);}
+.abn-b.on{position:relative;}
+.abn-b.on::before{content:'';position:absolute;top:-7px;left:50%;transform:translateX(-50%);width:16px;height:2px;background:var(--g);border-radius:0 0 3px 3px;}
+/* Subtab bar */
+.stab-bar{
+  display:flex;gap:4px;padding:8px 10px;
+  background:rgba(8,8,10,.5);
+  border-bottom:1px solid rgba(212,165,41,.06);overflow-x:auto;
+}
+.stab-btn{
+  padding:5px 10px;border-radius:8px;border:none;
+  background:transparent;color:var(--t3);
+  font-size:7px;font-weight:700;letter-spacing:1px;text-transform:uppercase;cursor:pointer;
+  white-space:nowrap;font-family:'Outfit',sans-serif;
+  transition:background .2s,color .2s;flex-shrink:0;
+}
+.stab-btn.on{background:var(--gdim);color:var(--g);}
+
+/* ── SCREEN 1: CHECK-IN ── */
+.sc1{padding:10px;}
+/* Alarm card */
+.alarm-card{
+  background:linear-gradient(135deg,rgba(212,165,41,.1),rgba(212,165,41,.05));
+  border:1px solid rgba(212,165,41,.3);border-radius:12px;
+  padding:10px 12px;margin-bottom:8px;
+  display:flex;align-items:center;gap:10px;
   position:relative;overflow:hidden;
 }
-.cta-footer::before{
-  content:'';position:absolute;inset:0;
-  background:radial-gradient(ellipse at 50% 0%,rgba(212,165,41,0.08),transparent 70%);
-  pointer-events:none;
+.alarm-card::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 80% 50%,rgba(212,165,41,.06),transparent 70%);}
+.alarm-bell{font-size:20px;animation:bell .8s ease-in-out infinite;flex-shrink:0;}
+@keyframes bell{0%,100%{transform:rotate(0)}25%{transform:rotate(12deg)}75%{transform:rotate(-12deg)}}
+.alarm-body{flex:1;}
+.alarm-title{font-size:10px;font-weight:900;color:var(--g);}
+.alarm-sub{font-size:8px;color:var(--t2);margin-top:1px;}
+.alarm-times{display:flex;gap:4px;margin-top:5px;}
+.at-pill{
+  padding:2px 7px;border-radius:6px;
+  background:var(--gdim);border:1px solid rgba(212,165,41,.2);
+  font-size:8px;font-weight:800;color:var(--g);font-family:'Space Mono',monospace;
 }
-.cta-title{
-  font-size:clamp(36px,8vw,80px);
-  font-weight:900;letter-spacing:-2px;line-height:1;
-  margin-bottom:20px;
+.at-pill.next{background:linear-gradient(135deg,rgba(212,165,41,.25),rgba(212,165,41,.1));border-color:var(--g);}
+/* Profile bar */
+.prof-bar{
+  display:flex;align-items:center;gap:10px;
+  background:linear-gradient(135deg,var(--ink3),var(--ink4));
+  border:1px solid rgba(212,165,41,.1);border-radius:12px;padding:10px;margin-bottom:8px;
 }
-.cta-title em{
-  font-style:normal;
-  background:linear-gradient(135deg,var(--gold),var(--gold-light));
-  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
-}
-.cta-sub{font-size:16px;color:var(--text2);margin-bottom:50px;max-width:500px;margin-left:auto;margin-right:auto;}
-.footer-copy{
-  margin-top:80px;padding-top:40px;
-  border-top:1px solid var(--text3);
-  font-size:11px;color:var(--text3);letter-spacing:2px;text-transform:uppercase;
-}
-
-/* ── ANIMATIONS ── */
-@keyframes fadeUp{
-  from{opacity:0;transform:translateY(30px);}
-  to{opacity:1;transform:translateY(0);}
-}
-.reveal{
-  opacity:0;transform:translateY(30px);
-  transition:opacity .8s ease,transform .8s ease;
-}
-.reveal.visible{opacity:1;transform:none;}
-
-/* ── SCROLL INDICATOR ── */
-.scroll-ind{
-  position:absolute;bottom:40px;left:50%;transform:translateX(-50%);
-  display:flex;flex-direction:column;align-items:center;gap:8px;
-  animation:bounce 2s ease-in-out infinite;
-  opacity:.5;
-}
-.scroll-ind span{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--text2);}
-@keyframes bounce{
-  0%,100%{transform:translateX(-50%) translateY(0);}
-  50%{transform:translateX(-50%) translateY(-8px);}
-}
-
-/* APP PREVIEW MOCK */
-.phone-wrap{
-  display:flex;justify-content:center;
-  margin-top:60px;gap:24px;flex-wrap:wrap;
-}
-.phone{
-  width:200px;
-  background:var(--bg2);
-  border:1px solid rgba(212,165,41,0.3);
-  border-radius:28px;
-  padding:16px;
-  box-shadow:0 40px 80px rgba(0,0,0,.6),0 0 0 1px rgba(212,165,41,0.1);
-  flex-shrink:0;
-}
-.phone-screen{
-  background:var(--bg);border-radius:18px;
-  overflow:hidden;padding:12px;min-height:340px;
-  position:relative;
-}
-.ph-header{
-  display:flex;align-items:center;justify-content:space-between;
-  margin-bottom:12px;
-}
-.ph-logo{
-  font-size:8px;font-weight:800;letter-spacing:2px;
-  background:linear-gradient(135deg,var(--gold),var(--gold-light));
-  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
-}
-.ph-avatar{
-  width:22px;height:22px;border-radius:50%;
-  background:linear-gradient(135deg,var(--gold),var(--gold-light));
+.prof-av{
+  width:38px;height:38px;border-radius:11px;flex-shrink:0;
+  background:linear-gradient(135deg,var(--g),var(--gl));
   display:flex;align-items:center;justify-content:center;
-  font-size:8px;font-weight:800;color:#000;
+  font-size:17px;font-weight:900;color:#000;
 }
-.ph-nav{
-  display:flex;justify-content:space-around;
-  padding:8px 0;
-  border-top:1px solid var(--text3);
-  margin-top:8px;position:absolute;bottom:12px;left:12px;right:12px;
+.prof-name{font-size:12px;font-weight:800;line-height:1;}
+.prof-meta{font-size:8px;color:var(--t2);margin-top:2px;}
+.prof-meta strong{color:var(--g);}
+.prof-count{
+  margin-left:auto;text-align:center;
+  padding:6px 10px;background:var(--gdim);border-radius:9px;border:1px solid rgba(212,165,41,.2);
 }
-.ph-nav-item{display:flex;flex-direction:column;align-items:center;gap:2px;font-size:14px;}
-.ph-nav-item span{font-size:7px;color:var(--text3);font-weight:700;letter-spacing:.5px;}
-.ph-nav-item.active span{color:var(--gold);}
-.ph-card{
-  background:var(--bg3);border:1px solid var(--text3);
-  border-radius:12px;padding:12px;margin-bottom:8px;
+.pc-n{font-size:16px;font-weight:900;color:var(--g);line-height:1;font-family:'Space Mono',monospace;}
+.pc-l{font-size:6px;color:var(--t2);font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-top:2px;}
+/* Tema card */
+.tema-card{
+  background:linear-gradient(135deg,rgba(20,184,166,.07),rgba(20,184,166,.03));
+  border:1px solid rgba(20,184,166,.15);border-radius:11px;padding:9px 11px;margin-bottom:8px;
 }
-.ph-card-title{font-size:9px;font-weight:800;margin-bottom:4px;color:var(--text1);}
-.ph-card-sub{font-size:7px;color:var(--text2);}
-.ph-stat-row{display:flex;gap:6px;margin-top:8px;}
-.ph-stat{
-  flex:1;background:var(--gold-dim);border-radius:8px;
-  padding:6px;text-align:center;
-  font-size:14px;font-weight:900;color:var(--gold);line-height:1;
+.tema-badge{font-size:6px;font-weight:800;letter-spacing:2px;color:var(--teal);text-transform:uppercase;margin-bottom:2px;}
+.tema-title{font-size:10px;font-weight:800;color:var(--t1);}
+.tema-meta{font-size:8px;color:var(--t2);margin-top:1px;}
+/* CT select */
+.ct-sec-title{font-size:7px;font-weight:700;letter-spacing:2px;color:var(--t2);text-transform:uppercase;margin-bottom:6px;}
+.ct-list{display:flex;flex-direction:column;gap:4px;}
+.ct-option{
+  padding:8px 10px;border-radius:10px;border:1.5px solid rgba(212,165,41,.1);
+  background:var(--ink4);display:flex;align-items:center;justify-content:space-between;
 }
-.ph-stat span{display:block;font-size:6px;font-weight:600;color:var(--text2);margin-top:2px;}
-.ph-btn{
+.ct-option.sel{border-color:var(--g);background:var(--gdim);}
+.cto-name{font-size:8px;font-weight:700;}
+.ct-option.sel .cto-name{color:var(--g);}
+.cto-time{font-size:7px;color:var(--t2);}
+.cto-check{font-size:10px;}
+.confirm-btn{
+  width:100%;padding:11px;background:linear-gradient(135deg,var(--g),var(--gl));
+  border:none;border-radius:11px;margin-top:6px;
+  font-size:9px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;
+  color:#000;font-family:'Outfit',sans-serif;cursor:pointer;
+}
+
+/* ── SCREEN 2: EVOLUÇÃO ── */
+.sc2{padding:10px;}
+.motiv-card{
+  background:linear-gradient(135deg,rgba(168,85,247,.08),rgba(168,85,247,.03));
+  border:1px solid rgba(168,85,247,.2);border-radius:11px;padding:10px 12px;
+  margin-bottom:8px;display:flex;align-items:center;gap:8px;
+}
+.motiv-ico{font-size:18px;flex-shrink:0;}
+.motiv-quote{font-size:9px;font-style:italic;color:var(--t2);line-height:1.5;}
+.motiv-sub{font-size:7px;color:rgba(168,85,247,.7);margin-top:2px;font-weight:700;}
+.belt-hero{
+  background:linear-gradient(135deg,rgba(59,130,246,.1),rgba(59,130,246,.04));
+  border:1px solid rgba(59,130,246,.2);border-radius:12px;padding:12px;margin-bottom:8px;
+  position:relative;overflow:hidden;
+}
+.belt-hero::before{content:'';position:absolute;top:-20px;right:-20px;width:80px;height:80px;background:radial-gradient(circle,rgba(59,130,246,.1),transparent 70%);}
+.bh-row{display:flex;align-items:center;gap:8px;margin-bottom:8px;}
+.bh-swatch{width:40px;height:11px;background:#3b82f6;border-radius:3px;border:1px solid rgba(255,255,255,.15);position:relative;overflow:hidden;flex-shrink:0;}
+.bh-swatch::after{content:'';position:absolute;right:0;top:0;bottom:0;width:6px;background:rgba(0,0,0,.25);}
+.bh-info{flex:1;}
+.bh-label{font-size:7px;font-weight:700;letter-spacing:1.5px;color:var(--t2);text-transform:uppercase;}
+.bh-name{font-size:12px;font-weight:800;}
+.bh-next{font-size:7px;color:var(--g);font-weight:700;margin-top:1px;}
+.bh-prog-bg{height:5px;background:rgba(255,255,255,.05);border-radius:3px;overflow:hidden;}
+.bh-prog-fill{height:100%;background:linear-gradient(90deg,var(--g),var(--gl));border-radius:3px;}
+.bh-info-row{display:flex;justify-content:space-between;margin-top:3px;}
+.bh-pct{font-size:7px;color:var(--t2);}
+.bh-count{font-size:7px;color:var(--g);font-weight:700;}
+/* Freq bar */
+.freq-card{background:var(--ink4);border-radius:10px;padding:10px;margin-bottom:8px;}
+.freq-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;}
+.freq-title{font-size:8px;color:var(--t2);font-weight:700;}
+.freq-pct{font-size:13px;font-weight:900;color:var(--g);font-family:'Space Mono',monospace;}
+.freq-bar-bg{height:6px;background:rgba(255,255,255,.05);border-radius:4px;overflow:hidden;margin-bottom:4px;}
+.freq-bar-fill{height:100%;background:linear-gradient(90deg,var(--g),var(--gl));border-radius:4px;}
+.freq-sub{font-size:7px;color:var(--t2);}
+/* Stats row */
+.stats3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:5px;margin-bottom:8px;}
+.s3-item{background:var(--ink3);border-radius:9px;padding:7px;text-align:center;}
+.s3-n{font-size:15px;font-weight:900;color:var(--g);font-family:'Space Mono',monospace;line-height:1;}
+.s3-l{font-size:6px;color:var(--t2);text-transform:uppercase;letter-spacing:.5px;margin-top:2px;}
+/* Seals */
+.seals-title{font-size:7px;font-weight:700;letter-spacing:2px;color:var(--t2);text-transform:uppercase;margin-bottom:6px;}
+.seals-row{display:flex;gap:4px;}
+.seal-item{display:flex;flex-direction:column;align-items:center;gap:3px;flex:1;}
+.seal-ring{
+  width:clamp(34px,5vw,40px);height:clamp(34px,5vw,40px);border-radius:50%;
+  background:var(--ink4);border:2px solid var(--t3);
+  display:flex;align-items:center;justify-content:center;font-size:clamp(13px,2vw,16px);
+}
+.seal-ring.done{background:var(--gdim);border-color:var(--g);}
+.seal-ring.next{background:var(--gdim);border-color:var(--g);box-shadow:0 0 10px var(--gglow);animation:sealGlow 2s ease-in-out infinite;}
+@keyframes sealGlow{0%,100%{box-shadow:0 0 6px var(--gglow)}50%{box-shadow:0 0 18px var(--gglow)}}
+.seal-lbl{font-size:6px;color:var(--t2);font-weight:600;text-align:center;}
+/* Exam button */
+.exam-btn{
   width:100%;padding:9px;
-  background:linear-gradient(135deg,var(--gold),var(--gold-light));
-  border-radius:10px;border:none;
-  font-size:8px;font-weight:800;letter-spacing:1px;
-  text-transform:uppercase;color:#000;cursor:pointer;margin-top:8px;
+  background:linear-gradient(135deg,rgba(168,85,247,.15),rgba(168,85,247,.08));
+  border:1px solid rgba(168,85,247,.3);border-radius:10px;
+  font-size:8px;font-weight:800;letter-spacing:1px;text-transform:uppercase;
+  color:#c084fc;font-family:'Outfit',sans-serif;cursor:pointer;
 }
-.ph-rank-item{
+
+/* ── SCREEN 3: RANKING APP ── */
+.sc3{padding:10px;}
+.my-stats-card{
+  background:linear-gradient(135deg,var(--ink3),var(--ink4));
+  border:1px solid rgba(212,165,41,.1);border-radius:12px;padding:10px;margin-bottom:8px;
+}
+.ms-title{font-size:7px;font-weight:700;letter-spacing:2px;color:var(--t2);text-transform:uppercase;margin-bottom:6px;}
+.ms-row{display:flex;align-items:center;gap:8px;}
+.ms-total{text-align:center;padding-right:10px;border-right:1px solid var(--t3);}
+.ms-total-n{font-size:24px;font-weight:900;color:var(--g);font-family:'Space Mono',monospace;line-height:1;}
+.ms-total-l{font-size:7px;color:var(--t2);font-weight:600;}
+.ms-grid{display:flex;flex-wrap:wrap;gap:4px;flex:1;}
+.ms-ct{
+  padding:4px 8px;background:var(--gdim);border-radius:6px;
+  font-size:7px;font-weight:700;color:var(--g);
+}
+/* Period tabs */
+.period-row{
+  display:flex;gap:3px;background:var(--ink3);border-radius:50px;padding:3px;
+  margin-bottom:8px;border:1px solid rgba(212,165,41,.07);
+}
+.pr-btn{
+  flex:1;padding:5px;border-radius:50px;border:none;
+  background:transparent;color:var(--t3);
+  font-size:7px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;cursor:pointer;font-family:'Outfit',sans-serif;
+}
+.pr-btn.on{background:linear-gradient(135deg,var(--g),var(--gl));color:#000;}
+/* Podium mini */
+.pod-mini{display:flex;gap:3px;align-items:flex-end;margin-bottom:8px;}
+.pm-col{display:flex;flex-direction:column;align-items:center;flex:1;}
+.pm-medal{font-size:12px;}
+.pm-av{
+  width:clamp(26px,5vw,32px);height:clamp(26px,5vw,32px);border-radius:8px;
+  background:var(--ink4);display:flex;align-items:center;justify-content:center;
+  font-size:11px;font-weight:800;border:1.5px solid var(--t3);margin:4px 0;
+}
+.pm-col.pm1 .pm-av{background:linear-gradient(135deg,rgba(212,165,41,.2),rgba(245,208,78,.08));border-color:var(--g);}
+.pm-name{font-size:7px;font-weight:700;text-align:center;}
+.pm-count{font-size:9px;color:var(--g);font-weight:900;font-family:'Space Mono',monospace;}
+.pm-plat{width:100%;border-radius:0 0 4px 4px;margin-top:4px;}
+.pm-col.pm1 .pm-plat{height:20px;background:rgba(212,165,41,.1);border-top:1.5px solid rgba(212,165,41,.3);}
+.pm-col.pm2 .pm-plat,.pm-col.pm3 .pm-plat{height:12px;background:rgba(192,192,192,.04);border-top:1px solid rgba(192,192,192,.15);}
+/* rank rows */
+.rr{display:flex;align-items:center;gap:7px;padding:7px 0;border-bottom:1px solid rgba(255,255,255,.04);}
+.rr:last-child{border:none;}
+.rr-pos{font-size:9px;font-weight:800;width:16px;color:var(--t3);font-family:'Space Mono',monospace;text-align:center;}
+.rr-av{
+  width:clamp(22px,4vw,26px);height:clamp(22px,4vw,26px);border-radius:7px;
+  background:var(--ink4);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;flex-shrink:0;
+}
+.rr-i{flex:1;min-width:0;}
+.rr-name{font-size:9px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.rr-belt{display:inline-block;padding:1px 5px;border-radius:3px;font-size:6px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;}
+.rr-count{font-size:9px;font-weight:800;color:var(--g);font-family:'Space Mono',monospace;flex-shrink:0;}
+.pos-card{
+  margin:6px 0 0;
+  background:rgba(212,165,41,.06);border:1px solid rgba(212,165,41,.2);
+  border-radius:10px;padding:8px 10px;
   display:flex;align-items:center;gap:8px;
-  padding:6px 0;border-bottom:1px solid var(--text3);
 }
-.ph-rank-pos{font-size:9px;font-weight:800;color:var(--gold);width:14px;}
-.ph-rank-name{font-size:8px;font-weight:700;flex:1;}
-.ph-rank-count{font-size:8px;font-weight:700;color:var(--gold);}
-.ph-adm-stat{
-  background:rgba(20,184,166,0.08);border:1px solid rgba(20,184,166,0.2);
-  border-radius:10px;padding:10px;margin-bottom:6px;
+.pc-pos{font-size:16px;font-weight:900;color:var(--g);font-family:'Space Mono',monospace;}
+.pc-arrow{font-size:14px;}
+.pc-info{flex:1;}
+.pc-title{font-size:8px;font-weight:700;color:var(--t1);}
+.pc-sub{font-size:7px;color:var(--t2);}
+
+/* ── SCREEN 4: ADMIN ── */
+.sc4-wrap{background:#060e0c;}
+.adm-hdr{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:10px 12px 8px;background:rgba(6,14,12,.9);
+  border-bottom:1px solid rgba(20,184,166,.08);
 }
-.ph-adm-num{font-size:18px;font-weight:900;color:var(--teal);line-height:1;}
-.ph-adm-lbl{font-size:7px;color:var(--text2);font-weight:600;}
-.ph-adm-actions{display:flex;gap:6px;margin-top:8px;}
-.ph-adm-btn-g{
-  flex:1;padding:7px;border-radius:8px;border:none;
-  background:rgba(34,197,94,.15);color:#22c55e;
-  font-size:7px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;cursor:pointer;
+.adm-logo{font-family:'Bebas Neue',sans-serif;font-size:10px;letter-spacing:3px;color:var(--teal);}
+.adm-pill{padding:2px 7px;background:rgba(20,184,166,.12);border:1px solid rgba(20,184,166,.25);border-radius:4px;font-size:7px;font-weight:800;letter-spacing:2px;color:var(--teal);}
+.adm-body{padding:10px;}
+.adm-stats2{display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-bottom:8px;}
+.ads{background:rgba(20,184,166,.04);border:1px solid rgba(20,184,166,.1);border-radius:10px;padding:9px;}
+.ads-n{font-size:clamp(18px,3vw,22px);font-weight:900;color:var(--teal);font-family:'Space Mono',monospace;line-height:1;}
+.ads-l{font-size:6px;color:rgba(20,184,166,.5);font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-top:2px;}
+.adm-pending{
+  background:rgba(232,93,93,.06);border:1px solid rgba(232,93,93,.18);
+  border-radius:11px;padding:10px;margin-bottom:6px;
 }
-.ph-adm-btn-r{
-  flex:1;padding:7px;border-radius:8px;border:none;
-  background:rgba(232,93,93,.15);color:var(--coral);
-  font-size:7px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;cursor:pointer;
+.adp-title{font-size:8px;font-weight:700;color:var(--coral);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:7px;}
+.adp-item{
+  background:rgba(6,14,12,.7);border-radius:8px;padding:7px 9px;margin-bottom:4px;
 }
-.ph-label{
-  text-align:center;margin-top:12px;
-  font-size:10px;font-weight:700;letter-spacing:2px;
-  text-transform:uppercase;color:var(--text2);
+.adp-name{font-size:9px;font-weight:700;color:var(--t1);}
+.adp-meta{font-size:7px;color:rgba(20,184,166,.6);margin-top:1px;}
+.adp-btns{display:flex;gap:4px;margin-top:5px;}
+.adp-g{flex:1;padding:5px;border-radius:5px;border:none;background:rgba(34,197,94,.12);color:#22c55e;font-size:7px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;cursor:pointer;font-family:'Outfit',sans-serif;}
+.adp-r{flex:1;padding:5px;border-radius:5px;border:none;background:rgba(232,93,93,.12);color:var(--coral);font-size:7px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;cursor:pointer;font-family:'Outfit',sans-serif;}
+.adm-bulk{
+  width:100%;padding:10px;border-radius:10px;border:none;
+  background:linear-gradient(135deg,var(--teal),#5eead4);
+  color:#000;font-size:9px;font-weight:800;letter-spacing:1px;text-transform:uppercase;cursor:pointer;font-family:'Outfit',sans-serif;
 }
+.adm-bnav{
+  display:flex;justify-content:space-around;
+  padding:7px 4px 9px;background:rgba(6,14,12,.98);border-top:1px solid rgba(20,184,166,.07);
+}
+.abn2{display:flex;flex-direction:column;align-items:center;gap:2px;}
+.abn2 .ico{font-size:14px;}
+.abn2 .lbl{font-size:6px;color:rgba(20,184,166,.3);font-weight:700;letter-spacing:.5px;text-transform:uppercase;}
+.abn2.on .lbl{color:var(--teal);}
+
+/* ── SCREEN 5: PRESENCES ── */
+.sc5{padding:10px;}
+.prs-summary-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:5px;margin-bottom:8px;}
+.prs-s{background:var(--ink3);border-radius:9px;padding:7px;text-align:center;}
+.prs-sn{font-size:15px;font-weight:900;color:var(--g);font-family:'Space Mono',monospace;line-height:1;}
+.prs-sl{font-size:6px;color:var(--t2);text-transform:uppercase;letter-spacing:.5px;margin-top:2px;}
+/* Mini calendar */
+.cal-wrap{background:var(--ink3);border-radius:12px;padding:10px;margin-bottom:8px;}
+.cal-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;}
+.cal-month{font-size:10px;font-weight:800;}
+.cal-arrow{font-size:12px;color:var(--t2);cursor:pointer;}
+.cal-hdr{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;margin-bottom:4px;}
+.cal-hdr-d{font-size:6px;font-weight:700;color:var(--t3);text-align:center;text-transform:uppercase;}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;}
+.cal-day{
+  aspect-ratio:1;border-radius:5px;display:flex;align-items:center;justify-content:center;
+  font-size:7px;font-weight:600;color:var(--t3);background:var(--ink4);
+}
+.cal-day.treinou{background:rgba(74,222,128,.12);color:#4ade80;font-weight:800;}
+.cal-day.faltou{background:rgba(248,113,113,.1);color:#f87171;}
+.cal-day.aula{background:rgba(56,189,248,.1);color:#38bdf8;}
+.cal-day.hoje{outline:2px solid var(--g);outline-offset:-1px;}
+.cal-day.empty{background:transparent;}
+/* Legend */
+.prs-leg{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px;}
+.prs-li{display:flex;align-items:center;gap:4px;font-size:7px;color:var(--t2);}
+.prs-dot{width:7px;height:7px;border-radius:50%;}
+/* Month list */
+.prs-list-title{font-size:7px;font-weight:700;letter-spacing:2px;color:var(--t2);text-transform:uppercase;margin-bottom:6px;}
+.prs-entry{
+  display:flex;align-items:center;gap:7px;
+  padding:6px 0;border-bottom:1px solid rgba(255,255,255,.04);
+}
+.prs-entry:last-child{border:none;}
+.prs-date-box{
+  width:30px;height:30px;border-radius:8px;background:var(--ink4);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;flex-shrink:0;
+}
+.prs-dd{font-size:11px;font-weight:900;line-height:1;color:var(--t1);}
+.prs-dm{font-size:6px;color:var(--t2);text-transform:uppercase;letter-spacing:.5px;}
+.prs-entry-info{flex:1;}
+.prs-ct{font-size:9px;font-weight:700;}
+.prs-h{font-size:8px;color:var(--t2);}
+.prs-ok{font-size:16px;}
+
+/* ── SCREEN 6: CRONOGRAMA ── */
+.sc6{padding:10px;}
+.crono-view-toggle{display:flex;gap:4px;background:var(--ink3);border-radius:50px;padding:3px;margin-bottom:8px;border:1px solid rgba(212,165,41,.07);}
+.cvt-btn{flex:1;padding:6px;border-radius:50px;border:none;background:transparent;color:var(--t3);font-size:7px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;cursor:pointer;font-family:'Outfit',sans-serif;}
+.cvt-btn.on{background:linear-gradient(135deg,var(--g),var(--gl));color:#000;}
+.crono-day-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:7px;}
+.cdn-arrow{font-size:16px;color:var(--t2);cursor:pointer;}
+.cdn-title{font-size:12px;font-weight:800;}
+/* Week strip */
+.week-strip{display:flex;gap:4px;margin-bottom:8px;overflow-x:auto;}
+.wd{
+  flex:1;min-width:28px;padding:5px 2px;border-radius:8px;text-align:center;
+  background:var(--ink4);border:1px solid var(--t3);cursor:pointer;
+}
+.wd.today{background:var(--gdim);border-color:var(--g);}
+.wd.has-class::after{content:'';display:block;width:4px;height:4px;background:var(--g);border-radius:50%;margin:3px auto 0;}
+.wd-day{font-size:6px;font-weight:700;color:var(--t2);text-transform:uppercase;}
+.wd.today .wd-day{color:var(--g);}
+.wd-date{font-size:9px;font-weight:800;}
+/* Class card */
+.aula-card{
+  background:linear-gradient(135deg,var(--ink3),var(--ink4));
+  border:1px solid rgba(212,165,41,.15);border-radius:12px;padding:12px;margin-bottom:6px;
+}
+.aula-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;}
+.aula-time{font-size:12px;font-weight:900;color:var(--g);font-family:'Space Mono',monospace;}
+.aula-status{padding:2px 8px;border-radius:6px;font-size:7px;font-weight:800;letter-spacing:1px;text-transform:uppercase;}
+.as-hoje{background:var(--gdim);color:var(--g);}
+.aula-tema{font-size:11px;font-weight:800;margin-bottom:3px;}
+.aula-prof{font-size:9px;color:var(--t2);}
+.aula-ct-tag{display:inline-flex;align-items:center;gap:4px;margin-top:6px;padding:3px 8px;background:rgba(20,184,166,.08);border:1px solid rgba(20,184,166,.15);border-radius:6px;font-size:7px;color:var(--teal);font-weight:700;}
+.esq-link{
+  width:100%;padding:8px;border-radius:9px;
+  background:rgba(232,93,93,.07);border:1px solid rgba(232,93,93,.15);
+  font-size:8px;font-weight:700;color:var(--t2);
+  text-align:center;margin-top:4px;cursor:pointer;font-family:'Outfit',sans-serif;
+}
+
+/* ═══════════════════════════════════════
+   MODULES
+═══════════════════════════════════════ */
+.mod-bg{background:var(--ink);}
+.mods-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
+  gap:2px;margin-top:clamp(40px,5vh,72px);
+}
+.mod{
+  background:var(--ink2);padding:clamp(28px,4vw,44px) clamp(24px,3vw,36px);
+  border:1px solid var(--t3);
+  transition:background .3s;position:relative;overflow:hidden;cursor:default;
+}
+.mod:hover{background:var(--ink3);}
+.mod-line{
+  position:absolute;left:0;top:0;bottom:0;width:2px;
+  transform:scaleY(0);transform-origin:bottom;transition:transform .4s cubic-bezier(.4,0,.2,1);
+}
+.mod:hover .mod-line{transform:scaleY(1);}
+.mod-gold .mod-line{background:var(--g);}
+.mod-teal .mod-line{background:var(--teal);}
+.mod-coral .mod-line{background:var(--coral);}
+.mod-purple .mod-line{background:var(--purple);}
+.mod-icon{font-size:clamp(36px,5vw,48px);margin-bottom:clamp(16px,2vw,24px);display:block;}
+.mod-title{font-size:clamp(16px,2.5vw,20px);font-weight:800;margin-bottom:10px;letter-spacing:-.3px;}
+.mod-desc{font-size:13px;color:var(--t2);line-height:1.8;margin-bottom:18px;}
+.mod-list{list-style:none;display:flex;flex-direction:column;gap:7px;}
+.mod-list li{font-size:12px;color:var(--t2);display:flex;gap:8px;align-items:flex-start;line-height:1.5;}
+.mod-list li b{color:var(--t1);font-weight:700;}
+.mod-gold .mod-list li::before{content:'›';color:var(--g);font-weight:900;flex-shrink:0;}
+.mod-teal .mod-list li::before{content:'›';color:var(--teal);font-weight:900;flex-shrink:0;}
+.mod-coral .mod-list li::before{content:'›';color:var(--coral);font-weight:900;flex-shrink:0;}
+.mod-purple .mod-list li::before{content:'›';color:var(--purple);font-weight:900;flex-shrink:0;}
+
+/* ═══════════════════════════════════════
+   ADMIN SECTION
+═══════════════════════════════════════ */
+.adm-sec-bg{
+  background:linear-gradient(160deg,#060e0d,#081210);
+  border-top:1px solid rgba(20,184,166,.08);border-bottom:1px solid rgba(20,184,166,.08);
+}
+.adm-layout{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:clamp(40px,6vw,80px);align-items:start;
+  margin-top:clamp(40px,5vh,72px);
+}
+@media(max-width:820px){.adm-layout{grid-template-columns:1fr;}}
+.adm-cards-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.adc{
+  background:rgba(20,184,166,.04);border:1px solid rgba(20,184,166,.1);
+  border-radius:16px;padding:clamp(16px,2vw,22px);
+  transition:border-color .3s,background .3s;
+}
+.adc:hover{border-color:rgba(20,184,166,.3);background:rgba(20,184,166,.08);}
+.adc-n{font-size:clamp(28px,4vw,40px);font-weight:900;color:var(--teal);font-family:'Space Mono',monospace;line-height:1;margin-bottom:8px;}
+.adc-t{font-size:13px;font-weight:700;margin-bottom:4px;}
+.adc-d{font-size:11px;color:var(--t2);line-height:1.6;}
+.adc-tag{display:inline-block;margin-top:10px;padding:3px 10px;background:var(--tdim);color:var(--teal);font-size:8px;font-weight:800;letter-spacing:2px;text-transform:uppercase;border-radius:4px;}
+
+/* ═══════════════════════════════════════
+   SECURITY
+═══════════════════════════════════════ */
+.sec-sec-bg{background:var(--ink);}
+.sec-layout{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:clamp(40px,6vw,80px);align-items:center;
+  margin-top:clamp(40px,5vh,72px);
+}
+@media(max-width:820px){.sec-layout{grid-template-columns:1fr;}}
+.shield-wrap{display:flex;align-items:center;justify-content:center;position:relative;min-height:300px;}
+.shield-rings{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;}
+.sring{position:absolute;border:1px solid rgba(212,165,41,.06);border-radius:50%;animation:ringAnim 4s ease-in-out infinite;}
+.sring:nth-child(1){width:140px;height:140px;}
+.sring:nth-child(2){width:220px;height:220px;animation-delay:.5s;}
+.sring:nth-child(3){width:300px;height:300px;animation-delay:1s;border-color:rgba(212,165,41,.03);}
+@keyframes ringAnim{0%,100%{opacity:.3;transform:scale(1)}50%{opacity:1;transform:scale(1.04)}}
+.shield-icon{font-size:clamp(80px,12vw,120px);position:relative;z-index:2;filter:drop-shadow(0 0 40px var(--gglow));}
+.sec-items{display:flex;flex-direction:column;gap:14px;}
+.sec-item{
+  display:flex;gap:clamp(12px,2vw,18px);align-items:flex-start;
+  padding:clamp(14px,2vw,20px);background:var(--ink2);border:1px solid var(--t3);
+  border-radius:16px;transition:border-color .3s,transform .3s;
+}
+.sec-item:hover{border-color:rgba(212,165,41,.25);transform:translateX(5px);}
+.sec-ico{
+  width:44px;height:44px;border-radius:12px;
+  background:var(--gdim);display:flex;align-items:center;justify-content:center;
+  font-size:20px;flex-shrink:0;
+}
+.sec-t{font-size:13px;font-weight:700;margin-bottom:4px;}
+.sec-d{font-size:12px;color:var(--t2);line-height:1.7;}
+
+/* ═══════════════════════════════════════
+   FORM SECTION
+═══════════════════════════════════════ */
+.form-bg{background:var(--ink2);border-top:1px solid rgba(212,165,41,.06);}
+.form-layout{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:clamp(40px,6vw,100px);align-items:start;
+}
+@media(max-width:820px){.form-layout{grid-template-columns:1fr;gap:40px;}}
+.form-benefits{margin-top:clamp(24px,4vh,48px);display:flex;flex-direction:column;gap:16px;}
+.fb{
+  display:flex;gap:clamp(12px,2vw,16px);align-items:flex-start;
+  padding:clamp(14px,2vw,18px);background:var(--ink);border:1px solid var(--t3);
+  border-radius:14px;transition:border-color .3s;
+}
+.fb:hover{border-color:rgba(212,165,41,.2);}
+.fb-ico{font-size:22px;width:42px;height:42px;background:var(--gdim);border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.fb-t{font-size:13px;font-weight:700;margin-bottom:3px;}
+.fb-d{font-size:12px;color:var(--t2);line-height:1.6;}
+/* Form card */
+.form-card{
+  background:var(--ink);border:1px solid rgba(212,165,41,.15);
+  border-radius:clamp(20px,3vw,28px);padding:clamp(28px,4vw,44px);
+  box-shadow:0 40px 80px rgba(0,0,0,.35);
+}
+.form-steps{display:flex;gap:6px;margin-bottom:28px;}
+.fstep{flex:1;height:3px;background:var(--t3);border-radius:2px;transition:background .4s;}
+.fstep.done{background:var(--g);}
+.form-pre{font-size:10px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--g);margin-bottom:8px;display:block;}
+.form-title{font-size:clamp(22px,3vw,28px);font-weight:900;line-height:1.1;letter-spacing:-.5px;margin-bottom:8px;}
+.form-sub{font-size:13px;color:var(--t2);line-height:1.7;margin-bottom:28px;}
+.fg{margin-bottom:18px;}
+.fl{display:block;font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--t2);margin-bottom:7px;}
+.fi{
+  width:100%;padding:clamp(12px,2vw,14px) 16px;
+  background:var(--ink2);border:1.5px solid var(--t3);border-radius:12px;
+  font-family:'Outfit',sans-serif;font-size:clamp(14px,2vw,15px);color:var(--t1);
+  transition:border-color .3s,box-shadow .3s;outline:none;
+  -webkit-appearance:none;appearance:none;
+}
+.fi:focus{border-color:var(--g);box-shadow:0 0 0 4px rgba(212,165,41,.08);background:rgba(212,165,41,.02);}
+.fi::placeholder{color:var(--t3);}
+.fs-sel{
+  width:100%;padding:clamp(12px,2vw,14px) 16px;
+  background:var(--ink2);border:1.5px solid var(--t3);border-radius:12px;
+  font-family:'Outfit',sans-serif;font-size:clamp(14px,2vw,15px);color:var(--t1);
+  transition:border-color .3s;outline:none;cursor:pointer;
+  -webkit-appearance:none;appearance:none;
+  background-image:url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23D4A529' stroke-width='2'%3e%3cpath stroke-linecap='round' stroke-linejoin='round' d='M19 9l-7 7-7-7'/%3e%3c/svg%3e");
+  background-repeat:no-repeat;background-position:right 14px center;background-size:16px;
+  padding-right:42px;
+}
+.fs-sel:focus{border-color:var(--g);box-shadow:0 0 0 4px rgba(212,165,41,.08);}
+.fs-sel option{background:var(--ink2);color:var(--t1);}
+.f2col{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+@media(max-width:480px){.f2col{grid-template-columns:1fr;}}
+.fsub{
+  width:100%;padding:clamp(14px,2vw,17px);margin-top:6px;
+  background:linear-gradient(135deg,var(--g),var(--gl));
+  border:none;border-radius:clamp(10px,2vw,14px);cursor:pointer;
+  font-family:'Outfit',sans-serif;
+  font-size:clamp(12px,2vw,14px);font-weight:800;letter-spacing:2px;text-transform:uppercase;color:#000;
+  transition:transform .25s,box-shadow .25s;box-shadow:0 0 28px rgba(212,165,41,.3);
+}
+.fsub:hover{transform:translateY(-2px);box-shadow:0 8px 40px rgba(212,165,41,.45);}
+.fsub:disabled{opacity:.6;cursor:not-allowed;transform:none;}
+.fprivacy{text-align:center;margin-top:14px;font-size:11px;color:var(--t3);line-height:1.7;}
+.fprivacy a{color:var(--t2);text-decoration:none;transition:color .2s;}
+.fprivacy a:hover{color:var(--g);}
+/* Success */
+.form-success{display:none;text-align:center;padding:16px 0;}
+.form-success.show{display:block;}
+.success-ico{font-size:64px;margin-bottom:18px;animation:bounceIn .6s ease both;}
+@keyframes bounceIn{0%{transform:scale(0)}65%{transform:scale(1.15)}100%{transform:scale(1)}}
+.success-t{font-size:clamp(20px,3vw,26px);font-weight:900;margin-bottom:10px;}
+.success-d{font-size:14px;color:var(--t2);line-height:1.7;}
+.success-note{margin-top:24px;padding:18px;background:var(--gdim);border:1px solid rgba(212,165,41,.18);border-radius:14px;}
+.success-note-t{font-size:12px;font-weight:700;color:var(--g);margin-bottom:6px;}
+.success-note-d{font-size:12px;color:var(--t2);line-height:1.7;}
+
+/* ═══════════════════════════════════════
+   FOOTER
+═══════════════════════════════════════ */
+footer{
+  background:var(--ink);border-top:1px solid rgba(212,165,41,.06);
+  padding:clamp(36px,5vh,56px) 5vw;
+}
+.footer-inner{
+  max-width:1200px;margin:0 auto;
+  display:flex;align-items:center;justify-content:space-between;
+  flex-wrap:wrap;gap:20px;
+}
+.footer-logo{font-family:'Bebas Neue',sans-serif;font-size:24px;letter-spacing:3px;background:linear-gradient(90deg,var(--g),var(--gl));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.footer-logo span{color:var(--t3);-webkit-text-fill-color:var(--t3);}
+.footer-links{display:flex;gap:clamp(16px,3vw,28px);flex-wrap:wrap;}
+.footer-links a{font-size:11px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--t3);text-decoration:none;transition:color .2s;}
+.footer-links a:hover{color:var(--g);}
+.footer-copy{font-size:11px;color:var(--t3);letter-spacing:.5px;}
 </style>
 </head>
 <body>
 
-<!-- ══════════════ HERO ══════════════ -->
-<section class="hero">
-  <div class="hero-glow"></div>
-  <div class="hero-glow2"></div>
-
-  <div class="hero-badge">🥋 Sistema Elite de Gestão · Jiu Jitsu Academy</div>
-
-  <h1 class="hero-title">JJA<br>SYSTEM</h1>
-  <p class="hero-sub">O Futuro da sua Academia começa aqui</p>
-
-  <p class="hero-desc">
-    A plataforma <strong>mais completa e inteligente</strong> do Brasil para gestão de academias de Jiu Jitsu.<br>
-    Check-in digital, gamificação, gestão de alunos, campeonatos e muito mais — tudo em <strong>um único sistema</strong>.
-  </p>
-
-  <div class="hero-cta-row">
-    <a class="btn-gold" href="#modulos">⚡ Ver Todos os Módulos</a>
-    <a class="btn-ghost" href="#admin">🔐 Painel Admin</a>
+<!-- ══════ NAV ══════ -->
+<nav id="nav">
+  <a href="#" class="logo">IDE<span>Systems</span></a>
+  <div class="nav-links">
+    <a href="#story">Como Funciona</a>
+    <a href="#ranking">Ranking</a>
+    <a href="#telas">Telas</a>
+    <a href="#modulos">Módulos</a>
+    <a href="#seguranca">Segurança</a>
+    <a href="#cadastro" class="nav-cta">Solicitar Demo</a>
   </div>
+  <button class="burger" id="burger" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+<div class="mobile-menu" id="mobile-menu">
+  <a href="#story" onclick="closeMob()">Como Funciona</a>
+  <a href="#ranking" onclick="closeMob()">Ranking</a>
+  <a href="#telas" onclick="closeMob()">Telas do Sistema</a>
+  <a href="#modulos" onclick="closeMob()">Módulos</a>
+  <a href="#seguranca" onclick="closeMob()">Segurança</a>
+  <a href="#cadastro" class="mob-cta" onclick="closeMob()">🥋 Solicitar Demo Gratuita</a>
+</div>
 
-  <div class="hero-stats">
-    <div>
-      <div class="h-stat-num">10+</div>
-      <div class="h-stat-lbl">Módulos Completos</div>
+<!-- ══════ HERO ══════ -->
+<section class="hero" id="top">
+  <div class="hero-mesh"></div>
+  <div class="hero-grid-bg"></div>
+  <div class="hero-inner">
+    <div class="hero-copy">
+      <div class="badge-pill"><div class="badge-dot"></div>Sistema Elite · Academias de Jiu Jitsu</div>
+      <h1 class="hero-h">
+        <span class="w1">GESTÃO</span>
+        <span class="w2">ELITE</span>
+        <span class="w3">Do tatame ao digital</span>
+      </h1>
+      <p class="hero-desc">A plataforma <strong>mais completa do Brasil</strong> para academias de Jiu Jitsu. Check-in digital, evolução de faixas, ranking de presenças, campeonatos e painel admin — <strong>tudo em um único sistema.</strong></p>
+      <div class="hero-btns">
+        <a href="#cadastro" class="btn-primary">⚡ Solicitar Demo Gratuita</a>
+        <a href="#telas" class="btn-outline">→ Ver o Sistema</a>
+      </div>
+      <div class="hero-kpis">
+        <div class="hkpi"><div class="hkpi-n">10+</div><div class="hkpi-l">Módulos</div></div>
+        <div class="hkpi"><div class="hkpi-n">360°</div><div class="hkpi-l">Gestão</div></div>
+        <div class="hkpi"><div class="hkpi-n">100%</div><div class="hkpi-l">Mobile</div></div>
+      </div>
     </div>
-    <div>
-      <div class="h-stat-num">360°</div>
-      <div class="h-stat-lbl">Gestão Total</div>
-    </div>
-    <div>
-      <div class="h-stat-num">100%</div>
-      <div class="h-stat-lbl">Digital & Seguro</div>
-    </div>
-    <div>
-      <div class="h-stat-num">iOS</div>
-      <div class="h-stat-lbl">+ Android Ready</div>
-    </div>
-  </div>
 
-  <div class="scroll-ind">
-    <span>Role para ver</span>
-    <div>▼</div>
+    <!-- PHONE CLUSTER -->
+    <div class="hero-phones">
+      <div class="float-stat fs1"><div class="fs-ico">🔥</div><div class="fs-n">+247</div><div class="fs-l">Check-ins Hoje</div></div>
+      <div class="float-stat fs2"><div class="fs-ico">🏆</div><div class="fs-n">4°</div><div class="fs-l">Sua Posição</div></div>
+
+      <!-- MAIN PHONE: Check-in -->
+      <div class="phone-main">
+        <div class="phone-shell">
+          <div class="p-notch"><div class="p-cam"></div><div class="p-spk"></div></div>
+          <div class="p-screen">
+            <!-- HEADER -->
+            <div class="ah">
+              <div class="ah-logo">IDE SYSTEMS</div>
+              <div style="display:flex;align-items:center;gap:5px;">
+                <div class="ah-tag">Checkin</div>
+                <div class="ah-av">C</div>
+              </div>
+            </div>
+            <!-- SUBTAB BAR -->
+            <div class="stab-bar">
+              <button class="stab-btn on">✍️ Check-in</button>
+              <button class="stab-btn">📅 Cronograma</button>
+              <button class="stab-btn">📈 Evolução</button>
+              <button class="stab-btn">📅 Presenças</button>
+            </div>
+            <div class="sc1">
+              <!-- ALARM -->
+              <div class="alarm-card">
+                <div class="alarm-bell">🔔</div>
+                <div class="alarm-body">
+                  <div class="alarm-title">Hoje tem treino! 🤙</div>
+                  <div class="alarm-sub">Bora pro tatame — CT Central</div>
+                  <div class="alarm-times">
+                    <div class="at-pill">18:30</div>
+                    <div class="at-pill next">19:30 ★</div>
+                    <div class="at-pill">21:00</div>
+                  </div>
+                </div>
+              </div>
+              <!-- PROFILE -->
+              <div class="prof-bar">
+                <div class="prof-av">C</div>
+                <div>
+                  <div class="prof-name">Carlos Mendes</div>
+                  <div class="prof-meta">Faixa <strong>Roxa · 2º Grau</strong></div>
+                </div>
+                <div class="prof-count"><div class="pc-n">89</div><div class="pc-l">Treinos</div></div>
+              </div>
+              <!-- TEMA -->
+              <div class="tema-card">
+                <div class="tema-badge">📚 Tema de Hoje</div>
+                <div class="tema-title">Triângulo da Guarda Fechada</div>
+                <div class="tema-meta">Prof. Roberto · CT Central · 19:30</div>
+              </div>
+              <!-- CT -->
+              <div class="ct-sec-title">Onde você treinou hoje?</div>
+              <div class="ct-list">
+                <div class="ct-option sel">
+                  <div class="cto-name">✓ CT Central</div>
+                  <div class="cto-time">19:30 · 21:00</div>
+                </div>
+                <div class="ct-option">
+                  <div class="cto-name">CT Norte</div>
+                  <div class="cto-time">18:00 · 20:00</div>
+                </div>
+              </div>
+              <button class="confirm-btn">✓ CONFIRMAR PRESENÇA</button>
+            </div>
+            <!-- BOTTOM NAV -->
+            <div class="abn">
+              <div class="abn-b on"><span class="ico">🥋</span><span class="lbl" style="color:var(--g);">BJJ</span></div>
+              <div class="abn-b"><span class="ico">🏋️</span><span class="lbl">Físico</span></div>
+              <div class="abn-b"><span class="ico">🏆</span><span class="lbl">Rank</span></div>
+              <div class="abn-b"><span class="ico">🎮</span><span class="lbl">Jogos</span></div>
+              <div class="abn-b"><span class="ico">👤</span><span class="lbl">Perfil</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- BACK PHONE: Ranking -->
+      <div class="phone-back">
+        <div class="phone-shell teal-shell">
+          <div class="p-notch"><div class="p-cam"></div><div class="p-spk"></div></div>
+          <div class="p-screen">
+            <div class="ah">
+              <div class="ah-logo" style="background:linear-gradient(90deg,var(--teal),#5eead4);-webkit-background-clip:text;background-clip:text;">🏆 RANKING</div>
+              <div style="font-size:8px;font-weight:700;color:var(--g);">Este Mês</div>
+            </div>
+            <div style="padding:8px;">
+              <div class="pod-mini">
+                <div class="pm-col pm2"><div class="pm-medal">🥈</div><div class="pm-av">A</div><div class="pm-name">Ana Lima</div><div class="pm-count">25</div><div class="pm-plat"></div></div>
+                <div class="pm-col pm1"><div class="pm-medal">🥇</div><div class="pm-av">C</div><div class="pm-name">Carlos M.</div><div class="pm-count">28</div><div class="pm-plat"></div></div>
+                <div class="pm-col pm3"><div class="pm-medal">🥉</div><div class="pm-av">P</div><div class="pm-name">Pedro C.</div><div class="pm-count">22</div><div class="pm-plat"></div></div>
+              </div>
+              <div class="rr"><div class="rr-pos">4</div><div class="rr-av">J</div><div class="rr-i"><div class="rr-name">João S.</div><div class="rr-belt b-blue">Azul</div></div><div class="rr-count">19</div></div>
+              <div class="rr"><div class="rr-pos">5</div><div class="rr-av">M</div><div class="rr-i"><div class="rr-name">Marina S.</div><div class="rr-belt b-purple">Roxa</div></div><div class="rr-count">17</div></div>
+              <div class="rr"><div class="rr-pos">6</div><div class="rr-av">L</div><div class="rr-i"><div class="rr-name">Lucas R.</div><div class="rr-belt b-brown">Marrom</div></div><div class="rr-count">15</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </section>
 
-<!-- ══════════════ MARQUEE BAND ══════════════ -->
-<div class="band">
-  <div class="band-inner">
-    <span class="band-item">CHECK-IN DIGITAL</span>
-    <span class="band-item">✦</span>
-    <span class="band-item">RANKING EM TEMPO REAL</span>
-    <span class="band-item">✦</span>
-    <span class="band-item">GESTÃO DE GRADUAÇÕES</span>
-    <span class="band-item">✦</span>
-    <span class="band-item">MODO KIDS</span>
-    <span class="band-item">✦</span>
-    <span class="band-item">CAMPEONATO INTEGRADO</span>
-    <span class="band-item">✦</span>
-    <span class="band-item">PREPARAÇÃO FÍSICA</span>
-    <span class="band-item">✦</span>
-    <span class="band-item">GAMIFICAÇÃO</span>
-    <span class="band-item">✦</span>
-    <span class="band-item">100% SEGURO</span>
-    <span class="band-item">✦</span>
-    <!-- repeat -->
-    <span class="band-item">CHECK-IN DIGITAL</span>
-    <span class="band-item">✦</span>
-    <span class="band-item">RANKING EM TEMPO REAL</span>
-    <span class="band-item">✦</span>
-    <span class="band-item">GESTÃO DE GRADUAÇÕES</span>
-    <span class="band-item">✦</span>
-    <span class="band-item">MODO KIDS</span>
-    <span class="band-item">✦</span>
-    <span class="band-item">CAMPEONATO INTEGRADO</span>
-    <span class="band-item">✦</span>
-    <span class="band-item">PREPARAÇÃO FÍSICA</span>
-    <span class="band-item">✦</span>
-    <span class="band-item">GAMIFICAÇÃO</span>
-    <span class="band-item">✦</span>
-    <span class="band-item">100% SEGURO</span>
-    <span class="band-item">✦</span>
+<!-- MARQUEE -->
+<div class="marquee-wrap">
+  <div class="marquee-track">
+    <span class="mi">Check-in Digital</span><span class="mi">✦</span>
+    <span class="mi">Ranking de Presenças</span><span class="mi">✦</span>
+    <span class="mi">Evolução de Faixas IBJJF</span><span class="mi">✦</span>
+    <span class="mi">Modo Kids Automático</span><span class="mi">✦</span>
+    <span class="mi">Painel Admin Completo</span><span class="mi">✦</span>
+    <span class="mi">Gamificação & Quiz</span><span class="mi">✦</span>
+    <span class="mi">Multi CT</span><span class="mi">✦</span>
+    <span class="mi">100% Mobile</span><span class="mi">✦</span>
+    <span class="mi">Check-in Digital</span><span class="mi">✦</span>
+    <span class="mi">Ranking de Presenças</span><span class="mi">✦</span>
+    <span class="mi">Evolução de Faixas IBJJF</span><span class="mi">✦</span>
+    <span class="mi">Modo Kids Automático</span><span class="mi">✦</span>
+    <span class="mi">Painel Admin Completo</span><span class="mi">✦</span>
+    <span class="mi">Gamificação & Quiz</span><span class="mi">✦</span>
+    <span class="mi">Multi CT</span><span class="mi">✦</span>
+    <span class="mi">100% Mobile</span><span class="mi">✦</span>
   </div>
 </div>
 
-<!-- ══════════════ PREVIEW PHONES ══════════════ -->
-<section style="background:var(--bg2);padding:80px 24px;">
-  <div class="container">
-    <div style="text-align:center;">
-      <span class="section-eyebrow">Interface</span>
-      <h2 class="section-title" style="text-align:center;">Experiência <em>Premium</em><br>para Aluno e Professor</h2>
-      <p class="section-subtitle" style="margin:0 auto;text-align:center;">Design dark e elegante. Fluido em qualquer dispositivo. Feito para quem vive o Jiu Jitsu.</p>
+<!-- ══════ STORY — TATAME ══════ -->
+<section class="sec story-bg" id="story">
+  <div class="wrap">
+    <div style="text-align:center;margin-bottom:clamp(40px,6vh,72px);">
+      <span class="eyebrow r">O Momento que Importa</span>
+      <h2 class="sh r" data-d="1" style="text-align:center;">Treino terminou.<br><em>Check-in feito.</em></h2>
+      <p class="s-sub r" data-d="2" style="margin:0 auto;text-align:center;">Seus alunos saem do tatame, abrem o app em segundos e confirmam a presença. Simples assim. Todo treino registrado, todo progresso valorizado.</p>
     </div>
-
-    <div class="phone-wrap">
-
-      <!-- PHONE 1: CHECK-IN -->
-      <div>
-        <div class="phone">
-          <div class="phone-screen">
-            <div class="ph-header">
-              <div class="ph-logo">JIU JITSU ACADEMY</div>
-              <div class="ph-avatar">J</div>
-            </div>
-            <div class="ph-card">
-              <div class="ph-card-title">✍️ Fazer Check-in</div>
-              <div class="ph-card-sub">João Silva · Faixa Azul</div>
-              <div class="ph-stat-row">
-                <div class="ph-stat">47 <span>Treinos</span></div>
-                <div class="ph-stat" style="font-size:11px;">🔵<span>Azul</span></div>
+    <div class="story-grid">
+      <!-- VISUAL SCENE -->
+      <div class="r" data-d="1">
+        <div class="tatame-card">
+          <!-- Athletes after training -->
+          <div class="tatame-visual">
+            <div class="athlete checked">
+              <div class="athlete-body">
+                <div class="check-badge">✓</div>
+                <div class="athlete-gi">🥋</div>
+                <div class="athlete-name">Carlos</div>
+                <div class="athlete-belt b-purple">Roxa</div>
               </div>
+              <div class="mat-label gold">✓ Check-in</div>
             </div>
-            <div class="ph-card" style="border-color:rgba(212,165,41,0.3);">
-              <div class="ph-card-title" style="color:var(--gold);">📍 Selecione seu CT</div>
-              <div style="display:flex;flex-direction:column;gap:4px;margin-top:6px;">
-                <div style="background:var(--gold-dim);border:1px solid var(--gold);border-radius:6px;padding:5px 8px;font-size:8px;font-weight:700;color:var(--gold);">✓ CT Central</div>
-                <div style="background:var(--bg3);border:1px solid var(--text3);border-radius:6px;padding:5px 8px;font-size:8px;color:var(--text2);">CT Norte</div>
+            <div class="athlete checked">
+              <div class="athlete-body">
+                <div class="check-badge">✓</div>
+                <div class="athlete-gi">🥋</div>
+                <div class="athlete-name">Ana</div>
+                <div class="athlete-belt b-blue">Azul</div>
               </div>
+              <div class="mat-label gold">✓ Check-in</div>
             </div>
-            <button class="ph-btn">🥋 Confirmar Check-in</button>
-            <div class="ph-nav">
-              <div class="ph-nav-item active"><span style="font-size:14px;">🥋</span><span style="color:var(--gold);">BJJ</span></div>
-              <div class="ph-nav-item"><span style="font-size:14px;">🏋️</span><span>Físico</span></div>
-              <div class="ph-nav-item"><span style="font-size:14px;">🏆</span><span>Rank</span></div>
-              <div class="ph-nav-item"><span style="font-size:14px;">🎮</span><span>Jogos</span></div>
-              <div class="ph-nav-item"><span style="font-size:14px;">👤</span><span>Perfil</span></div>
+            <div class="athlete checked">
+              <div class="athlete-body">
+                <div class="check-badge">✓</div>
+                <div class="athlete-gi">🥋</div>
+                <div class="athlete-name">Pedro</div>
+                <div class="athlete-belt b-brown">Marrom</div>
+              </div>
+              <div class="mat-label gold">✓ Check-in</div>
+            </div>
+            <div class="athlete">
+              <div class="athlete-body">
+                <div class="athlete-gi">🥋</div>
+                <div class="athlete-name">Lucas</div>
+                <div class="athlete-belt b-white">Branca</div>
+              </div>
+              <div class="mat-label">Fazendo...</div>
+            </div>
+          </div>
+          <!-- Live checkin feed -->
+          <div class="checkin-live">
+            <div class="cl-header">
+              <div class="cl-title">📍 CT Central — Ao Vivo</div>
+              <div class="cl-live">Live</div>
+            </div>
+            <div class="cl-rows">
+              <div class="cl-row" style="animation-delay:.1s">
+                <div class="cl-av">C</div>
+                <div class="cl-info"><div class="cl-name">Carlos Mendes</div><div class="cl-meta">Faixa Roxa · 89 treinos no total</div></div>
+                <div class="cl-time">19:47</div>
+                <div class="cl-check">✅</div>
+              </div>
+              <div class="cl-row" style="animation-delay:.3s">
+                <div class="cl-av">A</div>
+                <div class="cl-info"><div class="cl-name">Ana Lima</div><div class="cl-meta">Faixa Azul · 3° no ranking do mês</div></div>
+                <div class="cl-time">19:49</div>
+                <div class="cl-check">✅</div>
+              </div>
+              <div class="cl-row" style="animation-delay:.5s">
+                <div class="cl-av">P</div>
+                <div class="cl-info"><div class="cl-name">Pedro Costa</div><div class="cl-meta">Faixa Marrom · Exame próximo</div></div>
+                <div class="cl-time">19:51</div>
+                <div class="cl-check">✅</div>
+              </div>
             </div>
           </div>
         </div>
-        <div class="ph-label">Módulo Check-in</div>
       </div>
-
-      <!-- PHONE 2: RANKING -->
-      <div>
-        <div class="phone">
-          <div class="phone-screen">
-            <div class="ph-header">
-              <div class="ph-logo">🏆 RANKING</div>
-              <div style="font-size:8px;color:var(--gold);font-weight:700;">Este Mês</div>
+      <!-- COPY -->
+      <div class="story-copy r" data-d="2">
+        <h3 style="font-family:'Bebas Neue',sans-serif;font-size:clamp(28px,4vw,44px);line-height:1;letter-spacing:1px;margin-bottom:16px;">Cada treino conta.<br><span style="color:var(--g);">O sistema prova.</span></h3>
+        <p style="font-size:15px;color:var(--t2);line-height:1.8;margin-bottom:8px;">Com o IDESystems, cada ida ao tatame é registrada, visível e valorizada. O aluno vê seu crescimento em tempo real — e isso muda tudo.</p>
+        <div class="story-points">
+          <div class="sp">
+            <div class="sp-ico">⚡</div>
+            <div>
+              <div class="sp-title">Check-in em 2 toques</div>
+              <div class="sp-desc">O aluno seleciona o CT, confirma a presença. Registro instantâneo. Sem papel, sem erro, sem fila.</div>
             </div>
-            <div style="display:flex;flex-direction:column;gap:2px;">
-              <div class="ph-rank-item" style="padding-bottom:6px;">
-                <div class="ph-rank-pos">🥇</div>
-                <div class="ph-rank-name">Carlos Mendes</div>
-                <div class="ph-rank-count">28 treinos</div>
-              </div>
-              <div class="ph-rank-item">
-                <div class="ph-rank-pos">🥈</div>
-                <div class="ph-rank-name">Ana Lima</div>
-                <div class="ph-rank-count">25 treinos</div>
-              </div>
-              <div class="ph-rank-item">
-                <div class="ph-rank-pos">🥉</div>
-                <div class="ph-rank-name">Pedro Costa</div>
-                <div class="ph-rank-count">22 treinos</div>
-              </div>
-              <div class="ph-rank-item">
-                <div class="ph-rank-pos" style="color:var(--text2);">4</div>
-                <div class="ph-rank-name">João Silva</div>
-                <div class="ph-rank-count">19 treinos</div>
-              </div>
-              <div class="ph-rank-item">
-                <div class="ph-rank-pos" style="color:var(--text2);">5</div>
-                <div class="ph-rank-name">Marina S.</div>
-                <div class="ph-rank-count">17 treinos</div>
-              </div>
-              <div class="ph-rank-item" style="border:none;">
-                <div class="ph-rank-pos" style="color:var(--text2);">6</div>
-                <div class="ph-rank-name">Lucas R.</div>
-                <div class="ph-rank-count">15 treinos</div>
-              </div>
+          </div>
+          <div class="sp">
+            <div class="sp-ico">✋</div>
+            <div>
+              <div class="sp-title">Esqueceu? Sem problema.</div>
+              <div class="sp-desc">Aluno esqueceu de fazer check-in? Abre o app, solicita a presença com horário e observação. Professor aprova com um toque.</div>
             </div>
-            <div class="ph-nav">
-              <div class="ph-nav-item"><span style="font-size:14px;">🥋</span><span>BJJ</span></div>
-              <div class="ph-nav-item"><span style="font-size:14px;">🏋️</span><span>Físico</span></div>
-              <div class="ph-nav-item active"><span style="font-size:14px;">🏆</span><span style="color:var(--gold);">Rank</span></div>
-              <div class="ph-nav-item"><span style="font-size:14px;">🎮</span><span>Jogos</span></div>
-              <div class="ph-nav-item"><span style="font-size:14px;">👤</span><span>Perfil</span></div>
+          </div>
+          <div class="sp">
+            <div class="sp-ico">📅</div>
+            <div>
+              <div class="sp-title">Calendário visual de presenças</div>
+              <div class="sp-desc">O aluno vê exatamente quais dias treinou, faltou ou o dia era de treino. Histórico completo, motivação visual.</div>
+            </div>
+          </div>
+          <div class="sp">
+            <div class="sp-ico">🔔</div>
+            <div>
+              <div class="sp-title">Alarme: Hoje tem treino!</div>
+              <div class="sp-desc">O sistema avisa o aluno quando está na hora de ir pro tatame. Nunca mais um treino esquecido.</div>
             </div>
           </div>
         </div>
-        <div class="ph-label">Módulo Ranking</div>
-      </div>
-
-      <!-- PHONE 3: ADMIN -->
-      <div>
-        <div class="phone">
-          <div class="phone-screen" style="background:#081210;">
-            <div class="ph-header">
-              <div class="ph-logo" style="background:linear-gradient(135deg,var(--teal),#5eead4);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;">⚙️ ADMINISTRADOR</div>
-            </div>
-            <div class="ph-adm-stat">
-              <div style="display:flex;justify-content:space-between;align-items:flex-start;">
-                <div>
-                  <div class="ph-adm-num">148</div>
-                  <div class="ph-adm-lbl">Alunos Ativos</div>
-                </div>
-                <div>
-                  <div class="ph-adm-num" style="color:var(--gold);">32</div>
-                  <div class="ph-adm-lbl">Check-ins Hoje</div>
-                </div>
-              </div>
-            </div>
-            <div style="background:rgba(232,93,93,.08);border:1px solid rgba(232,93,93,.2);border-radius:10px;padding:10px;margin-bottom:6px;">
-              <div style="font-size:8px;font-weight:700;color:var(--coral);margin-bottom:4px;">⏳ 3 Presenças Pendentes</div>
-              <div style="font-size:7px;color:var(--text2);">João S. · Esquecimento · 18:30</div>
-              <div class="ph-adm-actions">
-                <button class="ph-adm-btn-g">✓ Aprovar</button>
-                <button class="ph-adm-btn-r">✕ Rejeitar</button>
-              </div>
-            </div>
-            <div style="background:rgba(20,184,166,.06);border:1px solid rgba(20,184,166,.15);border-radius:10px;padding:8px;">
-              <div style="font-size:7px;font-weight:700;color:var(--teal);margin-bottom:4px;">🆕 2 Novos Alunos Hoje</div>
-              <div style="font-size:7px;color:var(--text2);">Maria O. · Ana C.</div>
-            </div>
-          </div>
-        </div>
-        <div class="ph-label">Painel Admin</div>
-      </div>
-
-    </div>
-  </div>
-</section>
-
-<!-- ══════════════ FEATURE STRIP ══════════════ -->
-<section>
-  <div class="container">
-    <span class="section-eyebrow reveal">Por que o JJA System?</span>
-    <h2 class="section-title reveal">A <em>tecnologia</em> que sua<br>academia merecia</h2>
-    <p class="section-subtitle reveal">Construído exclusivamente para o mundo do Jiu Jitsu. Cada detalhe pensado para o dia a dia da academia.</p>
-
-    <div class="feature-strip">
-      <div class="feat-card reveal">
-        <span class="feat-icon">⚡</span>
-        <div class="feat-name">Check-in em Segundos</div>
-        <div class="feat-desc">Aluno faz o check-in em 2 toques. Sem papel, sem fila, sem erro. Registro instantâneo e rastreável.</div>
-        <div class="feat-tag">Produtividade</div>
-      </div>
-      <div class="feat-card reveal">
-        <span class="feat-icon">🏆</span>
-        <div class="feat-name">Ranking Automático</div>
-        <div class="feat-desc">Ranking mensal e anual gerado em tempo real, por CT ou geral. Motivação que move a academia.</div>
-        <div class="feat-tag">Engajamento</div>
-      </div>
-      <div class="feat-card reveal">
-        <span class="feat-icon">🔐</span>
-        <div class="feat-name">Segurança Máxima</div>
-        <div class="feat-desc">Token de sessão criptografado, expiração automática, autenticação por e-mail. Seus dados protegidos.</div>
-        <div class="feat-tag">Segurança</div>
-      </div>
-      <div class="feat-card reveal">
-        <span class="feat-icon">🎮</span>
-        <div class="feat-name">Gamificação Total</div>
-        <div class="feat-desc">Quiz, Jogo da Memória, XP, conquistas e ranking de jogos. O aluno aprende brincando e volta sempre.</div>
-        <div class="feat-tag">Retenção</div>
-      </div>
-      <div class="feat-card reveal">
-        <span class="feat-icon">👶</span>
-        <div class="feat-name">Modo Kids Exclusivo</div>
-        <div class="feat-desc">Interface adaptada automaticamente para alunos menores de idade. Seguro, colorido e intuitivo.</div>
-        <div class="feat-tag">Inclusão</div>
-      </div>
-      <div class="feat-card reveal">
-        <span class="feat-icon">📱</span>
-        <div class="feat-name">Mobile First</div>
-        <div class="feat-desc">Perfeito em qualquer celular. iOS e Android. PWA instalável. Funciona como app nativo.</div>
-        <div class="feat-tag">Acessibilidade</div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ══════════════ MODULES ══════════════ -->
-<section class="modules-bg" id="modulos">
-  <div class="container">
-    <span class="section-eyebrow reveal">Módulos do Sistema</span>
-    <h2 class="section-title reveal"><em>Tudo</em> que sua academia<br>precisa em um lugar só</h2>
-    <p class="section-subtitle reveal">Módulos ativos e configuráveis. Você decide o que exibir para cada aluno. Controle total.</p>
+<!-- ══════ RANKING — MOTIVAÇÃO ══════ -->
+<section class="sec rank-bg" id="ranking">
+  <div class="wrap">
+    <span class="eyebrow coral r">🔥 Ranking de Presenças</span>
+    <h2 class="sh r" data-d="1">Quem treina mais,<br><em>chega mais longe.</em></h2>
+    <p class="s-sub r" data-d="2">O ranking de presenças transforma frequência em competição saudável. Seu aluno não falta porque ele não quer cair no ranking.</p>
+  </div>
 
-    <div class="modules-grid">
-
-      <!-- BJJ -->
-      <div class="module-card mc-gold reveal">
-        <div class="module-card-header">
-          <div class="module-icon-box">🥋</div>
+  <div class="wrap" style="margin-top:0;">
+    <div class="rank-hero r" data-d="1">
+      <div class="rank-hero-top">
+        <div style="display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:20px;">
           <div>
-            <div class="module-card-title">Módulo BJJ</div>
-            <div style="font-size:11px;color:var(--text2);">Treino Principal</div>
+            <div class="rank-hero-title">🏆 Ranking Mensal — Março 2025</div>
+            <div class="rank-hero-sub">CT Central + CT Norte + CT Sul · Todos os alunos</div>
           </div>
-          <div class="module-badge">Core</div>
+          <div style="display:flex;gap:8px;">
+            <div style="padding:6px 14px;background:var(--gdim);border:1px solid rgba(212,165,41,.2);border-radius:50px;font-size:10px;font-weight:700;color:var(--g);">📅 Este Mês</div>
+            <div style="padding:6px 14px;background:var(--ink3);border:1px solid var(--t3);border-radius:50px;font-size:10px;font-weight:700;color:var(--t2);">📆 Este Ano</div>
+          </div>
         </div>
-        <div class="module-desc">O coração do sistema. Tudo o que o aluno precisa para acompanhar sua evolução no tatame — do check-in ao exame de faixa.</div>
-        <ul class="module-features">
-          <li><strong>Check-in Digital</strong> — Seleciona o CT, confirma presença com um toque</li>
-          <li><strong>Solicitação de Esquecimento</strong> — Aluno que esqueceu de fazer check-in solicita aprovação do professor com horário e observação</li>
-          <li><strong>Cronograma de Aulas</strong> — Grade de treinos por CT e por dia da semana, com próximo treino destacado</li>
-          <li><strong>Tema da Aula do Dia</strong> — Card hero exibindo o conteúdo técnico de hoje</li>
-          <li><strong>Alarme de Treino</strong> — Sistema de alerta quando a hora do treino se aproxima</li>
-          <li><strong>Histórico de Presenças</strong> — Calendário visual com todos os dias que treinou</li>
-        </ul>
+      </div>
+
+      <!-- PODIUM -->
+      <div style="padding:clamp(24px,4vw,48px) clamp(20px,4vw,60px) 0;overflow:hidden;">
+        <div class="podium-row">
+          <div class="pod-col p2">
+            <div class="pod-rank-num silver">2</div>
+            <div class="pod-av">A</div>
+            <div class="pod-name">Ana Lima</div>
+            <div class="pod-belt b-blue">Azul</div>
+            <div class="pod-count">25 <span>treinos</span></div>
+            <div class="pod-plat"></div>
+          </div>
+          <div class="pod-col p1">
+            <div class="pod-rank-num gold">1</div>
+            <div class="pod-av">C</div>
+            <div class="pod-name">Carlos Mendes</div>
+            <div class="pod-belt b-purple">Roxa</div>
+            <div class="pod-count">28 <span>treinos</span></div>
+            <div class="pod-plat"></div>
+          </div>
+          <div class="pod-col p3">
+            <div class="pod-rank-num bronze">3</div>
+            <div class="pod-av">P</div>
+            <div class="pod-name">Pedro Costa</div>
+            <div class="pod-belt b-brown">Marrom</div>
+            <div class="pod-count">22 <span>treinos</span></div>
+            <div class="pod-plat"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- RANK LIST -->
+      <div class="rank-list">
+        <div class="rank-item">
+          <div class="ri-pos">4</div>
+          <div class="ri-av">J</div>
+          <div class="ri-info"><div class="ri-name">João Silva</div><div class="ri-sub">CT Central · Faixa Azul</div></div>
+          <div class="ri-bar-wrap"><div class="ri-bar-bg"><div class="ri-bar-fill" style="width:68%"></div></div></div>
+          <div class="ri-count">19</div>
+        </div>
+        <div class="rank-item">
+          <div class="ri-pos">5</div>
+          <div class="ri-av">M</div>
+          <div class="ri-info"><div class="ri-name">Marina Santos</div><div class="ri-sub">CT Norte · Faixa Roxa</div></div>
+          <div class="ri-bar-wrap"><div class="ri-bar-bg"><div class="ri-bar-fill" style="width:61%"></div></div></div>
+          <div class="ri-count">17</div>
+        </div>
+        <div class="rank-item">
+          <div class="ri-pos">6</div>
+          <div class="ri-av">L</div>
+          <div class="ri-info"><div class="ri-name">Lucas Rocha</div><div class="ri-sub">CT Sul · Faixa Marrom</div></div>
+          <div class="ri-bar-wrap"><div class="ri-bar-bg"><div class="ri-bar-fill" style="width:54%"></div></div></div>
+          <div class="ri-count">15</div>
+        </div>
+        <div class="rank-item">
+          <div class="ri-pos">7</div>
+          <div class="ri-av">F</div>
+          <div class="ri-info"><div class="ri-name">Felipe Moura</div><div class="ri-sub">CT Central · Faixa Azul</div></div>
+          <div class="ri-bar-wrap"><div class="ri-bar-bg"><div class="ri-bar-fill" style="width:46%"></div></div></div>
+          <div class="ri-count">13</div>
+        </div>
+        <div class="rank-item" style="border:none;">
+          <div class="ri-pos">8</div>
+          <div class="ri-av">R</div>
+          <div class="ri-info"><div class="ri-name">Rafael Duarte</div><div class="ri-sub">CT Norte · Faixa Branca</div></div>
+          <div class="ri-bar-wrap"><div class="ri-bar-bg"><div class="ri-bar-fill" style="width:39%"></div></div></div>
+          <div class="ri-count">11</div>
+        </div>
+      </div>
+
+      <!-- MOTIVATION BANNER -->
+      <div class="motivation-banner">
+        <div class="mb-icon">😤</div>
+        <div class="mb-text">
+          <div class="mb-title">Você está em 4° lugar. Carlos tem 9 treinos a mais.</div>
+          <div class="mb-desc">O aluno sabe exatamente onde está e o que precisa fazer para subir. Essa informação em tempo real é o que faz ele <strong style="color:var(--t1);">não faltar na próxima aula.</strong></div>
+        </div>
+        <a href="#cadastro" class="btn-primary" style="white-space:nowrap;font-size:11px;padding:12px 22px;">Quero isso →</a>
+      </div>
+    </div>
+
+    <!-- PSYCHO CARDS -->
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;margin-top:clamp(24px,3vh,40px);">
+      <div class="r" data-d="1" style="background:var(--ink2);border:1px solid var(--t3);border-radius:20px;padding:clamp(20px,3vw,28px);">
+        <div style="font-size:36px;margin-bottom:14px;">📈</div>
+        <div style="font-size:16px;font-weight:800;margin-bottom:8px;">Frequência vira troféu</div>
+        <div style="font-size:13px;color:var(--t2);line-height:1.7;">Cada check-in sobe o aluno no ranking. Quando a frequência vira pontuação, a ausência dói diferente.</div>
+      </div>
+      <div class="r" data-d="2" style="background:var(--ink2);border:1px solid var(--t3);border-radius:20px;padding:clamp(20px,3vw,28px);">
+        <div style="font-size:36px;margin-bottom:14px;">🥊</div>
+        <div style="font-size:16px;font-weight:800;margin-bottom:8px;">Competição saudável</div>
+        <div style="font-size:13px;color:var(--t2);line-height:1.7;">Ranking mensal e anual reiniciam o ciclo de motivação. Todo mês é uma nova chance de ser o número 1 da academia.</div>
+      </div>
+      <div class="r" data-d="3" style="background:var(--ink2);border:1px solid var(--t3);border-radius:20px;padding:clamp(20px,3vw,28px);">
+        <div style="font-size:36px;margin-bottom:14px;">🎯</div>
+        <div style="font-size:16px;font-weight:800;margin-bottom:8px;">Posição do aluno em destaque</div>
+        <div style="font-size:13px;color:var(--t2);line-height:1.7;">O app mostra a posição do aluno no ranking e o quanto falta para subir. Motivação clara, meta visível.</div>
+      </div>
+      <div class="r" data-d="4" style="background:var(--ink2);border:1px solid var(--t3);border-radius:20px;padding:clamp(20px,3vw,28px);">
+        <div style="font-size:36px;margin-bottom:14px;">🏅</div>
+        <div style="font-size:16px;font-weight:800;margin-bottom:8px;">Campeonato interno</div>
+        <div style="font-size:13px;color:var(--t2);line-height:1.7;">Configure campeonatos com pontuação especial por CT ou geral. Pódio, medalhas e tudo dentro do sistema.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════ SCREENS SHOWCASE ══════ -->
+<section class="sec screens-bg" id="telas">
+  <div class="wrap">
+    <span class="eyebrow r">Telas Reais do Sistema</span>
+    <h2 class="sh r" data-d="1">O app que seus<br>alunos vão <em>amar</em>.</h2>
+    <p class="s-sub r" data-d="2">Design dark premium, fluido em qualquer celular. Cada tela pensada para o atleta e o professor. Veja o sistema real.</p>
+
+    <!-- ROW 1 -->
+    <div class="screens-grid">
+
+      <!-- CHECK-IN -->
+      <div class="screen-frame r" data-d="1">
+        <div class="sf-inner">
+          <div class="sf-notch-bar"><div class="sf-notch-pill"></div></div>
+          <div class="ah"><div class="ah-logo">IDE SYSTEMS</div><div style="display:flex;align-items:center;gap:4px;"><div class="ah-tag">Checkin</div><div class="ah-av">C</div></div></div>
+          <div class="stab-bar"><button class="stab-btn on">✍️ Check-in</button><button class="stab-btn">📅 Cronograma</button><button class="stab-btn">📈 Evolução</button><button class="stab-btn">📅 Presenças</button></div>
+          <div class="sc1">
+            <div class="alarm-card"><div class="alarm-bell">🔔</div><div class="alarm-body"><div class="alarm-title">Hoje tem treino! 🤙</div><div class="alarm-sub">CT Central · Bora pro tatame!</div><div class="alarm-times"><div class="at-pill">18:30</div><div class="at-pill next">19:30 ★</div><div class="at-pill">21:00</div></div></div></div>
+            <div class="prof-bar"><div class="prof-av">C</div><div><div class="prof-name">Carlos Mendes</div><div class="prof-meta">Faixa <strong>Roxa · 2º Grau</strong></div></div><div class="prof-count"><div class="pc-n">89</div><div class="pc-l">Treinos</div></div></div>
+            <div class="tema-card"><div class="tema-badge">📚 TEMA DE HOJE</div><div class="tema-title">Triângulo da Guarda Fechada</div><div class="tema-meta">Prof. Roberto · CT Central · 19:30</div></div>
+            <div class="ct-sec-title">Onde você treinou hoje?</div>
+            <div class="ct-list">
+              <div class="ct-option sel"><div class="cto-name">✓ CT Central</div><div class="cto-time">19:30</div></div>
+              <div class="ct-option"><div class="cto-name">CT Norte</div><div class="cto-time">18:00</div></div>
+            </div>
+            <button class="confirm-btn">✓ CONFIRMAR PRESENÇA</button>
+          </div>
+          <div class="abn"><div class="abn-b on"><span class="ico">🥋</span><span class="lbl" style="color:var(--g);">BJJ</span></div><div class="abn-b"><span class="ico">🏋️</span><span class="lbl">Físico</span></div><div class="abn-b"><span class="ico">🏆</span><span class="lbl">Rank</span></div><div class="abn-b"><span class="ico">🎮</span><span class="lbl">Jogos</span></div><div class="abn-b"><span class="ico">👤</span><span class="lbl">Perfil</span></div></div>
+        </div>
+        <div class="sf-label gold">✍️ Check-in do Aluno</div>
       </div>
 
       <!-- EVOLUÇÃO -->
-      <div class="module-card mc-purple reveal">
-        <div class="module-card-header">
-          <div class="module-icon-box">📈</div>
-          <div>
-            <div class="module-card-title">Evolução & Graduação</div>
-            <div style="font-size:11px;color:var(--text2);">Jornada do Atleta</div>
+      <div class="screen-frame elevated r" data-d="2" style="border-color:rgba(212,165,41,.3);">
+        <div class="sf-inner">
+          <div class="sf-notch-bar"><div class="sf-notch-pill"></div></div>
+          <div class="ah"><div class="ah-logo">IDE SYSTEMS</div><div class="ah-av">C</div></div>
+          <div class="stab-bar"><button class="stab-btn">✍️ Check-in</button><button class="stab-btn">📅 Cronograma</button><button class="stab-btn on">📈 Evolução</button><button class="stab-btn">📅 Presenças</button></div>
+          <div class="sc2">
+            <div class="motiv-card"><div class="motiv-ico">🔥</div><div><div class="motiv-quote">"Consistência constrói campeões."</div><div class="motiv-sub">Continue firme no tatame</div></div></div>
+            <div class="belt-hero">
+              <div class="bh-row"><div class="bh-swatch"></div><div class="bh-info"><div class="bh-label">Faixa Atual</div><div class="bh-name">Roxa · 2º Grau</div><div class="bh-next">→ Próxima: Faixa Marrom</div></div><div style="font-size:22px;margin-left:auto;">🟣</div></div>
+              <div class="bh-prog-bg"><div class="bh-prog-fill" style="width:67%"></div></div>
+              <div class="bh-info-row"><div class="bh-pct">67% concluído</div><div class="bh-count">89/120 treinos</div></div>
+            </div>
+            <div class="freq-card"><div class="freq-header"><div class="freq-title">📊 Frequência do Semestre</div><div class="freq-pct">74%</div></div><div class="freq-bar-bg"><div class="freq-bar-fill" style="width:74%"></div></div><div class="freq-sub">89 de 120 aulas possíveis</div></div>
+            <div class="stats3"><div class="s3-item"><div class="s3-n">89</div><div class="s3-l">Treinos</div></div><div class="s3-item"><div class="s3-n">12</div><div class="s3-l">Mês</div></div><div class="s3-item"><div class="s3-n">2G</div><div class="s3-l">Graus</div></div></div>
+            <div class="seals-title">🏅 Selos de Grau — Evolução</div>
+            <div class="seals-row">
+              <div class="seal-item"><div class="seal-ring done">✅</div><div class="seal-lbl">10 treinos</div></div>
+              <div class="seal-item"><div class="seal-ring done">🔥</div><div class="seal-lbl">50 treinos</div></div>
+              <div class="seal-item"><div class="seal-ring next">⭐</div><div class="seal-lbl">100</div></div>
+              <div class="seal-item"><div class="seal-ring">🏆</div><div class="seal-lbl">200</div></div>
+              <div class="seal-item"><div class="seal-ring">💎</div><div class="seal-lbl">500</div></div>
+            </div>
+            <button class="exam-btn" style="margin-top:8px;">📅 Solicitar Exame Prático →</button>
           </div>
-          <div class="module-badge">Avançado</div>
+          <div class="abn"><div class="abn-b on"><span class="ico">🥋</span><span class="lbl" style="color:var(--g);">BJJ</span></div><div class="abn-b"><span class="ico">🏋️</span><span class="lbl">Físico</span></div><div class="abn-b"><span class="ico">🏆</span><span class="lbl">Rank</span></div><div class="abn-b"><span class="ico">🎮</span><span class="lbl">Jogos</span></div><div class="abn-b"><span class="ico">👤</span><span class="lbl">Perfil</span></div></div>
         </div>
-        <div class="module-desc">Acompanhe a evolução do aluno com faixas IBJJF, selos de progressão e sistema completo de exame prático.</div>
-        <ul class="module-features">
-          <li><strong>Selos de Progressão</strong> — Conquistas desbloqueadas por frequência e desempenho</li>
-          <li><strong>Faixa Atual & Próxima</strong> — Visualização da faixa IBJJF com barra de progresso</li>
-          <li><strong>Prova Teórica</strong> — Subtab exclusivo para conteúdo e avaliação teórica</li>
-          <li><strong>Prova Prática</strong> — Solicitação de exame prático diretamente pelo app</li>
-          <li><strong>Critérios de Aprovação</strong> — Checklist de requisitos para cada graduação</li>
-          <li><strong>Suporte Kids & Adulto</strong> — Faixas IBJJF para ambas as categorias</li>
-        </ul>
+        <div class="sf-label gold">📈 Evolução & Graduação</div>
       </div>
 
-      <!-- RANKING -->
-      <div class="module-card mc-gold reveal">
-        <div class="module-card-header">
-          <div class="module-icon-box">🏆</div>
-          <div>
-            <div class="module-card-title">Ranking & Campeonato</div>
-            <div style="font-size:11px;color:var(--text2);">Competição Saudável</div>
+      <!-- RANKING APP -->
+      <div class="screen-frame r" data-d="3" style="border-color:rgba(20,184,166,.18);">
+        <div class="sf-inner">
+          <div class="sf-notch-bar"><div class="sf-notch-pill"></div></div>
+          <div class="ah"><div class="ah-logo" style="background:linear-gradient(90deg,var(--g),var(--gl));-webkit-background-clip:text;background-clip:text;">🏆 RANKING</div><div style="font-size:8px;font-weight:700;color:var(--g);">Este Mês</div></div>
+          <div class="sc3">
+            <div class="my-stats-card"><div class="ms-title">Seus Treinos</div><div class="ms-row"><div class="ms-total"><div class="ms-total-n">19</div><div class="ms-total-l">treinos</div></div><div class="ms-grid"><div class="ms-ct">CT Central · 12</div><div class="ms-ct">CT Norte · 7</div></div></div></div>
+            <div class="period-row"><button class="pr-btn on">Este Mês</button><button class="pr-btn">Este Ano</button></div>
+            <div class="pod-mini">
+              <div class="pm-col pm2"><div class="pm-medal">🥈</div><div class="pm-av">A</div><div class="pm-name">Ana L.</div><div class="pm-count">25</div><div class="pm-plat"></div></div>
+              <div class="pm-col pm1"><div class="pm-medal">🥇</div><div class="pm-av">C</div><div class="pm-name">Carlos M.</div><div class="pm-count">28</div><div class="pm-plat"></div></div>
+              <div class="pm-col pm3"><div class="pm-medal">🥉</div><div class="pm-av">P</div><div class="pm-name">Pedro C.</div><div class="pm-count">22</div><div class="pm-plat"></div></div>
+            </div>
+            <div class="rr"><div class="rr-pos">4</div><div class="rr-av">J</div><div class="rr-i"><div class="rr-name">João S.</div><div class="rr-belt b-blue">Azul</div></div><div class="rr-count">19</div></div>
+            <div class="rr"><div class="rr-pos">5</div><div class="rr-av">M</div><div class="rr-i"><div class="rr-name">Marina S.</div><div class="rr-belt b-purple">Roxa</div></div><div class="rr-count">17</div></div>
+            <div class="rr" style="border:none;"><div class="rr-pos">6</div><div class="rr-av">L</div><div class="rr-i"><div class="rr-name">Lucas R.</div><div class="rr-belt b-brown">Marrom</div></div><div class="rr-count">15</div></div>
+            <!-- Minha posição destaque -->
+            <div class="pos-card"><div class="pc-pos">4°</div><div class="pc-arrow">↑</div><div class="pc-info"><div class="pc-title">Sua posição atual</div><div class="pc-sub">9 treinos para alcançar o 1° lugar</div></div></div>
           </div>
-          <div class="module-badge">Engajamento</div>
+          <div class="abn"><div class="abn-b"><span class="ico">🥋</span><span class="lbl">BJJ</span></div><div class="abn-b"><span class="ico">🏋️</span><span class="lbl">Físico</span></div><div class="abn-b on"><span class="ico">🏆</span><span class="lbl" style="color:var(--g);">Rank</span></div><div class="abn-b"><span class="ico">🎮</span><span class="lbl">Jogos</span></div><div class="abn-b"><span class="ico">👤</span><span class="lbl">Perfil</span></div></div>
         </div>
-        <div class="module-desc">Transforme a frequência em competição saudável. Pódio, pontuações e campeonatos internos que motivam o aluno a não faltar.</div>
-        <ul class="module-features">
-          <li><strong>Ranking Mensal & Anual</strong> — Filtre por período e veja quem está na frente</li>
-          <li><strong>Ranking por CT</strong> — Competição entre diferentes unidades da academia</li>
-          <li><strong>Campeonato Interno</strong> — Pontuação especial de campeonato com pódio e medalhas</li>
-          <li><strong>Chips de Filtro por CT</strong> — Aluno vê ranking geral ou do seu centro de treinamento</li>
-          <li><strong>Pódio Visual</strong> — 1º, 2º e 3º lugar em destaque com faixas exibidas</li>
-        </ul>
+        <div class="sf-label tl">🏆 Ranking de Presenças</div>
       </div>
 
-      <!-- PREPARAÇÃO FÍSICA -->
-      <div class="module-card mc-teal reveal">
-        <div class="module-card-header">
-          <div class="module-icon-box">🏋️</div>
-          <div>
-            <div class="module-card-title">Preparação Física</div>
-            <div style="font-size:11px;color:var(--text2);">Musculação & Condicionamento</div>
+    </div>
+
+    <!-- ROW 2 -->
+    <div class="screens-grid" style="margin-top:clamp(12px,2vw,24px);">
+
+      <!-- PRESENÇAS -->
+      <div class="screen-frame r" data-d="1">
+        <div class="sf-inner">
+          <div class="sf-notch-bar"><div class="sf-notch-pill"></div></div>
+          <div class="ah"><div class="ah-logo">IDE SYSTEMS</div><div class="ah-av">C</div></div>
+          <div class="stab-bar"><button class="stab-btn">✍️ Check-in</button><button class="stab-btn">📅 Cronograma</button><button class="stab-btn">📈 Evolução</button><button class="stab-btn on">📅 Presenças</button></div>
+          <div class="sc5">
+            <div class="prs-summary-row">
+              <div class="prs-s"><div class="prs-sn">12</div><div class="prs-sl">Treinos</div></div>
+              <div class="prs-s"><div class="prs-sn">2</div><div class="prs-sl">CTs</div></div>
+              <div class="prs-s"><div class="prs-sn">74%</div><div class="prs-sl">Frequência</div></div>
+            </div>
+            <div class="cal-wrap">
+              <div class="cal-nav"><div class="cal-arrow">◀</div><div class="cal-month">Março 2025</div><div class="cal-arrow">▶</div></div>
+              <div class="cal-hdr"><div class="cal-hdr-d">S</div><div class="cal-hdr-d">T</div><div class="cal-hdr-d">Q</div><div class="cal-hdr-d">Q</div><div class="cal-hdr-d">S</div><div class="cal-hdr-d">S</div><div class="cal-hdr-d">D</div></div>
+              <div class="cal-grid">
+                <div class="cal-day empty"></div><div class="cal-day empty"></div><div class="cal-day empty"></div><div class="cal-day empty"></div><div class="cal-day aula">1</div><div class="cal-day">2</div><div class="cal-day">3</div>
+                <div class="cal-day treinou">4</div><div class="cal-day">5</div><div class="cal-day treinou">6</div><div class="cal-day">7</div><div class="cal-day treinou">8</div><div class="cal-day">9</div><div class="cal-day">10</div>
+                <div class="cal-day treinou">11</div><div class="cal-day faltou">12</div><div class="cal-day treinou">13</div><div class="cal-day">14</div><div class="cal-day treinou">15</div><div class="cal-day">16</div><div class="cal-day">17</div>
+                <div class="cal-day treinou">18</div><div class="cal-day">19</div><div class="cal-day treinou">20</div><div class="cal-day">21</div><div class="cal-day treinou hoje">22</div><div class="cal-day">23</div><div class="cal-day">24</div>
+                <div class="cal-day aula">25</div><div class="cal-day">26</div><div class="cal-day aula">27</div><div class="cal-day">28</div><div class="cal-day aula">29</div><div class="cal-day">30</div><div class="cal-day">31</div>
+              </div>
+            </div>
+            <div class="prs-leg"><div class="prs-li"><div class="prs-dot" style="background:#4ade80;"></div>Treinou</div><div class="prs-li"><div class="prs-dot" style="background:#38bdf8;"></div>Próximo</div><div class="prs-li"><div class="prs-dot" style="background:#f87171;"></div>Faltou</div></div>
+            <div class="prs-list-title" style="margin-top:8px;">Histórico do Mês</div>
+            <div class="prs-entry"><div class="prs-date-box"><div class="prs-dd">22</div><div class="prs-dm">Mar</div></div><div class="prs-entry-info"><div class="prs-ct">CT Central</div><div class="prs-h">19:30 · Triângulo Guarda</div></div><div class="prs-ok">✅</div></div>
+            <div class="prs-entry"><div class="prs-date-box"><div class="prs-dd">20</div><div class="prs-dm">Mar</div></div><div class="prs-entry-info"><div class="prs-ct">CT Norte</div><div class="prs-h">18:00 · Raspagens</div></div><div class="prs-ok">✅</div></div>
+            <div class="prs-entry" style="border:none;"><div class="prs-date-box"><div class="prs-dd">18</div><div class="prs-dm">Mar</div></div><div class="prs-entry-info"><div class="prs-ct">CT Central</div><div class="prs-h">19:30 · Guard Pass</div></div><div class="prs-ok">✅</div></div>
           </div>
-          <div class="module-badge">Fitness</div>
+          <div class="abn"><div class="abn-b on"><span class="ico">🥋</span><span class="lbl" style="color:var(--g);">BJJ</span></div><div class="abn-b"><span class="ico">🏋️</span><span class="lbl">Físico</span></div><div class="abn-b"><span class="ico">🏆</span><span class="lbl">Rank</span></div><div class="abn-b"><span class="ico">🎮</span><span class="lbl">Jogos</span></div><div class="abn-b"><span class="ico">👤</span><span class="lbl">Perfil</span></div></div>
         </div>
-        <div class="module-desc">Módulo dedicado à preparação física complementar. O atleta que treina força, treina melhor no tatame.</div>
-        <ul class="module-features">
-          <li><strong>Planilhas de Musculação</strong> — Programas de treino por dia da semana</li>
-          <li><strong>Chips de Navegação por Dia</strong> — Acesso rápido ao treino do dia</li>
-          <li><strong>Integrado ao Perfil</strong> — Módulo ativável/desativável pelo admin</li>
-        </ul>
+        <div class="sf-label gold">📅 Histórico de Presenças</div>
       </div>
 
-      <!-- JOGOS -->
-      <div class="module-card mc-coral reveal">
-        <div class="module-card-header">
-          <div class="module-icon-box">🎮</div>
-          <div>
-            <div class="module-card-title">Jogos & Gamificação</div>
-            <div style="font-size:11px;color:var(--text2);">Aprender Brincando</div>
+      <!-- CRONOGRAMA -->
+      <div class="screen-frame elevated r" data-d="2" style="border-color:rgba(20,184,166,.25);">
+        <div class="sf-inner">
+          <div class="sf-notch-bar"><div class="sf-notch-pill"></div></div>
+          <div class="ah"><div class="ah-logo">IDE SYSTEMS</div><div class="ah-av">C</div></div>
+          <div class="stab-bar"><button class="stab-btn">✍️ Check-in</button><button class="stab-btn on">📅 Cronograma</button><button class="stab-btn">📈 Evolução</button><button class="stab-btn">📅 Presenças</button></div>
+          <div class="sc6">
+            <div class="crono-view-toggle"><button class="cvt-btn on">📖 Diário</button><button class="cvt-btn">📅 Mensal</button></div>
+            <div class="crono-day-nav"><div class="cdn-arrow">◀</div><div class="cdn-title">Sábado, 22 Mar</div><div class="cdn-arrow">▶</div></div>
+            <div class="week-strip">
+              <div class="wd"><div class="wd-day">Seg</div><div class="wd-date">17</div></div>
+              <div class="wd has-class"><div class="wd-day">Ter</div><div class="wd-date">18</div></div>
+              <div class="wd has-class"><div class="wd-day">Qua</div><div class="wd-date">19</div></div>
+              <div class="wd has-class"><div class="wd-day">Qui</div><div class="wd-date">20</div></div>
+              <div class="wd has-class"><div class="wd-day">Sex</div><div class="wd-date">21</div></div>
+              <div class="wd today has-class"><div class="wd-day">Sáb</div><div class="wd-date">22</div></div>
+              <div class="wd"><div class="wd-day">Dom</div><div class="wd-date">23</div></div>
+            </div>
+            <div class="aula-card">
+              <div class="aula-header">
+                <div class="aula-time">09:00 — 11:00</div>
+                <div class="aula-status as-hoje">Hoje</div>
+              </div>
+              <div class="aula-tema">Triângulo da Guarda Fechada</div>
+              <div class="aula-prof">Prof. Roberto Alves · Gi</div>
+              <div class="aula-ct-tag">📍 CT Central</div>
+            </div>
+            <div class="aula-card" style="border-color:rgba(168,85,247,.15);">
+              <div class="aula-header">
+                <div class="aula-time">10:00 — 12:00</div>
+                <div class="aula-status" style="background:rgba(168,85,247,.1);color:#c084fc;">Kids</div>
+              </div>
+              <div class="aula-tema">Guard Pull & Queda — Kids</div>
+              <div class="aula-prof">Prof. Ana Lima · Kids Gi</div>
+              <div class="aula-ct-tag">📍 CT Norte</div>
+            </div>
+            <button class="esq-link">✋ Esqueceu de fazer check-in? Solicitar presença</button>
           </div>
-          <div class="module-badge">Inovador</div>
+          <div class="abn"><div class="abn-b on"><span class="ico">🥋</span><span class="lbl" style="color:var(--g);">BJJ</span></div><div class="abn-b"><span class="ico">🏋️</span><span class="lbl">Físico</span></div><div class="abn-b"><span class="ico">🏆</span><span class="lbl">Rank</span></div><div class="abn-b"><span class="ico">🎮</span><span class="lbl">Jogos</span></div><div class="abn-b"><span class="ico">👤</span><span class="lbl">Perfil</span></div></div>
         </div>
-        <div class="module-desc">Engajamento máximo com gamificação real. Quiz de técnicas, jogo da memória, XP, curiosidades e ranking de jogadores.</div>
-        <ul class="module-features">
-          <li><strong>Quiz de Técnicas BJJ</strong> — Perguntas sobre golpes, regras e história</li>
-          <li><strong>Jogo da Memória</strong> — Cards interativos com termos e movimentos</li>
-          <li><strong>Sistema de XP</strong> — Pontos de experiência acumulados por jogo</li>
-          <li><strong>Curiosidades do Jiu Jitsu</strong> — Cards informativos com fatos da arte</li>
-          <li><strong>Manual BJJ</strong> — Guia digital de referência dentro do app</li>
-          <li><strong>Ranking de Jogadores</strong> — Competição por pontuação nos minigames</li>
-        </ul>
+        <div class="sf-label tl">📅 Cronograma de Aulas</div>
       </div>
 
-      <!-- PERFIL -->
-      <div class="module-card mc-gold reveal">
-        <div class="module-card-header">
-          <div class="module-icon-box">👤</div>
-          <div>
-            <div class="module-card-title">Perfil do Aluno</div>
-            <div style="font-size:11px;color:var(--text2);">Dados Pessoais</div>
+      <!-- ADMIN PANEL -->
+      <div class="screen-frame teal-frame r" data-d="3">
+        <div class="sf-inner">
+          <div class="sf-notch-bar" style="background:#050d0b;"><div class="sf-notch-pill" style="background:#0a1412;"></div></div>
+          <div class="sc4-wrap">
+            <div class="adm-hdr"><div class="adm-logo">IDE SYSTEMS · ADMIN</div><div class="adm-pill">ADMIN</div></div>
+            <div class="adm-body">
+              <div class="adm-stats2">
+                <div class="ads"><div class="ads-n">148</div><div class="ads-l">Alunos</div></div>
+                <div class="ads"><div class="ads-n">34</div><div class="ads-l">Hoje</div></div>
+                <div class="ads"><div class="ads-n" style="color:#F0A030;">3</div><div class="ads-l" style="color:rgba(240,160,48,.5);">Pendentes</div></div>
+                <div class="ads"><div class="ads-n">7</div><div class="ads-l">Novos</div></div>
+              </div>
+              <div class="adm-pending">
+                <div class="adp-title">⏳ Presenças Pendentes</div>
+                <div class="adp-item">
+                  <div class="adp-name">✋ João Silva — Esquecimento</div>
+                  <div class="adp-meta">CT Central · 19:30 · "Estava sem celular"</div>
+                  <div class="adp-btns"><button class="adp-g">✓ Aprovar</button><button class="adp-r">✕ Rejeitar</button></div>
+                </div>
+                <div class="adp-item">
+                  <div class="adp-name">Ana Costa</div>
+                  <div class="adp-meta">CT Norte · 18:00</div>
+                  <div class="adp-btns"><button class="adp-g">✓ Aprovar</button><button class="adp-r">✕ Rejeitar</button></div>
+                </div>
+              </div>
+              <button class="adm-bulk">✅ Aprovar Todos os Pendentes</button>
+              <div style="margin-top:6px;background:rgba(20,184,166,.03);border:1px solid rgba(20,184,166,.1);border-radius:10px;padding:8px;">
+                <div style="font-size:7px;font-weight:700;letter-spacing:2px;color:var(--teal);margin-bottom:4px;">🆕 NOVOS ALUNOS HOJE</div>
+                <div style="font-size:9px;color:var(--t2);">Maria Oliveira · Pedro Santos</div>
+              </div>
+            </div>
+            <div class="adm-bnav"><div class="abn2 on"><span class="ico">🏠</span><span class="lbl" style="color:var(--teal);">Painel</span></div><div class="abn2"><span class="ico">👥</span><span class="lbl">Alunos</span></div><div class="abn2"><span class="ico">📋</span><span class="lbl">Presença</span></div><div class="abn2"><span class="ico">🏅</span><span class="lbl">Camp.</span></div><div class="abn2"><span class="ico">⚙️</span><span class="lbl">Sistema</span></div></div>
           </div>
-          <div class="module-badge">Gestão</div>
         </div>
-        <div class="module-desc">Cada aluno gerencia seu perfil completo, com dados pessoais, CT vinculado, troca de senha e progresso de completude.</div>
-        <ul class="module-features">
-          <li><strong>Barra de Completude</strong> — % do perfil preenchido, incentivando dados completos</li>
-          <li><strong>Faixa no Perfil</strong> — Tag visual da graduação atual</li>
-          <li><strong>CT Liberado</strong> — Visualiza quais centros de treinamento tem acesso</li>
-          <li><strong>Troca de Senha Segura</strong> — Confirmação com senha atual obrigatória</li>
-          <li><strong>Cronograma de Outros CTs</strong> — Consulta horários de todas as unidades</li>
-          <li><strong>Logout Seguro</strong> — Encerramento de sessão com um toque</li>
-        </ul>
+        <div class="sf-label tl">⚙️ Painel Administrador</div>
       </div>
 
     </div>
   </div>
 </section>
 
-<!-- ══════════════ ADMIN ══════════════ -->
-<section class="admin-section" id="admin">
-  <div class="container">
-    <span class="section-eyebrow reveal" style="color:var(--teal);">Modo Administrador</span>
-    <h2 class="section-title reveal">Poder Total na palma<br>da <em style="background:linear-gradient(135deg,var(--teal),#5eead4);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">sua mão</em></h2>
-    <p class="section-subtitle reveal">Interface dedicada exclusiva para professores e administradores. Controle completo da academia em tempo real, pelo celular.</p>
+<!-- ══════ MODULES ══════ -->
+<section class="sec mod-bg" id="modulos">
+  <div class="wrap">
+    <span class="eyebrow r">Módulos Completos</span>
+    <h2 class="sh r" data-d="1"><em>Tudo</em> que sua academia<br>precisa. Zero extras.</h2>
+    <p class="s-sub r" data-d="2">Módulos ativos e configuráveis. O admin decide o que cada aluno vê.</p>
+  </div>
+  <div class="mods-grid" style="max-width:1200px;margin:clamp(40px,5vh,72px) auto 0;">
+    <div class="mod mod-gold r" data-d="1"><div class="mod-line"></div><span class="mod-icon">🥋</span><div class="mod-title">BJJ — Módulo Core</div><div class="mod-desc">Check-in, cronograma, alarme de treino, tema do dia, histórico e solicitação por esquecimento.</div><ul class="mod-list"><li><b>Check-in digital</b> com seleção de CT</li><li><b>Alarme</b> "Hoje tem treino!"</li><li><b>Tema da aula</b> exibido no hero card</li><li><b>Solicitação</b> de presença por esquecimento</li><li><b>Calendário visual</b> de presenças</li></ul></div>
+    <div class="mod mod-purple r" data-d="2"><div class="mod-line"></div><span class="mod-icon">📈</span><div class="mod-title">Evolução & Graduação</div><div class="mod-desc">Jornada completa do atleta. Faixas IBJJF adulto e kids, selos de progressão, prova teórica e prática.</div><ul class="mod-list"><li><b>Faixa atual</b> com barra de progresso</li><li><b>Selos</b> por frequência</li><li><b>Prova teórica</b> e prática integradas</li><li><b>Critérios</b> de graduação visíveis</li><li><b>Kids:</b> cinza, amarela, laranja, verde</li></ul></div>
+    <div class="mod mod-gold r" data-d="3"><div class="mod-line"></div><span class="mod-icon">🏆</span><div class="mod-title">Ranking & Campeonato</div><div class="mod-desc">Ranking mensal e anual automático com pódio visual. Posição do aluno em destaque. Campeonatos internos.</div><ul class="mod-list"><li><b>Ranking</b> mensal e anual em tempo real</li><li><b>Filtro</b> por CT ou ranking geral</li><li><b>Posição do aluno</b> em destaque</li><li><b>Campeonato</b> interno com pódio</li></ul></div>
+    <div class="mod mod-teal r" data-d="1"><div class="mod-line"></div><span class="mod-icon">🏋️</span><div class="mod-title">Preparação Física</div><div class="mod-desc">Módulo de musculação e condicionamento por dia da semana. Complemento perfeito ao BJJ.</div><ul class="mod-list"><li><b>Planilha</b> semanal de musculação</li><li><b>Navegação</b> por dia com chips</li><li><b>Ativável</b> pelo administrador</li></ul></div>
+    <div class="mod mod-coral r" data-d="2"><div class="mod-line"></div><span class="mod-icon">🎮</span><div class="mod-title">Jogos & Gamificação</div><div class="mod-desc">Quiz de técnicas, jogo da memória, XP, curiosidades e ranking de jogadores. Engajamento máximo.</div><ul class="mod-list"><li><b>Quiz</b> de técnicas e regras BJJ</li><li><b>Jogo da memória</b> interativo</li><li><b>Sistema de XP</b> acumulado</li><li><b>Manual BJJ</b> digital integrado</li><li><b>Ranking</b> de jogadores</li></ul></div>
+    <div class="mod mod-gold r" data-d="3"><div class="mod-line"></div><span class="mod-icon">👤</span><div class="mod-title">Perfil & Multi CT</div><div class="mod-desc">Dados pessoais, faixa, CTs liberados e barra de completude. Multi CT com cronograma por unidade.</div><ul class="mod-list"><li><b>Barra de completude</b> do perfil</li><li><b>Tag visual</b> da faixa atual</li><li><b>CTs liberados</b> para check-in</li><li><b>Troca de senha</b> com verificação dupla</li><li><b>Cronograma</b> de outros CTs</li></ul></div>
+  </div>
+</section>
 
-    <div class="admin-grid">
-
-      <div class="admin-card reveal">
-        <div class="adm-card-num">01</div>
-        <div class="adm-card-title">🏠 Painel do Administrador</div>
-        <div class="adm-card-desc">Dashboard com estatísticas em tempo real: total de check-ins do dia, novos alunos, alertas e ranking da academia. Visão 360° instantânea.</div>
-        <div class="adm-tag">Dashboard</div>
+<!-- ══════ ADMIN ══════ -->
+<section class="sec adm-sec-bg" id="admin">
+  <div class="wrap">
+    <span class="eyebrow teal r">Modo Administrador</span>
+    <h2 class="sh r" data-d="1">Controle <em class="teal">total</em>.<br>Na palma da mão.</h2>
+    <p class="s-sub r" data-d="2">Interface exclusiva para professores. Gestão completa da academia pelo celular, em tempo real.</p>
+    <div class="adm-layout">
+      <div class="adm-cards-grid r" data-d="1">
+        <div class="adc"><div class="adc-n">01</div><div class="adc-t">🏠 Dashboard</div><div class="adc-d">Estatísticas do dia em tempo real: check-ins, novos alunos, alertas e ranking.</div><div class="adc-tag">Visão Geral</div></div>
+        <div class="adc"><div class="adc-n">02</div><div class="adc-t">👥 Gestão Alunos</div><div class="adc-d">Lista completa, busca por nome, perfil, faixa e CT vinculado.</div><div class="adc-tag">CRM</div></div>
+        <div class="adc"><div class="adc-n">03</div><div class="adc-t">📋 Presenças</div><div class="adc-d">Aprovar ou rejeitar individual ou em massa com um toque.</div><div class="adc-tag">Controle</div></div>
+        <div class="adc"><div class="adc-n">04</div><div class="adc-t">🏅 Campeonato</div><div class="adc-d">Crie e gerencie campeonatos internos com pódio e pontuações.</div><div class="adc-tag">Campeonato</div></div>
+        <div class="adc"><div class="adc-n">05</div><div class="adc-t">📚 Cronograma</div><div class="adc-d">Cadastre aulas, horários e conteúdo técnico por CT.</div><div class="adc-tag">Agenda</div></div>
+        <div class="adc"><div class="adc-n">06</div><div class="adc-t">⚙️ Sistema</div><div class="adc-d">CTs, módulos visíveis, graduações por grau e configurações.</div><div class="adc-tag">Config</div></div>
       </div>
-
-      <div class="admin-card reveal">
-        <div class="adm-card-num">02</div>
-        <div class="adm-card-title">👥 Gestão de Alunos</div>
-        <div class="adm-card-desc">Lista completa de alunos cadastrados. Busca por nome, visualização de perfil, faixa, CT vinculado e status de cada atleta.</div>
-        <div class="adm-tag">CRM</div>
+      <!-- Admin screen large -->
+      <div class="r" data-d="2" style="max-width:380px;">
+        <div style="background:linear-gradient(160deg,#0a1a18,#071412);border:1px solid rgba(20,184,166,.2);border-radius:24px;overflow:hidden;box-shadow:0 40px 80px rgba(0,0,0,.7);">
+          <div style="padding:14px 20px;background:rgba(20,184,166,.04);border-bottom:1px solid rgba(20,184,166,.08);display:flex;align-items:center;gap:8px;">
+            <div style="width:10px;height:10px;border-radius:50%;background:#ff5f57;"></div>
+            <div style="width:10px;height:10px;border-radius:50%;background:#febc2e;margin-left:4px;"></div>
+            <div style="width:10px;height:10px;border-radius:50%;background:#28c840;margin-left:4px;"></div>
+            <div style="font-size:10px;font-weight:700;letter-spacing:2px;color:var(--teal);text-transform:uppercase;margin:0 auto;">PAINEL ADMIN</div>
+          </div>
+          <div style="padding:16px;display:flex;flex-direction:column;gap:10px;">
+            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;">
+              <div style="background:rgba(20,184,166,.05);border:1px solid rgba(20,184,166,.1);border-radius:10px;padding:12px;text-align:center;"><div style="font-size:24px;font-weight:900;color:var(--teal);font-family:'Space Mono',monospace;line-height:1;">148</div><div style="font-size:8px;color:rgba(20,184,166,.5);font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-top:3px;">Alunos</div></div>
+              <div style="background:rgba(20,184,166,.05);border:1px solid rgba(20,184,166,.1);border-radius:10px;padding:12px;text-align:center;"><div style="font-size:24px;font-weight:900;color:var(--teal);font-family:'Space Mono',monospace;line-height:1;">34</div><div style="font-size:8px;color:rgba(20,184,166,.5);font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-top:3px;">Hoje</div></div>
+              <div style="background:rgba(20,184,166,.05);border:1px solid rgba(20,184,166,.1);border-radius:10px;padding:12px;text-align:center;"><div style="font-size:24px;font-weight:900;color:#F0A030;font-family:'Space Mono',monospace;line-height:1;">3</div><div style="font-size:8px;color:rgba(240,160,48,.5);font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-top:3px;">Pendentes</div></div>
+            </div>
+            <div style="background:rgba(232,93,93,.06);border:1px solid rgba(232,93,93,.16);border-radius:12px;padding:12px;">
+              <div style="font-size:9px;font-weight:700;color:var(--coral);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:8px;">⏳ Presenças Pendentes</div>
+              <div style="background:rgba(8,14,12,.7);border-radius:8px;padding:9px;margin-bottom:6px;"><div style="font-size:10px;font-weight:700;">✋ João Silva — Esquecimento</div><div style="font-size:8px;color:rgba(20,184,166,.6);margin-top:2px;">CT Central · 19:30 · "Sem celular"</div><div style="display:flex;gap:6px;margin-top:7px;"><button style="flex:1;padding:7px;border-radius:7px;border:none;background:rgba(34,197,94,.12);color:#22c55e;font-size:9px;font-weight:800;text-transform:uppercase;cursor:pointer;font-family:'Outfit',sans-serif;">✓ Aprovar</button><button style="flex:1;padding:7px;border-radius:7px;border:none;background:rgba(232,93,93,.12);color:var(--coral);font-size:9px;font-weight:800;text-transform:uppercase;cursor:pointer;font-family:'Outfit',sans-serif;">✕ Rejeitar</button></div></div>
+            </div>
+            <button style="width:100%;padding:12px;border-radius:12px;border:none;background:linear-gradient(135deg,var(--teal),#5eead4);color:#000;font-size:11px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;font-family:'Outfit',sans-serif;">✅ Aprovar Todos os Pendentes</button>
+          </div>
+        </div>
       </div>
-
-      <div class="admin-card reveal">
-        <div class="adm-card-num">03</div>
-        <div class="adm-card-title">📋 Gestão de Presenças</div>
-        <div class="adm-card-desc">Aprovar ou rejeitar check-ins individualmente ou em massa com um botão. Suporte a solicitações de esquecimento com observação do aluno.</div>
-        <div class="adm-tag">Controle</div>
-      </div>
-
-      <div class="admin-card reveal">
-        <div class="adm-card-num">04</div>
-        <div class="adm-card-title">🏅 Gestão de Campeonato</div>
-        <div class="adm-card-desc">Configure e gerencie campeonatos internos. Pontuações, pódio, categorias e resultados — tudo dentro do sistema, sem planilha.</div>
-        <div class="adm-tag">Campeonato</div>
-      </div>
-
-      <div class="admin-card reveal">
-        <div class="adm-card-num">05</div>
-        <div class="adm-card-title">📚 Cronograma de Aulas</div>
-        <div class="adm-card-desc">Cadastre e edite o cronograma de aulas de cada CT. Defina dias, horários e conteúdo técnico que aparece no app dos alunos.</div>
-        <div class="adm-tag">Agenda</div>
-      </div>
-
-      <div class="admin-card reveal">
-        <div class="adm-card-num">06</div>
-        <div class="adm-card-title">⚙️ Configurações do Sistema</div>
-        <div class="adm-card-desc">Gerencie CTs ativos, defina módulos visíveis para os alunos, configure graduações por grau e altere dados do seu perfil admin.</div>
-        <div class="adm-tag">Sistema</div>
-      </div>
-
     </div>
+  </div>
+</section>
 
-    <!-- admin highlight bar -->
-    <div style="margin-top:50px;padding:32px;background:rgba(20,184,166,0.06);border:1px solid rgba(20,184,166,0.2);border-radius:20px;display:flex;gap:40px;flex-wrap:wrap;align-items:center;justify-content:space-between;" class="reveal">
+<!-- ══════ SECURITY ══════ -->
+<section class="sec sec-sec-bg" id="seguranca">
+  <div class="wrap">
+    <span class="eyebrow r">Segurança dos Dados</span>
+    <h2 class="sh r" data-d="1">Seus dados <em>blindados</em>.<br>Sem exceção.</h2>
+    <div class="sec-layout">
+      <div class="shield-wrap r" data-d="1">
+        <div class="shield-rings"><div class="sring"></div><div class="sring"></div><div class="sring"></div></div>
+        <div class="shield-icon">🛡️</div>
+      </div>
+      <div class="sec-items r" data-d="2">
+        <div class="sec-item"><div class="sec-ico">🔑</div><div><div class="sec-t">Token de Sessão Criptografado</div><div class="sec-d">Cada login gera um token único. Sem token válido, nenhuma requisição é aceita. Proteção em todas as camadas.</div></div></div>
+        <div class="sec-item"><div class="sec-ico">⏱️</div><div><div class="sec-t">Expiração Automática de Sessão</div><div class="sec-d">Sessão expira em 24h automaticamente. Token vencido = redirecionamento imediato para login.</div></div></div>
+        <div class="sec-item"><div class="sec-ico">📧</div><div><div class="sec-t">Autenticação E-mail + Senha</div><div class="sec-d">Acesso vinculado ao e-mail. Recuperação com confirmação dupla. Senha mínima de 6 caracteres.</div></div></div>
+        <div class="sec-item"><div class="sec-ico">🚫</div><div><div class="sec-t">Bloqueio de Acesso Não Autorizado</div><div class="sec-d">Qualquer requisição sem autenticação é bloqueada. Alunos e admins têm escopos separados.</div></div></div>
+        <div class="sec-item"><div class="sec-ico">🔒</div><div><div class="sec-t">Troca de Senha com Verificação Dupla</div><div class="sec-d">Senha atual obrigatória + confirmação. Impossível alterar sem acesso prévio autenticado.</div></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════ FORM ══════ -->
+<section class="sec form-bg" id="cadastro">
+  <div class="wrap">
+    <div class="form-layout">
       <div>
-        <div style="font-size:12px;color:var(--teal);font-weight:700;letter-spacing:2px;text-transform:uppercase;margin-bottom:8px;">Aprovação em Massa</div>
-        <div style="font-size:28px;font-weight:900;">Aprovar <span style="color:var(--teal);">todos</span> os check-ins<br>com um único botão</div>
-      </div>
-      <div style="text-align:right;">
-        <div style="font-size:12px;color:var(--text2);font-weight:600;letter-spacing:1px;text-transform:uppercase;margin-bottom:8px;">Bulk Approve</div>
-        <div style="font-size:13px;color:var(--text2);max-width:300px;line-height:1.7;">Fim de noite agitada? Aprove todas as presenças pendentes com confirmação de segurança. Zero cliques desnecessários.</div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ══════════════ SECURITY ══════════════ -->
-<section class="security-section" id="seguranca">
-  <div class="container">
-    <span class="section-eyebrow reveal">Segurança dos Dados</span>
-    <h2 class="section-title reveal">Seus dados <em>blindados</em>.<br>Sem exceção.</h2>
-
-    <div class="sec-hero">
-      <div class="sec-shield">🛡️</div>
-      <div class="sec-list">
-        <div class="sec-item reveal">
-          <div class="sec-item-icon">🔑</div>
-          <div>
-            <div class="sec-item-title">Token de Sessão Criptografado</div>
-            <div class="sec-item-desc">Cada login gera um token único e seguro. Sem token válido, nenhuma requisição passa. Proteção em todas as camadas.</div>
-          </div>
-        </div>
-        <div class="sec-item reveal">
-          <div class="sec-item-icon">⏱️</div>
-          <div>
-            <div class="sec-item-title">Expiração Automática de Sessão</div>
-            <div class="sec-item-desc">Sessão expira em 24h automaticamente. Se o token vencer, o usuário é redirecionado para login sem comprometer dados.</div>
-          </div>
-        </div>
-        <div class="sec-item reveal">
-          <div class="sec-item-icon">📧</div>
-          <div>
-            <div class="sec-item-title">Autenticação por E-mail + Senha</div>
-            <div class="sec-item-desc">Acesso vinculado ao e-mail do aluno. Recuperação de senha com confirmação dupla. Senha mínima de 6 caracteres.</div>
-          </div>
-        </div>
-        <div class="sec-item reveal">
-          <div class="sec-item-icon">🚫</div>
-          <div>
-            <div class="sec-item-title">Bloqueio de Acesso Não Autorizado</div>
-            <div class="sec-item-desc">Qualquer requisição sem autenticação válida é imediatamente bloqueada. Alunos e admins têm níveis de acesso separados.</div>
-          </div>
-        </div>
-        <div class="sec-item reveal">
-          <div class="sec-item-icon">🔒</div>
-          <div>
-            <div class="sec-item-title">Troca de Senha com Verificação</div>
-            <div class="sec-item-desc">Para alterar a senha, é obrigatório informar a senha atual. Confirmação dupla obrigatória. Segurança em camadas.</div>
-          </div>
+        <span class="eyebrow r">Solicitar Demo Gratuita</span>
+        <h2 class="sh r" data-d="1">Transforme sua<br>academia <em>hoje.</em></h2>
+        <p class="s-sub r" data-d="2">Preencha o formulário e nossa equipe entra em contato em até 24 horas para uma demonstração personalizada.</p>
+        <div class="form-benefits">
+          <div class="fb r" data-d="1"><div class="fb-ico">⚡</div><div><div class="fb-t">Demo Personalizada Gratuita</div><div class="fb-d">Nossa equipe apresenta o sistema adaptado à realidade da sua academia. Sem compromisso.</div></div></div>
+          <div class="fb r" data-d="2"><div class="fb-ico">🚀</div><div><div class="fb-t">Implantação Assistida</div><div class="fb-d">Acompanhamos todo o processo de configuração e treinamento da equipe desde o dia 1.</div></div></div>
+          <div class="fb r" data-d="3"><div class="fb-ico">📊</div><div><div class="fb-t">Dados e Relatórios</div><div class="fb-d">Acesso completo ao histórico de presenças, ranking e evolução dos seus alunos.</div></div></div>
+          <div class="fb r" data-d="4"><div class="fb-ico">🔧</div><div><div class="fb-t">Suporte Contínuo</div><div class="fb-d">Você não fica sozinho. Suporte técnico e atualizações incluídas.</div></div></div>
         </div>
       </div>
-    </div>
-  </div>
-</section>
-
-<!-- ══════════════ KIDS MODE ══════════════ -->
-<section class="kids-section">
-  <div class="container">
-    <div class="kids-inner">
-      <div class="reveal">
-        <span class="section-eyebrow" style="color:#a988f5;">Funcionalidade Exclusiva</span>
-        <h2 class="section-title">Modo <em style="background:linear-gradient(135deg,#6c3ce0,#a988f5);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">Kids</em><br>Automático</h2>
-        <p class="section-subtitle">O sistema detecta automaticamente a data de nascimento do aluno e ativa o Modo Kids para menores de idade.</p>
-        <div class="kids-chips" style="margin-top:24px;">
-          <div class="kids-chip">Interface Adaptada</div>
-          <div class="kids-chip">Cores Especiais</div>
-          <div class="kids-chip">Faixas Kids IBJJF</div>
-          <div class="kids-chip">CT Restrito</div>
-          <div class="kids-chip">Detecção Automática</div>
-          <div class="kids-chip">Badge "KIDS" no Header</div>
-          <div class="kids-chip">Seguro para Crianças</div>
-        </div>
-      </div>
-      <div class="kids-visual reveal">🥋</div>
-    </div>
-  </div>
-</section>
-
-<!-- ══════════════ BELTS ══════════════ -->
-<section style="background:var(--bg);padding:100px 24px;text-align:center;">
-  <div class="container">
-    <span class="section-eyebrow reveal">Graduação IBJJF</span>
-    <h2 class="section-title reveal">Todas as <em>faixas</em><br>dentro do sistema</h2>
-    <p class="section-subtitle reveal" style="margin:0 auto 20px;">Do branco ao coral vermelho. Adulto e Kids. O sistema conhece cada graduação e exibe a evolução corretamente.</p>
-
-    <div class="belt-row reveal">
-      <div class="belt belt-white"><span class="belt-label">Branca</span></div>
-      <div class="belt belt-gray"><span class="belt-label">Cinza</span></div>
-      <div class="belt belt-yellow"><span class="belt-label">Amarela</span></div>
-      <div class="belt belt-orange"><span class="belt-label">Laranja</span></div>
-      <div class="belt belt-green"><span class="belt-label">Verde</span></div>
-    </div>
-    <div style="font-size:10px;color:var(--text3);letter-spacing:2px;text-transform:uppercase;margin:12px 0 4px;">Adultos →</div>
-    <div class="belt-row reveal">
-      <div class="belt belt-blue"><span class="belt-label">Azul</span></div>
-      <div class="belt belt-purple"><span class="belt-label">Roxa</span></div>
-      <div class="belt belt-brown"><span class="belt-label">Marrom</span></div>
-      <div class="belt belt-black"><span class="belt-label">Preta</span></div>
-      <div class="belt belt-red" style="background:linear-gradient(90deg,#991b1b 50%,#000 50%);"><span class="belt-label">Coral</span></div>
-      <div class="belt belt-red"><span class="belt-label">Vermelha</span></div>
-    </div>
-  </div>
-</section>
-
-<!-- ══════════════ GAMIFICATION ══════════════ -->
-<section class="game-section">
-  <div class="container">
-    <span class="section-eyebrow reveal">Gamificação</span>
-    <h2 class="section-title reveal">Aprenda. Compita.<br><em>Vença.</em></h2>
-    <p class="section-subtitle reveal">Muito além do check-in. O JJA System usa gamificação para manter o aluno engajado, aprendendo e sempre voltando.</p>
-
-    <div class="game-grid">
-      <div class="game-card reveal">
-        <div class="game-card-icon">❓</div>
-        <div class="game-card-title">Quiz BJJ</div>
-        <div class="game-card-desc">Perguntas sobre técnicas, regras, história e fundamentos do Jiu Jitsu. Cada resposta certa = mais XP.</div>
-      </div>
-      <div class="game-card reveal">
-        <div class="game-card-icon">🧠</div>
-        <div class="game-card-title">Jogo da Memória</div>
-        <div class="game-card-desc">Pairs de termos e movimentos do BJJ. Treina o vocabulário enquanto se diverte.</div>
-      </div>
-      <div class="game-card reveal">
-        <div class="game-card-icon">⭐</div>
-        <div class="game-card-title">XP & Conquistas</div>
-        <div class="game-card-desc">Sistema de experiência acumulada por jogos e frequência. Recompensas por consistência.</div>
-      </div>
-      <div class="game-card reveal">
-        <div class="game-card-icon">💡</div>
-        <div class="game-card-title">Curiosidades</div>
-        <div class="game-card-desc">Cards com fatos incríveis sobre o Jiu Jitsu, história e campeões mundiais.</div>
-      </div>
-      <div class="game-card reveal">
-        <div class="game-card-icon">📖</div>
-        <div class="game-card-title">Manual BJJ</div>
-        <div class="game-card-desc">Glossário completo de termos e movimentos. Uma bíblia digital do Jiu Jitsu no bolso.</div>
-      </div>
-      <div class="game-card reveal">
-        <div class="game-card-icon">🏅</div>
-        <div class="game-card-title">Ranking de Jogos</div>
-        <div class="game-card-desc">Quem é o mais inteligente da academia? Ranking exclusivo dos melhores nas atividades.</div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ══════════════ IMPACT QUOTE ══════════════ -->
-<section class="impact-section">
-  <div class="impact-quote reveal">
-    "O aluno que <em>se vê evoluindo</em><br>nunca larga o tatame."
-  </div>
-  <p class="impact-sub reveal">O JJA System foi criado para mostrar ao aluno, em tempo real, que cada treino conta. Cada check-in é um passo rumo à próxima faixa.</p>
-  <div style="margin-top:50px;display:flex;gap:40px;flex-wrap:wrap;justify-content:center;" class="reveal">
-    <div style="text-align:center;">
-      <div style="font-size:48px;font-weight:900;background:linear-gradient(135deg,var(--gold),var(--gold-light));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">↑83%</div>
-      <div style="font-size:11px;color:var(--text2);letter-spacing:2px;text-transform:uppercase;margin-top:4px;">Mais Frequência</div>
-    </div>
-    <div style="text-align:center;">
-      <div style="font-size:48px;font-weight:900;background:linear-gradient(135deg,var(--teal),#5eead4);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">↓60%</div>
-      <div style="font-size:11px;color:var(--text2);letter-spacing:2px;text-transform:uppercase;margin-top:4px;">Menos Evasão</div>
-    </div>
-    <div style="text-align:center;">
-      <div style="font-size:48px;font-weight:900;background:linear-gradient(135deg,#a855f7,#c084fc);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">3x</div>
-      <div style="font-size:11px;color:var(--text2);letter-spacing:2px;text-transform:uppercase;margin-top:4px;">Mais Engajamento</div>
-    </div>
-  </div>
-</section>
-
-<!-- ══════════════ MULTI CT ══════════════ -->
-<section style="background:var(--bg2);padding:100px 24px;">
-  <div class="container">
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;" class="reveal">
       <div>
-        <span class="section-eyebrow">Multi CT</span>
-        <h2 class="section-title">Uma rede.<br><em>Múltiplas</em> unidades.</h2>
-        <p class="section-subtitle">O JJA System suporta múltiplos Centros de Treinamento em uma única plataforma. Cada CT tem seu cronograma, seus alunos e seus horários. O admin vê tudo.</p>
-        <div style="margin-top:32px;display:flex;flex-direction:column;gap:12px;">
-          <div style="display:flex;gap:12px;align-items:center;font-size:14px;">
-            <span style="color:var(--gold);font-size:20px;">✓</span> Check-in separado por CT
+        <div class="form-card r" data-d="2">
+          <div class="form-steps"><div class="fstep done" id="s1"></div><div class="fstep" id="s2"></div><div class="fstep" id="s3"></div></div>
+          <span class="form-pre">Cadastro Gratuito</span>
+          <div class="form-title">Conheça o IDESystems</div>
+          <p class="form-sub">Preencha os dados da sua academia e nossa equipe entrará em contato.</p>
+          <div id="form-fields">
+            <div class="f2col">
+              <div class="fg"><label class="fl">Seu Nome</label><input class="fi" type="text" id="f-nome" placeholder="Nome completo" autocomplete="name"></div>
+              <div class="fg"><label class="fl">WhatsApp</label><input class="fi" type="tel" id="f-tel" placeholder="(11) 99999-9999" autocomplete="tel"></div>
+            </div>
+            <div class="fg"><label class="fl">E-mail</label><input class="fi" type="email" id="f-email" placeholder="professor@academia.com.br" autocomplete="email"></div>
+            <div class="fg"><label class="fl">Nome da Academia</label><input class="fi" type="text" id="f-academia" placeholder="Ex: Team Brasil Jiu Jitsu"></div>
+            <div class="f2col">
+              <div class="fg"><label class="fl">Cidade</label><input class="fi" type="text" id="f-cidade" placeholder="Sua cidade"></div>
+              <div class="fg"><label class="fl">Estado</label>
+                <select class="fs-sel" id="f-estado">
+                  <option value="">UF</option>
+                  <option>SP</option><option>RJ</option><option>MG</option><option>RS</option><option>PR</option><option>SC</option><option>BA</option><option>GO</option><option>DF</option><option>PE</option><option>CE</option><option>AM</option><option>PA</option><option>MT</option><option>MS</option><option>ES</option><option>RN</option><option>PB</option><option>AL</option><option>SE</option><option>PI</option><option>MA</option><option>TO</option><option>RO</option><option>AC</option><option>RR</option><option>AP</option>
+                </select>
+              </div>
+            </div>
+            <div class="f2col">
+              <div class="fg"><label class="fl">Qtd. de Alunos</label>
+                <select class="fs-sel" id="f-alunos">
+                  <option value="">Selecione</option>
+                  <option>Até 30 alunos</option><option>31 a 80 alunos</option><option>81 a 150 alunos</option><option>151 a 300 alunos</option><option>Mais de 300 alunos</option>
+                </select>
+              </div>
+              <div class="fg"><label class="fl">Nº de Unidades</label>
+                <select class="fs-sel" id="f-unidades">
+                  <option value="">Selecione</option>
+                  <option>1 unidade</option><option>2 a 3 unidades</option><option>4 a 6 unidades</option><option>7+ unidades</option>
+                </select>
+              </div>
+            </div>
+            <button class="fsub" id="fsub" onclick="submitForm()">🥋 Solicitar Demo Gratuita</button>
+            <p class="fprivacy">Ao enviar você concorda com nossa <a href="#">Política de Privacidade</a>. Seus dados são usados somente para contato. Zero spam.</p>
           </div>
-          <div style="display:flex;gap:12px;align-items:center;font-size:14px;">
-            <span style="color:var(--gold);font-size:20px;">✓</span> Ranking geral e por unidade
+          <div class="form-success" id="fsuccess">
+            <div class="success-ico">🎉</div>
+            <div class="success-t">Cadastro Recebido!</div>
+            <p class="success-d">Nossa equipe entrará em contato em até <strong>24 horas</strong> para agendar sua demonstração personalizada e gratuita do IDESystems.</p>
+            <div class="success-note"><div class="success-note-t">🥋 Enquanto aguarda...</div><div class="success-note-d">Explore todos os módulos e funcionalidades detalhadas aqui nesta página. Prepare suas perguntas para a demo!</div></div>
           </div>
-          <div style="display:flex;gap:12px;align-items:center;font-size:14px;">
-            <span style="color:var(--gold);font-size:20px;">✓</span> Cronograma independente por CT
-          </div>
-          <div style="display:flex;gap:12px;align-items:center;font-size:14px;">
-            <span style="color:var(--gold);font-size:20px;">✓</span> Aluno liberado em múltiplos CTs
-          </div>
-          <div style="display:flex;gap:12px;align-items:center;font-size:14px;">
-            <span style="color:var(--gold);font-size:20px;">✓</span> Notificação de outro CT com treino hoje
-          </div>
-        </div>
-      </div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
-        <div style="background:var(--bg);border:1px solid var(--text3);border-radius:16px;padding:24px;text-align:center;">
-          <div style="font-size:36px;font-weight:900;color:var(--gold);font-family:'Space Mono',monospace;line-height:1;">CT 01</div>
-          <div style="font-size:11px;color:var(--text2);margin-top:4px;">Central</div>
-          <div style="font-size:10px;color:var(--teal);margin-top:8px;font-weight:700;">● Aberto</div>
-        </div>
-        <div style="background:var(--bg);border:1px solid var(--text3);border-radius:16px;padding:24px;text-align:center;">
-          <div style="font-size:36px;font-weight:900;color:var(--gold);font-family:'Space Mono',monospace;line-height:1;">CT 02</div>
-          <div style="font-size:11px;color:var(--text2);margin-top:4px;">Norte</div>
-          <div style="font-size:10px;color:var(--teal);margin-top:8px;font-weight:700;">● Aberto</div>
-        </div>
-        <div style="background:var(--bg);border:1px solid var(--text3);border-radius:16px;padding:24px;text-align:center;">
-          <div style="font-size:36px;font-weight:900;color:var(--gold);font-family:'Space Mono',monospace;line-height:1;">CT 03</div>
-          <div style="font-size:11px;color:var(--text2);margin-top:4px;">Sul</div>
-          <div style="font-size:10px;color:var(--coral);margin-top:8px;font-weight:700;">● Fechado</div>
-        </div>
-        <div style="background:var(--gold-dim);border:1px dashed var(--gold);border-radius:16px;padding:24px;text-align:center;">
-          <div style="font-size:36px;font-weight:900;color:var(--gold);line-height:1;">+</div>
-          <div style="font-size:11px;color:var(--text2);margin-top:4px;">Nova Unidade</div>
         </div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ══════════════ HASHTAGS ══════════════ -->
-<section class="hashtag-section">
-  <div class="container">
-    <span class="section-eyebrow reveal">Marketing Digital</span>
-    <h2 class="section-title reveal" style="text-align:center;">Compartilhe.<br>Engaje. <em>Cresça.</em></h2>
-    <p style="font-size:14px;color:var(--text2);text-align:center;margin:0 auto;" class="reveal">Use estas hashtags nas suas postagens do Instagram e stories para alcançar mais alunos potenciais.</p>
-
-    <div class="hashtag-grid">
-      <div class="hashtag">#JiuJitsuAcademy</div>
-      <div class="hashtag">#CheckinBJJ</div>
-      <div class="hashtag">#BJJDigital</div>
-      <div class="hashtag">#JiuJitsuLife</div>
-      <div class="hashtag">#AcademiaBJJ</div>
-      <div class="hashtag">#GraduacaoBJJ</div>
-      <div class="hashtag">#FaixaAzul</div>
-      <div class="hashtag">#JiuJitsuBrasil</div>
-      <div class="hashtag">#BJJFamily</div>
-      <div class="hashtag">#OscarSteele</div>
-      <div class="hashtag">#TatameDeBJJ</div>
-      <div class="hashtag">#CheckinDigital</div>
-      <div class="hashtag">#GestaoDeAcademia</div>
-      <div class="hashtag">#BJJCommunity</div>
-      <div class="hashtag">#RankingBJJ</div>
-      <div class="hashtag">#JiuJitsuKids</div>
-      <div class="hashtag">#FrequenciaBJJ</div>
-      <div class="hashtag">#PróximaFaixa</div>
-      <div class="hashtag">#TecnologiaBJJ</div>
-      <div class="hashtag">#SistemaDeCheckin</div>
+<!-- ══════ FOOTER ══════ -->
+<footer>
+  <div class="footer-inner">
+    <div>
+      <div class="footer-logo">IDE<span>Systems</span></div>
+      <div style="font-size:12px;color:var(--t3);margin-top:5px;">Gestão Elite para Academias de Jiu Jitsu</div>
     </div>
+    <div class="footer-links">
+      <a href="#story">Como Funciona</a>
+      <a href="#telas">Telas</a>
+      <a href="#modulos">Módulos</a>
+      <a href="#seguranca">Segurança</a>
+      <a href="#cadastro">Demo</a>
+    </div>
+    <div class="footer-copy">© 2025 IDESystems · Todos os direitos reservados</div>
   </div>
-</section>
+</footer>
 
-<!-- ══════════════ CAPTIONS INSTAGRAM ══════════════ -->
-<section style="background:var(--bg2);padding:100px 24px;">
-  <div class="container">
-    <span class="section-eyebrow reveal">Copie & Cole</span>
-    <h2 class="section-title reveal">Legendas prontas<br>para o <em>Instagram</em></h2>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:50px;" class="reveal">
-
-      <div style="background:var(--bg);border:1px solid var(--text3);border-radius:20px;padding:28px;border-left:3px solid var(--gold);">
-        <div style="font-size:10px;font-weight:700;letter-spacing:2px;color:var(--gold);text-transform:uppercase;margin-bottom:16px;">🔥 Post de Apresentação</div>
-        <div style="font-size:13px;color:var(--text2);line-height:1.9;">
-          🥋 Apresentamos o <strong style="color:var(--text1);">JJA System</strong> — o sistema de gestão mais completo do Brasil para academias de Jiu Jitsu!<br><br>
-          ✅ Check-in Digital<br>
-          ✅ Ranking em Tempo Real<br>
-          ✅ Evolução de Faixas<br>
-          ✅ Campeonatos Internos<br>
-          ✅ Modo Kids Automático<br>
-          ✅ Gamificação & Quiz<br><br>
-          📲 Cada treino registrado. Cada evolução celebrada. Cada faixa conquistada.<br><br>
-          🔐 Dados seguros. Interface premium. Experiência única.<br><br>
-          👇 Saiba mais no link da bio.<br><br>
-          <em style="color:var(--text3);">#JiuJitsuAcademy #CheckinBJJ #BJJDigital #GestaoDeAcademia #JiuJitsuBrasil</em>
-        </div>
-      </div>
-
-      <div style="background:var(--bg);border:1px solid var(--text3);border-radius:20px;padding:28px;border-left:3px solid var(--teal);">
-        <div style="font-size:10px;font-weight:700;letter-spacing:2px;color:var(--teal);text-transform:uppercase;margin-bottom:16px;">⚡ Post de Engajamento</div>
-        <div style="font-size:13px;color:var(--text2);line-height:1.9;">
-          Você sabe quantos treinos fez esse mês? 🤔<br><br>
-          Com o <strong style="color:var(--text1);">JJA System</strong>, seus alunos acompanham cada presença, cada progresso e cada passo rumo à próxima faixa — direto no celular! 📱<br><br>
-          🏆 Ranking automático mensal<br>
-          📅 Calendário de presenças<br>
-          🎮 Quiz e Jogo da Memória<br>
-          📈 Evolução de faixa visual<br><br>
-          Sua academia na era digital. Seus alunos, mais motivados do que nunca. 💪<br><br>
-          <em style="color:var(--text3);">#BJJFamily #RankingBJJ #FrequenciaBJJ #PróximaFaixa #JiuJitsuLife</em>
-        </div>
-      </div>
-
-    </div>
-  </div>
-</section>
-
-<!-- ══════════════ FINAL CTA ══════════════ -->
-<section class="cta-footer">
-  <div class="container" style="position:relative;z-index:1;">
-    <div class="cta-title reveal">
-      Sua academia.<br><em>Redefinida.</em>
-    </div>
-    <p class="cta-sub reveal">O JJA System não é só um sistema. É a transformação digital completa da sua academia de Jiu Jitsu.</p>
-    <div class="reveal" style="display:flex;gap:16px;flex-wrap:wrap;justify-content:center;">
-      <a class="btn-gold" href="#">🥋 Quero meu Sistema</a>
-      <a class="btn-ghost" href="#">💬 Falar com a Equipe</a>
-    </div>
-
-    <div style="margin-top:80px;display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:2px;max-width:900px;margin-left:auto;margin-right:auto;" class="reveal">
-      <div style="padding:24px;text-align:center;background:var(--bg2);border:1px solid var(--text3);">
-        <div style="font-size:28px;margin-bottom:8px;">📱</div>
-        <div style="font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;">iOS & Android</div>
-        <div style="font-size:10px;color:var(--text2);margin-top:4px;">PWA Instalável</div>
-      </div>
-      <div style="padding:24px;text-align:center;background:var(--bg2);border:1px solid var(--text3);">
-        <div style="font-size:28px;margin-bottom:8px;">🔒</div>
-        <div style="font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;">100% Seguro</div>
-        <div style="font-size:10px;color:var(--text2);margin-top:4px;">Token Criptografado</div>
-      </div>
-      <div style="padding:24px;text-align:center;background:var(--bg2);border:1px solid var(--text3);">
-        <div style="font-size:28px;margin-bottom:8px;">⚡</div>
-        <div style="font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;">Tempo Real</div>
-        <div style="font-size:10px;color:var(--text2);margin-top:4px;">Dados Instantâneos</div>
-      </div>
-      <div style="padding:24px;text-align:center;background:var(--bg2);border:1px solid var(--text3);">
-        <div style="font-size:28px;margin-bottom:8px;">🏋️</div>
-        <div style="font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;">Multi Módulos</div>
-        <div style="font-size:10px;color:var(--text2);margin-top:4px;">Configurável</div>
-      </div>
-      <div style="padding:24px;text-align:center;background:var(--bg2);border:1px solid var(--text3);">
-        <div style="font-size:28px;margin-bottom:8px;">👶</div>
-        <div style="font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;">Kids Mode</div>
-        <div style="font-size:10px;color:var(--text2);margin-top:4px;">Automático</div>
-      </div>
-    </div>
-
-    <div class="footer-copy">
-      JJA System · Gestão Elite para Academias de Jiu Jitsu · Todos os direitos reservados
-    </div>
-  </div>
-</section>
-
+<!-- ══════ SCRIPTS ══════ -->
 <script>
-// Reveal on scroll
-const reveals = document.querySelectorAll('.reveal');
-const io = new IntersectionObserver((entries) => {
-  entries.forEach(e => {
-    if(e.isIntersecting){ e.target.classList.add('visible'); }
+/* NAV */
+const nav=document.getElementById('nav');
+const burger=document.getElementById('burger');
+const mob=document.getElementById('mobile-menu');
+window.addEventListener('scroll',()=>nav.classList.toggle('solid',scrollY>60),{passive:true});
+burger.addEventListener('click',()=>{burger.classList.toggle('open');mob.classList.toggle('open');});
+function closeMob(){burger.classList.remove('open');mob.classList.remove('open');}
+// close on outside click
+document.addEventListener('click',e=>{if(!nav.contains(e.target)&&!mob.contains(e.target)){burger.classList.remove('open');mob.classList.remove('open');}});
+
+/* SMOOTH ANCHOR */
+document.querySelectorAll('a[href^="#"]').forEach(a=>{
+  a.addEventListener('click',e=>{
+    const t=document.querySelector(a.getAttribute('href'));
+    if(t){e.preventDefault();const y=t.getBoundingClientRect().top+scrollY-68;window.scrollTo({top:y,behavior:'smooth'});}
   });
-},{threshold:0.1,rootMargin:'0px 0px -40px 0px'});
-reveals.forEach(r => io.observe(r));
+});
+
+/* REVEAL */
+const io=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('v');});
+},{threshold:.07,rootMargin:'0px 0px -30px 0px'});
+document.querySelectorAll('.r').forEach(el=>io.observe(el));
+
+/* TATAME ANIMATION */
+setTimeout(()=>{
+  document.querySelectorAll('.athlete').forEach((a,i)=>{
+    setTimeout(()=>a.classList.add('checked'),i*600);
+  });
+},800);
+
+/* FORM STEPS */
+const allInputs=document.querySelectorAll('.fi,.fs-sel');
+function updateSteps(){
+  const n=Array.from(allInputs).filter(e=>e.value.trim()).length;
+  const p=Math.ceil(n/allInputs.length*3);
+  document.querySelectorAll('.fstep').forEach((s,i)=>s.classList.toggle('done',i<p));
+}
+allInputs.forEach(el=>el.addEventListener('input',updateSteps));
+// Force step 1 done from start
+document.getElementById('s1').classList.add('done');
+
+function submitForm(){
+  const nome=document.getElementById('f-nome').value.trim();
+  const email=document.getElementById('f-email').value.trim();
+  const tel=document.getElementById('f-tel').value.trim();
+  const acad=document.getElementById('f-academia').value.trim();
+  if(!nome){alert('Por favor, informe seu nome.');return;}
+  if(!email||!email.includes('@')){alert('Por favor, informe um e-mail válido.');return;}
+  if(!tel){alert('Por favor, informe seu WhatsApp.');return;}
+  if(!acad){alert('Por favor, informe o nome da academia.');return;}
+  const btn=document.getElementById('fsub');
+  btn.disabled=true;btn.textContent='Enviando...';
+  document.querySelectorAll('.fstep').forEach(s=>s.classList.add('done'));
+  setTimeout(()=>{
+    document.getElementById('form-fields').style.display='none';
+    document.getElementById('fsuccess').classList.add('show');
+  },1200);
+}
+
+/* CANVAS PARTICLES — HERO */
+(function(){
+  try{
+    const c=document.createElement('canvas');
+    c.style.cssText='position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:1;';
+    document.querySelector('.hero-mesh').appendChild(c);
+    const ctx=c.getContext('2d');
+    let W,H,pts=[];
+    function resize(){W=c.width=c.offsetWidth;H=c.height=c.offsetHeight;}
+    resize();
+    function Pt(){this.reset=()=>{this.x=Math.random()*W;this.y=Math.random()*H;this.r=Math.random()*1.2+.2;this.o=Math.random()*.3+.05;this.vx=(Math.random()-.5)*.12;this.vy=-(Math.random()*.15+.03);};this.reset();}
+    for(let i=0;i<70;i++){const p=new Pt();p.y=Math.random()*H;pts.push(p);}
+    function frame(){
+      ctx.clearRect(0,0,W,H);
+      pts.forEach(p=>{
+        ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,6.28);
+        ctx.fillStyle=`rgba(212,165,41,${p.o})`;ctx.fill();
+        p.x+=p.vx;p.y+=p.vy;p.o-=.0008;
+        if(p.y<-4||p.o<=0)p.reset();
+      });
+      requestAnimationFrame(frame);
+    }
+    frame();
+    let resT;window.addEventListener('resize',()=>{clearTimeout(resT);resT=setTimeout(resize,200);},{passive:true});
+  }catch(e){}
+})();
 </script>
 </body>
 </html>
